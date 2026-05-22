@@ -1,0 +1,106 @@
+import { PageBreadcrumb } from "@/components/ui/PageBreadcrumb";
+import { Link } from "wouter";
+import { useGetWishlist, useRemoveFromWishlist, useAddToCart, getGetWishlistQueryKey, getGetCartQueryKey } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Heart, ShoppingBag, Trash2 } from "lucide-react";
+
+export function WishlistPage() {
+  const qc = useQueryClient();
+  const { data: wishlist, isLoading } = useGetWishlist();
+  const removeFromWishlist = useRemoveFromWishlist();
+  const addToCart = useAddToCart();
+
+  function handleRemove(productId: number) {
+    removeFromWishlist.mutate({ productId }, {
+      onSuccess: () => qc.invalidateQueries({ queryKey: getGetWishlistQueryKey() }),
+    });
+  }
+
+  function handleAddToCart(productId: number) {
+    addToCart.mutate({ data: { productId, quantity: 1 } }, {
+      onSuccess: () => qc.invalidateQueries({ queryKey: getGetCartQueryKey() }),
+    });
+  }
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="aspect-square rounded-xl" />)}
+        </div>
+      </div>
+    );
+  }
+
+  if (!wishlist || wishlist.length === 0) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+        <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center mb-6">
+          <Heart className="h-9 w-9 text-muted-foreground" />
+        </div>
+        <h2 className="font-serif text-2xl font-medium mb-2">Your wishlist is empty</h2>
+        <p className="text-muted-foreground text-sm mb-6">Save products you love and come back to them anytime.</p>
+        <Link href="/products"><Button className="rounded-full px-8">Explore Products</Button></Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="bg-muted/30 border-b py-10">
+        <div className="container mx-auto px-4">
+          <PageBreadcrumb crumbs={[{ label: "Wishlist", icon: <Heart className="h-3 w-3" /> }]} className="mb-3" />
+          <h1 className="font-serif text-4xl font-medium">Wishlist</h1>
+          <p className="text-muted-foreground mt-1 text-sm">{wishlist.length} saved item{wishlist.length !== 1 ? "s" : ""}</p>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          {wishlist.map((item) => {
+            const product = item.product;
+            const img = product.images?.[0] ?? "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80&fm=webp";
+            const price = product.discountPrice ?? product.price;
+            return (
+              <div key={item.id} className="group bg-card border rounded-xl overflow-hidden">
+                <Link href={`/products/${item.productId}`}>
+                  <div className="relative aspect-square overflow-hidden bg-muted/20 cursor-pointer">
+                    <img src={img} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <button
+                      onClick={(e) => { e.preventDefault(); handleRemove(item.productId); }}
+                      className="absolute top-3 right-3 p-2 rounded-full bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hover:text-destructive text-muted-foreground"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </Link>
+                <div className="p-3">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{product.category}</p>
+                  <Link href={`/products/${item.productId}`}>
+                    <p className="font-medium text-sm leading-snug mb-2 line-clamp-2 cursor-pointer hover:text-accent">{product.name}</p>
+                  </Link>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="font-semibold text-sm">৳{price.toLocaleString()}</span>
+                    {product.discountPrice && (
+                      <span className="text-xs text-muted-foreground line-through">৳{product.price.toLocaleString()}</span>
+                    )}
+                  </div>
+                  <Button
+                    size="sm"
+                    className="w-full text-xs"
+                    onClick={() => handleAddToCart(item.productId)}
+                  >
+                    <ShoppingBag className="h-3.5 w-3.5 mr-1.5" />
+                    Add to Bag
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}

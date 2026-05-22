@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5" />
+    <title>EnvyEnhance – Authentic Japanese Skincare | Bangladesh</title>
+    <meta name="description" content="Shop authentic Japanese skincare products in Bangladesh. Serums, moisturizers, cleansers, sunscreen and more. Fair pricing, genuine brands, delivered responsibly." />
+    <meta name="keywords" content="Japanese skincare Bangladesh, authentic skincare, serums, moisturizers, cleansers, sunscreen, skincare products" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#fdf6f0" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EnvyEnhance" />
+    <meta property="og:title" content="EnvyEnhance – Authentic Japanese Skincare" />
+    <meta property="og:description" content="Shop authentic Japanese skincare products in Bangladesh. Genuine brands, fair pricing, delivered responsibly." />
+    <meta property="og:image" content="/opengraph.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="EnvyEnhance – Authentic Japanese Skincare" />
+    <meta name="twitter:description" content="Shop authentic Japanese skincare products in Bangladesh." />
+    <meta name="twitter:image" content="/opengraph.jpg" />
+
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="EnvyEnhance" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://envyenhance.com/" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo.webp" />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+    <link rel="dns-prefetch" href="https://clerk.envyenhance.com" />
+
+    <!-- Preload LCP hero image so browser fetches it immediately -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&q=75&fm=webp" fetchpriority="high" />
+
+    <!-- Fonts: DM Sans for body + DM Serif Display for headings (matches index.css) -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data: Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "EnvyEnhance",
+      "url": "https://envyenhance.com",
+      "logo": "https://envyenhance.com/logo.webp",
+      "description": "Authentic Japanese skincare products in Bangladesh",
+      "sameAs": []
+    }
+    </script>
+
+    <!-- Structured Data: WebSite with SearchAction -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "EnvyEnhance",
+      "url": "https://envyenhance.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://envyenhance.com/products?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
