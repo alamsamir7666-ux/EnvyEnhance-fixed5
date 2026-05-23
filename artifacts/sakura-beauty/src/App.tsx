@@ -48,7 +48,12 @@ function TokenSync() {
   const { getToken, isSignedIn } = useAuth();
   useEffect(() => {
     if (isSignedIn) {
-      setAuthTokenGetter(() => getToken());
+      const getter = async () => {
+        const token = await getToken();
+        return token;
+      };
+      setAuthTokenGetter(getter);
+      console.log("Auth token getter set");
     } else {
       setAuthTokenGetter(null);
     }
