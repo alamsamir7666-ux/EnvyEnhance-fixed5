@@ -3,7 +3,7 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 import App from "./App";
 import "./index.css";
 import { initGA, initMetaPixel } from "./lib/analytics";
-import { setBaseUrl } from "@workspace/api-client-react";
+import { setBaseUrl, setAuthTokenGetter } from "@workspace/api-client-react";
 setBaseUrl(import.meta.env.VITE_API_BASE_URL ?? "");
 
 initGA();
