@@ -42,6 +42,7 @@ const LoyaltyPage = lazy(() => import("@/pages/LoyaltyPage"));
 const ReferralPage = lazy(() => import("@/pages/ReferralPage"));
 const ComparePage = lazy(() => import("@/pages/ComparePage"));
 import { useGetMe } from "@workspace/api-client-react";
+import { useUser } from "@clerk/react";
 
 function TokenSync() {
   const { getToken } = useAuth();
@@ -273,10 +274,11 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 }
 
 function AdminRoute() {
+  const { user: clerkUser } = useUser();
   const { data: dbUser, isLoading } = useGetMe({ query: { retry: false, queryKey: ["me"] } });
   if (isLoading) return null;
   if (isLoading) return null;
-  if (dbUser?.role !== "admin" && !isLoading) return <Redirect to="/" />;
+  if (!isLoading && dbUser?.role !== "admin" && clerkUser?.publicMetadata?.role !== "admin") return <Redirect to="/" />;
   return <AdminPage />;
 }
 
