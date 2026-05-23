@@ -52,17 +52,13 @@ createRoot(document.getElementById("root")!).render(
     <App />
   </ErrorBoundary>
 );
-import { setBaseUrl } from "@workspace/api-client-react";
-setBaseUrl(import.meta.env.VITE_API_BASE_URL ?? "");
 
-import { setAuthTokenGetter } from "@workspace/api-client-react";
 import { useAuth } from "@clerk/react";
 import { useEffect } from "react";
 
 function ClerkTokenSync() {
   const { getToken } = useAuth();
   useEffect(() => {
-    setAuthTokenGetter(() => getToken());
   }, [getToken]);
   return null;
 }
