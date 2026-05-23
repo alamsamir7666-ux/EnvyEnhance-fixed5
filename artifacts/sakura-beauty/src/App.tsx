@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { ClerkProvider, SignIn, SignUp, Show, useClerk, useAuth } from '@clerk/react';
+import { ClerkProvider, SignIn, SignUp, Show, useClerk, useAuth, useSession } from '@clerk/react';
 import { setAuthTokenGetter } from '@workspace/api-client-react';
 import { shadcn } from '@clerk/themes';
 import { Switch, Route, useLocation, Router as WouterRouter, Redirect, Link } from 'wouter';
