@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { ClerkProvider, SignIn, SignUp, Show, useClerk } from '@clerk/react';
+import { ClerkProvider, SignIn, SignUp, Show, useClerk, useAuth } from '@clerk/react';
+import { setAuthTokenGetter } from '@workspace/api-client-react';
 import { shadcn } from '@clerk/themes';
 import { Switch, Route, useLocation, Router as WouterRouter, Redirect, Link } from 'wouter';
 import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
@@ -41,6 +42,15 @@ const LoyaltyPage = lazy(() => import("@/pages/LoyaltyPage"));
 const ReferralPage = lazy(() => import("@/pages/ReferralPage"));
 const ComparePage = lazy(() => import("@/pages/ComparePage"));
 import { useGetMe } from "@workspace/api-client-react";
+
+function TokenSync() {
+  const { getToken } = useAuth();
+  useEffect(() => {
+    setAuthTokenGetter(() => getToken());
+    return () => setAuthTokenGetter(null);
+  }, [getToken]);
+  return null;
+}
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 
@@ -313,6 +323,7 @@ function ClerkProviderWithRoutes() {
       routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
     >
       <QueryClientProvider client={queryClient}>
+        <TokenSync />
         <GuestCartProvider>
           <WishlistProvider>
           <PageProvider>
