@@ -36,7 +36,7 @@ router.get("/sitemap.xml", async (_req, res) => {
       url: `/products/${p.id}`,
       priority: "0.7",
       changefreq: "weekly",
-      lastmod: toXmlDate(p.updatedAt),
+      lastmod: p.updatedAt ? toXmlDate(p.updatedAt) : undefined,
     }));
 
     const allUrls = [...staticPages, ...categoryUrls, ...productUrls];
