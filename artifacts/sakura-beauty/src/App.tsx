@@ -275,7 +275,8 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 function AdminRoute() {
   const { data: dbUser, isLoading } = useGetMe({ query: { retry: false, queryKey: ["me"] } });
   if (isLoading) return null;
-  if (dbUser?.role !== "admin") return <Redirect to="/" />;
+  if (isLoading) return null;
+  if (dbUser?.role !== "admin" && !isLoading) return <Redirect to="/" />;
   return <AdminPage />;
 }
 
