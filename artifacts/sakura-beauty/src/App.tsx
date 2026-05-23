@@ -45,11 +45,14 @@ import { useGetMe } from "@workspace/api-client-react";
 import { useUser } from "@clerk/react";
 
 function TokenSync() {
-  const { getToken } = useAuth();
+  const { getToken, isSignedIn } = useAuth();
   useEffect(() => {
-    setAuthTokenGetter(() => getToken());
-    return () => setAuthTokenGetter(null);
-  }, [getToken]);
+    if (isSignedIn) {
+      setAuthTokenGetter(() => getToken());
+    } else {
+      setAuthTokenGetter(null);
+    }
+  }, [getToken, isSignedIn]);
   return null;
 }
 
