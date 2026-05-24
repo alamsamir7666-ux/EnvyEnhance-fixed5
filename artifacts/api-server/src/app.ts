@@ -86,12 +86,10 @@ app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 
 // ─── Clerk middleware ─────────────────────────────────────────────────────────
 app.use(
-  clerkMiddleware((req) => ({
-    publishableKey: publishableKeyFromHost(
-      getClerkProxyHost(req) ?? "",
-      process.env.CLERK_PUBLISHABLE_KEY,
-    ),
-  })),
+  clerkMiddleware({
+    publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  }),
 );
 
 // ─── Rate Limiting ───────────────────────────────────────────────────────────
