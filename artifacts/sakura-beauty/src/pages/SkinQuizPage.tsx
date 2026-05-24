@@ -92,8 +92,8 @@ function QuizResults({ profile, onRetake }: { profile: SkinProfile; onRetake: ()
     dry: "Dry", oily: "Oily", combination: "Combination", normal: "Normal",
   };
   const concernLabel: Record<string, string> = {
-    brightening: "Brightening", antiaging: "Anti-Aging",
-    acne: "Acne Control", hydration: "Hydration",
+    brightening: "serums", antiaging: "serums",
+    acne: "cleansers", hydration: "moisturizers",
   };
 
   const category = CATEGORY_MAP[profile.concern] ?? CATEGORY_MAP[profile.skinType] ?? "serum";
