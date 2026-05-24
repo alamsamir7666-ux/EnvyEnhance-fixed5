@@ -77,9 +77,9 @@ const CATEGORY_MAP: Record<string, string> = {
   dry: "moisturizer",
   oily: "cleanser",
   combination: "toner",
-  normal: "serum",
-  brightening: "serum",
-  antiaging: "serum",
+  normal: "serums",
+  brightening: "serums",
+  antiaging: "serums",
   acne: "cleanser",
   hydration: "moisturizer",
 };
@@ -94,9 +94,10 @@ function QuizResults({ profile, onRetake }: { profile: SkinProfile; onRetake: ()
   const concernLabel: Record<string, string> = {
     brightening: "serums", antiaging: "serums",
     acne: "cleansers", hydration: "moisturizers",
+    serum: "serums", normal: "serums",
   };
 
-  const category = CATEGORY_MAP[profile.concern] ?? CATEGORY_MAP[profile.skinType] ?? "serum";
+  const category = CATEGORY_MAP[profile.concern] ?? CATEGORY_MAP[profile.skinType] ?? "serums";
 
   // Load products by category first (primary concern)
   const { data: primaryData, isLoading } = useListProducts({ category, limit: 4 });
