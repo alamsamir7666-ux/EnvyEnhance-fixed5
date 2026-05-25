@@ -460,29 +460,28 @@ router.post("/products/:id/duplicate", requireAdmin, async (req: any, res) => {
   }
 });
 
-export default router;
 
 // ─── Image Upload Endpoint ─────────────────────────────────────────────────
-import multer from "multer";
-import { v2 as cloudinary } from "cloudinary";
+import multerPkg from "multer";
+import { v2 as cloudinaryV2 } from "cloudinary";
 
-cloudinary.config({
+cloudinaryV2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
+const uploadStorage = multerPkg.memoryStorage();
+const uploadMiddleware = multerPkg({ storage: uploadStorage, limits: { fileSize: 10 * 1024 * 1024 } });
 
-router.post("/products/upload-image", requireAuth, requireAdmin, upload.array("images", 10), async (req: any, res) => {
+router.post("/products/upload-image", requireAuth, requireAdmin, uploadMiddleware.array("images", 4), async (req: any, res) => {
   try {
     const files = req.files as Express.Multer.File[];
     if (!files || files.length === 0) {
       res.status(400).json({ error: "No files uploaded" }); return;
     }
     const urls = await Promise.all(files.map(file => new Promise<string>((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
+      const stream = cloudinaryV2.uploader.upload_stream(
         { folder: "envyenhance/products", quality: "auto", fetch_format: "auto" },
         (err, result) => {
           if (err || !result) return reject(err ?? new Error("Upload failed"));
@@ -496,3 +495,6 @@ router.post("/products/upload-image", requireAuth, requireAdmin, upload.array("i
     res.status(500).json({ error: "Upload failed" });
   }
 });
+
+export default router;
+
