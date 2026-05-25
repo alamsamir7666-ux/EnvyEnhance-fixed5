@@ -1,4 +1,6 @@
 import { Router } from "express";
+import multerPkg from "multer";
+import { v2 as cloudinaryV2 } from "cloudinary";
 import { db } from "@workspace/db";
 import {
   productsTable,
@@ -7,6 +9,12 @@ import {
 import { eq, ilike, gte, lte, and, desc, sql, inArray } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth";
 import { notifyStockAlerts } from "./stockAlerts";
+
+cloudinaryV2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const router = Router();
 
@@ -462,18 +470,6 @@ router.post("/products/:id/duplicate", requireAdmin, async (req: any, res) => {
 
 
 // ─── Image Upload Endpoint ─────────────────────────────────────────────────
-import multerPkg from "multer";
-import { v2 as cloudinaryV2 } from "cloudinary";
-
-cloudinaryV2.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-const uploadStorage = multerPkg.memoryStorage();
-const uploadMiddleware = multerPkg({ storage: uploadStorage, limits: { fileSize: 10 * 1024 * 1024 } });
-
 router.post("/products/upload-image", requireAuth, requireAdmin, uploadMiddleware.array("images", 4), async (req: any, res) => {
   try {
     const files = req.files as Express.Multer.File[];
