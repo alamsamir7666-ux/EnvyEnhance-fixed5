@@ -79,6 +79,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
     discountPrice: product?.discountPrice ?? "",
     stock: product?.stock ?? "",
     images: product?.images?.join(", ") ?? "",
+    videoUrl: (product as any)?.videoUrl ?? "",
     ingredients: product?.ingredients ?? "",
     keyBenefits: (product?.keyBenefits ?? []).join("\n"),
     mainIngredients: (product?.mainIngredients ?? []) as { name: string; icon: string }[],
@@ -127,6 +128,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
       discountPrice: form.discountPrice ? parseFloat(String(form.discountPrice)) : undefined,
       stock: parseInt(String(form.stock)),
       images: String(form.images).split(",").map((s) => s.trim()).filter(Boolean),
+      videoUrl: (form as any).videoUrl ?? "",
     };
     const invalidateAll = () => {
       qc.invalidateQueries({ queryKey: getListProductsQueryKey() });
@@ -315,6 +317,8 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                     const files = Array.from(e.target.files ?? []);
                     if (!files.length) return;
                     const fd = new FormData();
+                    const currentCount = form.images ? String(form.images).split(",").filter(s => s.trim()).length : 0;
+                    if (currentCount + files.length > 4) { alert("Maximum 4 images allowed per product"); return; }
                     files.forEach(f => fd.append("images", f));
                     try {
                       const token = await window.__clerkGetToken?.();
@@ -349,6 +353,11 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
               )}
               <Input value={form.images} onChange={e => setForm(f => ({ ...f, images: e.target.value }))} className="rounded-xl text-xs" placeholder="Or paste image URLs here..." />
             </div>
+          </div>
+
+          <div>
+            <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">YouTube Video URL (optional)</Label>
+            <Input value={form.videoUrl ?? ""} onChange={e => setForm(f => ({ ...f, videoUrl: e.target.value }))} className="mt-1.5 rounded-xl" placeholder="https://www.youtube.com/watch?v=..." />
           </div>
 
           <div>
