@@ -16,6 +16,9 @@ cloudinaryV2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const uploadStorage = multerPkg.memoryStorage();
+const uploadMiddleware = multerPkg({ storage: uploadStorage, limits: { fileSize: 10 * 1024 * 1024 } });
+
 const router = Router();
 
 function toProduct(
