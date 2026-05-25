@@ -7,7 +7,7 @@ import {
   reviewsTable,
 } from "@workspace/db";
 import { eq, ilike, gte, lte, and, desc, sql, inArray } from "drizzle-orm";
-import { requireAdmin } from "../middlewares/auth";
+import { requireAdmin, requireAuth } from "../middlewares/auth";
 import { notifyStockAlerts } from "./stockAlerts";
 
 cloudinaryV2.config({
