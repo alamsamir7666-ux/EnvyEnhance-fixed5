@@ -29,6 +29,7 @@ export const productsTable = pgTable("products", {
   isFeatured: boolean("is_featured").notNull().default(false),
   homepageSection: text("homepage_section"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  videoUrl: text("video_url"),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
