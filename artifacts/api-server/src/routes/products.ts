@@ -22,6 +22,7 @@ function toProduct(
     price: Number(p.price),
     discountPrice: p.discountPrice != null ? Number(p.discountPrice) : null,
     category: p.category,
+    videoUrl: p.videoUrl ?? null,
     stock: p.stock,
     description: p.description,
     ingredients: p.ingredients,
@@ -289,6 +290,7 @@ router.post("/products", requireAdmin, async (req: any, res) => {
         keyBenefits: keyBenefits ?? [],
         mainIngredients: mainIngredients ?? [],
         bestFor: bestFor ?? [],
+        videoUrl: req.body.videoUrl ?? null,
         texture: texture ?? null,
         images: images ?? [],
         isFeatured: isFeatured ?? false,
@@ -348,6 +350,7 @@ router.put("/products/:id", requireAdmin, async (req: any, res) => {
     if (keyBenefits !== undefined) updates.keyBenefits = keyBenefits;
     if (mainIngredients !== undefined) updates.mainIngredients = mainIngredients;
     if (bestFor !== undefined) updates.bestFor = bestFor;
+    if (req.body.videoUrl !== undefined) updates.videoUrl = req.body.videoUrl;
     if (texture !== undefined) updates.texture = texture ?? null;
     if (images !== undefined) updates.images = images;
     if (isFeatured !== undefined) updates.isFeatured = isFeatured;
