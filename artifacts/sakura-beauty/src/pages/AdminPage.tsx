@@ -307,8 +307,48 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
           </div>
 
           <div>
-            <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Image URLs (comma-separated)</Label>
-            <Input value={form.images} onChange={e => setForm(f => ({ ...f, images: e.target.value }))} className="mt-1.5 rounded-xl" placeholder="https://..." />
+            <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Product Images</Label>
+            <div className="mt-1.5 space-y-2">
+              <div className="flex gap-2">
+                <input type="file" accept="image/*" multiple id="product-image-upload" className="hidden"
+                  onChange={async (e) => {
+                    const files = Array.from(e.target.files ?? []);
+                    if (!files.length) return;
+                    const fd = new FormData();
+                    files.forEach(f => fd.append("images", f));
+                    try {
+                      const token = await window.__clerkGetToken?.();
+                      const res = await fetch(import.meta.env.VITE_API_BASE_URL + "/api/products/upload-image", {
+                        method: "POST",
+                        headers: token ? { Authorization: "Bearer " + token } : {},
+                        body: fd,
+                      });
+                      const data = await res.json();
+                      if (data.urls) {
+                        const existing = form.images ? form.images + ", " : "";
+                        setForm(f => ({ ...f, images: existing + data.urls.join(", ") }));
+                      }
+                    } catch { alert("Upload failed"); }
+                  }}
+                />
+                <Button type="button" variant="outline" className="rounded-xl flex-1"
+                  onClick={() => document.getElementById("product-image-upload")?.click()}>
+                  📁 Upload Images from Device
+                </Button>
+              </div>
+              {form.images && (
+                <div className="flex flex-wrap gap-2">
+                  {String(form.images).split(",").map((url, i) => url.trim() && (
+                    <div key={i} className="relative">
+                      <img src={url.trim()} className="h-16 w-16 object-cover rounded-lg border" />
+                      <button type="button" className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center"
+                        onClick={() => setForm(f => ({ ...f, images: String(f.images).split(",").filter((_, j) => j !== i).join(", ") }))}>×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <Input value={form.images} onChange={e => setForm(f => ({ ...f, images: e.target.value }))} className="rounded-xl text-xs" placeholder="Or paste image URLs here..." />
+            </div>
           </div>
 
           <div>
