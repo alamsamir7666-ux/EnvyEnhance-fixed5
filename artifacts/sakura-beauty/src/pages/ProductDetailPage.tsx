@@ -360,6 +360,20 @@ export function ProductDetailPage() {
               </div>
             )}
 
+            {(product as any).videoUrl && (
+              <div className="mb-6">
+                <h3 className="text-xs uppercase tracking-wider font-medium text-foreground mb-2">Product Video</h3>
+                <div className="relative w-full" style={{paddingBottom: "56.25%"}}>
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full rounded-xl"
+                    src={(product as any).videoUrl.replace("watch?v=", "embed/")}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            )}
+
             {product.ingredients && (
               <details className="mb-6 group">
                 <summary className="cursor-pointer text-sm font-medium text-foreground flex items-center gap-2 mb-2 list-none">
