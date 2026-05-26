@@ -321,10 +321,12 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                     if (currentCount + files.length > 4) { alert("Maximum 4 images allowed per product"); return; }
                     files.forEach(f => fd.append("images", f));
                     try {
-                      const token = await window.__clerkGetToken?.();
+                      let token = null;
+                      try { token = await (window as any).__clerkGetToken?.(); } catch {}
+                      if (!token) { alert("Please make sure you are logged in"); return; }
                       const res = await fetch(import.meta.env.VITE_API_BASE_URL + "/api/products/upload-image", {
                         method: "POST",
-                        headers: token ? { Authorization: "Bearer " + token } : {},
+                        headers: { Authorization: "Bearer " + token },
                         body: fd,
                       });
                       const data = await res.json();
