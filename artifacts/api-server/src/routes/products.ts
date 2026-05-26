@@ -132,6 +132,28 @@ router.get("/products/homepage", async (_req, res) => {
   }
 });
 
+router.post("/products/upload-image", requireAuth, requireAdmin, uploadMiddleware.array("images", 4), async (req: any, res) => {
+  try {
+    const files = req.files as Express.Multer.File[];
+    if (!files || files.length === 0) {
+      res.status(400).json({ error: "No files uploaded" }); return;
+    }
+    const urls = await Promise.all(files.map(file => new Promise<string>((resolve, reject) => {
+      const stream = cloudinaryV2.uploader.upload_stream(
+        { folder: "envyenhance/products", quality: "auto", fetch_format: "auto" },
+        (err, result) => {
+          if (err || !result) return reject(err ?? new Error("Upload failed"));
+          resolve(result.secure_url);
+        }
+      );
+      stream.end(file.buffer);
+    })));
+    res.json({ urls });
+  } catch (err) {
+    res.status(500).json({ error: "Upload failed" });
+  }
+});
+
 router.get("/products/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -473,27 +495,7 @@ router.post("/products/:id/duplicate", requireAdmin, async (req: any, res) => {
 
 
 // ─── Image Upload Endpoint ─────────────────────────────────────────────────
-router.post("/products/upload-image", requireAuth, requireAdmin, uploadMiddleware.array("images", 4), async (req: any, res) => {
-  try {
-    const files = req.files as Express.Multer.File[];
-    if (!files || files.length === 0) {
-      res.status(400).json({ error: "No files uploaded" }); return;
-    }
-    const urls = await Promise.all(files.map(file => new Promise<string>((resolve, reject) => {
-      const stream = cloudinaryV2.uploader.upload_stream(
-        { folder: "envyenhance/products", quality: "auto", fetch_format: "auto" },
-        (err, result) => {
-          if (err || !result) return reject(err ?? new Error("Upload failed"));
-          resolve(result.secure_url);
-        }
-      );
-      stream.end(file.buffer);
-    })));
-    res.json({ urls });
-  } catch (err) {
-    res.status(500).json({ error: "Upload failed" });
-  }
-});
+
 
 export default router;
 
