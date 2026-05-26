@@ -86,3 +86,19 @@ CREATE TABLE IF NOT EXISTS email_preferences (
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS loyalty_points (
+  id SERIAL PRIMARY KEY,
+  user_id TEXT NOT NULL UNIQUE,
+  points INTEGER NOT NULL DEFAULT 0,
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS loyalty_transactions (
+  id SERIAL PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  points INTEGER NOT NULL,
+  reason TEXT NOT NULL,
+  order_id INTEGER,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
