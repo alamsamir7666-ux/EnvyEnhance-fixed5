@@ -316,24 +316,24 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                   onChange={async (e) => {
                     const files = Array.from(e.target.files ?? []);
                     if (!files.length) return;
-                    const fd = new FormData();
-                    const currentCount = form.images ? String(form.images).split(",").filter(s => s.trim()).length : 0;
+                    const currentCount = form.images ? String(form.images).split(",").filter((s: string) => s.trim()).length : 0;
                     if (currentCount + files.length > 4) { alert("Maximum 4 images allowed per product"); return; }
-                    files.forEach(f => fd.append("images", f));
+                    const fd = new FormData();
+                    files.forEach((f: File) => fd.append("images", f));
                     try {
                       const token = await getToken();
-                      if (!token) { alert("Please make sure you are logged in"); return; }
-                      const res = await fetch(import.meta.env.VITE_API_BASE_URL + "/api/products/upload-image", {
+                      if (!token) { alert("Not logged in"); return; }
+                      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products/upload-image`, {
                         method: "POST",
-                        headers: { Authorization: "Bearer " + token },
+                        headers: { "Authorization": `Bearer ${token}` },
                         body: fd,
                       });
+                      if (!res.ok) { const err = await res.json(); alert("Upload error: " + (err.details || err.error)); return; }
                       const data = await res.json();
-                      if (data.urls) {
-                        const existing = form.images ? form.images + ", " : "";
-                        setForm(f => ({ ...f, images: existing + data.urls.join(", ") }));
+                      if (data.urls?.length) {
+                        setForm((f: any) => ({ ...f, images: [f.images, ...data.urls].filter(Boolean).join(", ") }));
                       }
-                    } catch { alert("Upload failed"); }
+                    } catch (err) { alert("Upload failed: " + String(err)); }
                   }}
                 />
                 <Button type="button" variant="outline" className="rounded-xl flex-1"
