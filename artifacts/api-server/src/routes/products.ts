@@ -142,7 +142,7 @@ router.post("/products/upload-image", requireAuth, requireAdmin, uploadMiddlewar
       const stream = cloudinaryV2.uploader.upload_stream(
         { folder: "envyenhance/products", quality: "auto", fetch_format: "auto" },
         (err, result) => {
-          if (err || !result) return reject(err ?? new Error("Upload failed"));
+          if (err || !result) { console.error("Cloudinary error:", err); return reject(err ?? new Error("Upload failed")); }
           resolve(result.secure_url);
         }
       );
@@ -150,7 +150,8 @@ router.post("/products/upload-image", requireAuth, requireAdmin, uploadMiddlewar
     })));
     res.json({ urls });
   } catch (err) {
-    res.status(500).json({ error: "Upload failed" });
+    console.error("Upload endpoint error:", err);
+    res.status(500).json({ error: "Upload failed", details: String(err) });
   }
 });
 
