@@ -3,7 +3,7 @@ import { MessageCircle, ChevronDown, ChevronUp, Send, Loader2 } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { useUser } from "@clerk/react";
+import { useUser, useAuth } from "@clerk/react";
 import { useLocation } from "wouter";
 
 interface QAItem {
@@ -17,6 +17,7 @@ interface QAItem {
 
 export function ProductQA({ productId }: { productId: number }) {
   const { user } = useUser();
+  const { getToken } = useAuth();
   const [, setLocation] = useLocation();
   const [items, setItems] = useState<QAItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,7 @@ export function ProductQA({ productId }: { productId: number }) {
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/products/${productId}/qa`)
+    fetch(import.meta.env.VITE_API_BASE_URL + `/api/products/${productId}/qa`)
       .then((r) => r.json())
       .then(setItems)
       .catch(() => {})
@@ -40,10 +41,11 @@ export function ProductQA({ productId }: { productId: number }) {
     if (question.trim().length < 5) return;
     setSubmitting(true);
     try {
-      const r = await fetch(`/api/products/${productId}/qa`, {
+      const token = await getToken();
+      if (!token) { setLocation("/sign-in"); return; }
+      const r = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/products/${productId}/qa`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
         body: JSON.stringify({ question: question.trim() }),
       });
       if (r.ok) {
