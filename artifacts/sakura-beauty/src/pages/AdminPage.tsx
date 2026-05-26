@@ -66,6 +66,7 @@ const navItems = [
 
 // ─── Product form ────────────────────────────────────────────────────────────
 function ProductModal({ product, categories, onClose }: { product?: any; categories: any[]; onClose: () => void }) {
+  const { getToken } = useAuth();
   const qc = useQueryClient();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
