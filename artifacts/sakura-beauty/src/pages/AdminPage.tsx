@@ -321,8 +321,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                     if (currentCount + files.length > 4) { alert("Maximum 4 images allowed per product"); return; }
                     files.forEach(f => fd.append("images", f));
                     try {
-                      let token = null;
-                      try { token = await (window as any).__clerkGetToken?.(); } catch {}
+                      const token = await getToken();
                       if (!token) { alert("Please make sure you are logged in"); return; }
                       const res = await fetch(import.meta.env.VITE_API_BASE_URL + "/api/products/upload-image", {
                         method: "POST",
