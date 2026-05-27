@@ -63,7 +63,7 @@ const socials = [
 
 export function Footer() {
   return (
-    <footer className="bg-stone-100 text-stone-800 dark:bg-zinc-900 dark:text-gray-100 py-16">
+    <footer className="bg-stone-100 text-stone-800 dark:bg-zinc-900 dark:text-zinc-100 py-16">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Brand */}
         <div className="space-y-4 md:col-span-1">
@@ -144,7 +144,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 mt-12 pt-8 border-t border-background/20 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-background/60">
+      <div className="container mx-auto px-4 mt-12 pt-8 border-t border-stone-200 dark:border-zinc-700 border-background/20 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-background/60">
         <p>&copy; {new Date().getFullYear()} EnvyEnhance. All rights reserved.</p>
         <div className="flex gap-4">
           <a href="/privacy" className="hover:text-background transition-colors">Privacy Policy</a>
