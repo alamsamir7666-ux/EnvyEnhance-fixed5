@@ -40,7 +40,7 @@ export function Navbar() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const guestCart = useGuestCart();
 
   const { data: cart } = useGetCart({
@@ -88,7 +88,7 @@ export function Navbar() {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2">
-              <img src={theme === "dark" ? "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" : "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg"} alt="EnvyEnhance" className="h-9 w-auto max-w-[160px] object-contain" />
+              <img src={resolvedTheme === "dark" ? "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" : "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg"} alt="EnvyEnhance" className="h-9 w-auto max-w-[160px] object-contain" />
             </Link>
 
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
@@ -139,7 +139,7 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full hidden sm:flex">
                     {user?.imageUrl ? (
-                      <img src={theme === "dark" ? "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" : "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg"} alt="EnvyEnhance" className="h-8 w-auto max-w-[140px] object-contain" />
+                      <img src={resolvedTheme === "dark" ? "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" : "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg"} alt="EnvyEnhance" className="h-8 w-auto max-w-[140px] object-contain" />
           </Link>
           <Button variant="ghost" size="icon" onClick={() => setMobileOpen(false)}>
             <X className="h-5 w-5" />
