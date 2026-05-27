@@ -1,3 +1,5 @@
+import { getToken } from "@/lib/getToken";
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 type RequestConfig = {
@@ -20,10 +22,12 @@ async function request<T = unknown>(url: string, config: RequestConfig = {}): Pr
     if (qsStr) fullUrl += `?${qsStr}`;
   }
 
+  const token = await getToken();
+  const authHeader: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
+
   const res = await fetch(fullUrl, {
     method,
-    credentials: "include",
-    headers: { "Content-Type": "application/json", ...headers },
+    headers: { "Content-Type": "application/json", ...authHeader, ...headers },
     body: data != null ? JSON.stringify(data) : undefined,
   });
 
