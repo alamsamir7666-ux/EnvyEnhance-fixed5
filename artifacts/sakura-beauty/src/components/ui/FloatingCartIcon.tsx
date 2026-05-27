@@ -20,7 +20,7 @@ export function FloatingCartIcon() {
   const guestCart = useGuestCart();
 
   const serverCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
-  const cartItemCount = user ? serverCount : guestCart.totalCount;
+  const cartItemCount = user ? (serverCount || guestCart.totalCount) : guestCart.totalCount;
 
   const [visible, setVisible] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
@@ -28,29 +28,25 @@ export function FloatingCartIcon() {
   const ICON_SIZE = 56;
   const EDGE_SNAP = 16;
 
-  function getInitialPos() {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const pos = JSON.parse(saved);
-        return { x: pos.x as number, y: pos.y as number };
-      }
-    } catch {}
-    return {
-      x: window.innerWidth - ICON_SIZE - EDGE_SNAP,
-      y: window.innerHeight * 0.7,
-    };
-  }
-
-  const [pos, setPos] = useState(() => ({ x: window.innerWidth - ICON_SIZE - EDGE_SNAP, y: window.innerHeight * 0.7 }));
+  const [pos, setPos] = useState({ x: 0, y: 0 });
   const isDragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0 });
   const hasMoved = useRef(false);
   const iconRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const p = getInitialPos();
-    setPos(p);
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const p = JSON.parse(saved);
+        setPos({ x: p.x, y: p.y });
+        return;
+      }
+    } catch {}
+    setPos({
+      x: window.innerWidth - ICON_SIZE - EDGE_SNAP,
+      y: window.innerHeight * 0.7,
+    });
   }, []);
 
   useEffect(() => {
