@@ -63,12 +63,12 @@ const socials = [
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-background py-16">
+    <footer className="dark:bg-zinc-900 dark:text-gray-100 dark:border-zinc-700 bg-foreground text-background py-16">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Brand */}
         <div className="space-y-4 md:col-span-1">
           <div className="flex items-center gap-2">
-            <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain dark:hidden" /><img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain hidden dark:block" />
+            <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain dark:hidden" /><img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain hidden dark:block" /><span className="font-serif text-xl font-medium tracking-wide">EnvyEnhance</span>
             
           </div>
           <p className="text-sm text-background/80 leading-relaxed">
