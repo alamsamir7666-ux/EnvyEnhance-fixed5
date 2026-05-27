@@ -88,7 +88,7 @@ export function Navbar() {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2">
-              <img src={(resolvedTheme ?? "light") === "dark" ? "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" : "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg"} alt="EnvyEnhance" className="h-9 w-auto max-w-[160px] object-contain" />
+              <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-9 w-auto max-w-[160px] object-contain block dark:hidden" /><img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" alt="EnvyEnhance" className="h-9 w-auto max-w-[160px] object-contain hidden dark:block" />
             </Link>
 
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
