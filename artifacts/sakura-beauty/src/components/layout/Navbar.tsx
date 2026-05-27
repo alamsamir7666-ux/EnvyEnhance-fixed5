@@ -88,8 +88,11 @@ export function Navbar() {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2">
-              <img src={`${import.meta.env.BASE_URL}logo.webp`} alt="EnvyEnhance" className="h-8 w-8 rounded-full object-cover" />
-              <span className="font-serif text-xl font-medium tracking-wide">EnvyEnhance</span>
+              <img
+                src={theme === "dark" ? "https://res.cloudinary.com/YOUR_CLOUD/image/upload/w_120,f_auto,q_auto/envy-logo-dark.jpg" : "https://res.cloudinary.com/YOUR_CLOUD/image/upload/w_120,f_auto,q_auto/envy-logo-light.jpg"}
+                alt="EnvyEnhance"
+                className="h-9 w-auto max-w-[140px] object-contain"
+              />
             </Link>
 
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
@@ -252,8 +255,11 @@ export function Navbar() {
       >
         <div className="flex items-center justify-between px-5 h-16 border-b shrink-0">
           <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-            <img src={`${import.meta.env.BASE_URL}logo.webp`} alt="EnvyEnhance" className="h-7 w-7 rounded-full object-cover" />
-            <span className="font-serif text-lg font-medium">EnvyEnhance</span>
+            <img
+              src={theme === "dark" ? "https://res.cloudinary.com/YOUR_CLOUD/image/upload/w_120,f_auto,q_auto/envy-logo-dark.jpg" : "https://res.cloudinary.com/YOUR_CLOUD/image/upload/w_120,f_auto,q_auto/envy-logo-light.jpg"}
+              alt="EnvyEnhance"
+              className="h-8 w-auto max-w-[130px] object-contain"
+            />
           </Link>
           <Button variant="ghost" size="icon" onClick={() => setMobileOpen(false)}>
             <X className="h-5 w-5" />
