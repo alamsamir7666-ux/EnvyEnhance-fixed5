@@ -209,48 +209,7 @@ export function HomePage() {
               <br />
               <em className="text-accent not-italic">purpose.</em>
             </h1>
-            <div className="flex flex-wrap gap-4">
-              <Link href="/products">
-                <Button size="lg" className="rounded-full px-8 font-medium">
-                  Shop Now <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/products?category=serums">
-                <Button size="lg" variant="outline" className="rounded-full px-8">
-                  Shop Serums
-                </Button>
-              </Link>
-            </div>
 
-            {/* ── Hero Search Bar ────────────────────────────── */}
-            <div className="mt-8 max-w-md">
-              <form
-                onSubmit={e => {
-                  e.preventDefault();
-                  if (heroSearch.trim()) {
-                    navigate(`/products?q=${encodeURIComponent(heroSearch.trim())}`);
-                  } else {
-                    navigate("/products");
-                  }
-                }}
-                className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-2xl px-4 py-2 shadow-lg border border-white/60"
-              >
-                <Search className="h-4 w-4 text-muted-foreground shrink-0" />
-                <Input
-                  placeholder="Search for product…"
-                  value={heroSearch}
-                  onChange={e => setHeroSearch(e.target.value)}
-                  className="border-0 shadow-none focus-visible:ring-0 bg-transparent p-0 h-8 text-sm placeholder:text-muted-foreground/70"
-                  aria-label="Search products"
-                />
-                <Button type="submit" size="sm" className="rounded-xl h-8 px-4 text-xs shrink-0">
-                  Search
-                </Button>
-              </form>
-              <p className="text-xs text-foreground/50 mt-2 pl-1">
-                Try "vitamin C serum", "moisturizer", "sunscreen"…
-              </p>
-            </div>
           </div>
         </div>
         <div className="absolute right-0 top-0 h-full w-1/2 hidden lg:block">
