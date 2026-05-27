@@ -302,8 +302,8 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       {pageReady && <Footer />}
-      <FloatingCartIcon />
     </div>
+    <FloatingCartIcon />
   );
 }
 
