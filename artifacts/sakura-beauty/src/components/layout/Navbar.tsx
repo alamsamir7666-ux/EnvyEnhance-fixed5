@@ -88,11 +88,7 @@ export function Navbar() {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2">
-              <img
-                src={theme === "dark" ? "https://res.cloudinary.com/YOUR_CLOUD/image/upload/w_120,f_auto,q_auto/envy-logo-dark.jpg" : "https://res.cloudinary.com/YOUR_CLOUD/image/upload/w_120,f_auto,q_auto/envy-logo-light.jpg"}
-                alt="EnvyEnhance"
-                className="h-9 w-auto max-w-[140px] object-contain"
-              />
+              <img src={theme === "dark" ? "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" : "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg"} alt="EnvyEnhance" className="h-9 w-auto max-w-[160px] object-contain" />
             </Link>
 
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
@@ -143,123 +139,7 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full hidden sm:flex">
                     {user?.imageUrl ? (
-                      <img src={user.imageUrl} alt="Profile" className="h-7 w-7 rounded-full object-cover" />
-                    ) : (
-                      <UserIcon className="h-5 w-5" />
-                    )}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <div className="flex flex-col space-y-1 leading-none px-2 py-2">
-                    <p className="font-medium text-sm">{user?.firstName} {user?.lastName}</p>
-                    <p className="text-xs text-muted-foreground truncate">{user?.emailAddresses[0]?.emailAddress}</p>
-                  </div>
-                  <DropdownMenuSeparator />
-                  {isAdmin && (
-                    <>
-                      <DropdownMenuItem asChild>
-                        <Link href="/admin" className="cursor-pointer flex items-center">
-                          <Settings className="mr-2 h-4 w-4" />
-                          Admin Dashboard
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                    </>
-                  )}
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile" className="cursor-pointer flex items-center">
-                      <UserIcon className="mr-2 h-4 w-4" />
-                      Profile
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/orders" className="cursor-pointer flex items-center">
-                      <Package className="mr-2 h-4 w-4" />
-                      Orders
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/loyalty" className="cursor-pointer flex items-center">
-                      <Star className="mr-2 h-4 w-4" />
-                      Loyalty Points
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/referral" className="cursor-pointer flex items-center">
-                      <Share2 className="mr-2 h-4 w-4" />
-                      Refer a Friend
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="cursor-pointer text-destructive focus:text-destructive"
-                    onClick={() => signOut()}
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Log out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </Show>
-
-            {/* Dark mode toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              aria-label="Toggle dark mode"
-              className="hidden sm:flex"
-            >
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            </Button>
-
-            <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative">
-                <ShoppingBag className="h-5 w-5" />
-                {cartItemCount > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 rounded-full bg-accent text-accent-foreground text-xs">
-                    {cartItemCount > 99 ? "99+" : cartItemCount}
-                  </Badge>
-                )}
-                <span className="sr-only">Cart</span>
-              </Button>
-            </Link>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setMobileOpen((v) => !v)}
-              aria-label="Toggle menu"
-            >
-              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      {/* Backdrop */}
-      <div
-        className={`fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
-          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        onClick={() => setMobileOpen(false)}
-      />
-
-      {/* Mobile Drawer */}
-      <div
-        className={`fixed top-0 left-0 z-50 h-full w-72 bg-background shadow-2xl transform transition-transform duration-300 ease-out md:hidden flex flex-col ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex items-center justify-between px-5 h-16 border-b shrink-0">
-          <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-            <img
-              src={theme === "dark" ? "https://res.cloudinary.com/YOUR_CLOUD/image/upload/w_120,f_auto,q_auto/envy-logo-dark.jpg" : "https://res.cloudinary.com/YOUR_CLOUD/image/upload/w_120,f_auto,q_auto/envy-logo-light.jpg"}
-              alt="EnvyEnhance"
-              className="h-8 w-auto max-w-[130px] object-contain"
-            />
+                      <img src={theme === "dark" ? "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" : "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg"} alt="EnvyEnhance" className="h-8 w-auto max-w-[140px] object-contain" />
           </Link>
           <Button variant="ghost" size="icon" onClick={() => setMobileOpen(false)}>
             <X className="h-5 w-5" />
