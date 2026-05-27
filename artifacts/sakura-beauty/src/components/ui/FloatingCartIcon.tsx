@@ -5,7 +5,7 @@ import { useGetCart, getGetCartQueryKey } from "@workspace/api-client-react";
 import { useUser } from "@clerk/react";
 import { useGuestCart } from "@/hooks/useGuestCart";
 
-const STORAGE_KEY = "sakura_cart_icon_pos";
+const STORAGE_KEY = "sakura_cart_icon_pos_v2";
 
 function clamp(val: number, min: number, max: number) {
   return Math.max(min, Math.min(max, val));
@@ -24,38 +24,38 @@ export function FloatingCartIcon() {
 
   const [visible, setVisible] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
+  const [pos, setPos] = useState({ x: -200, y: -200 }); // off-screen until useEffect
 
   const ICON_SIZE = 56;
   const EDGE_SNAP = 16;
 
-  const [pos, setPos] = useState(() => ({
-    x: typeof window !== "undefined" ? window.innerWidth - 72 : 300,
-    y: typeof window !== "undefined" ? window.innerHeight * 0.75 : 600,
-  }));
   const isDragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0 });
   const hasMoved = useRef(false);
   const iconRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Set correct position after mount
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const p = JSON.parse(saved);
-        setPos({ x: p.x, y: p.y });
-        return;
+        if (p.x > 0 && p.y > 0) {
+          setPos({ x: p.x, y: p.y });
+          return;
+        }
       }
     } catch {}
     setPos({
       x: window.innerWidth - ICON_SIZE - EDGE_SNAP,
-      y: window.innerHeight * 0.7,
+      y: window.innerHeight * 0.75,
     });
   }, []);
 
   useEffect(() => {
     if (cartItemCount > 0) {
       setVisible(true);
-      setTimeout(() => setAnimateIn(true), 10);
+      setTimeout(() => setAnimateIn(true), 50);
       return undefined;
     } else {
       setAnimateIn(false);
@@ -67,12 +67,10 @@ export function FloatingCartIcon() {
   function snapToEdge(x: number, y: number) {
     const w = window.innerWidth;
     const h = window.innerHeight;
-    const isMobile = w < 768;
     const safeX = clamp(x, EDGE_SNAP, w - ICON_SIZE - EDGE_SNAP);
     const safeY = clamp(y, EDGE_SNAP + 64, h - ICON_SIZE - EDGE_SNAP);
-    if (isMobile) {
-      return { x: w - ICON_SIZE - EDGE_SNAP, y: safeY };
-    }
+    // Always snap to right edge on mobile
+    if (w < 768) return { x: w - ICON_SIZE - EDGE_SNAP, y: safeY };
     return { x: safeX, y: safeY };
   }
 
@@ -88,13 +86,10 @@ export function FloatingCartIcon() {
     const dx = e.clientX - dragStart.current.x;
     const dy = e.clientY - dragStart.current.y;
     if (Math.abs(dx) > 4 || Math.abs(dy) > 4) hasMoved.current = true;
-    const newX = dragStart.current.posX + dx;
-    const newY = dragStart.current.posY + dy;
-    const clamped = {
-      x: clamp(newX, EDGE_SNAP, window.innerWidth - ICON_SIZE - EDGE_SNAP),
-      y: clamp(newY, EDGE_SNAP + 64, window.innerHeight - ICON_SIZE - EDGE_SNAP),
-    };
-    setPos(clamped);
+    setPos({
+      x: clamp(dragStart.current.posX + dx, EDGE_SNAP, window.innerWidth - ICON_SIZE - EDGE_SNAP),
+      y: clamp(dragStart.current.posY + dy, EDGE_SNAP + 64, window.innerHeight - ICON_SIZE - EDGE_SNAP),
+    });
   }
 
   function onPointerUp(_e: React.PointerEvent) {
@@ -102,9 +97,7 @@ export function FloatingCartIcon() {
     const snapped = snapToEdge(pos.x, pos.y);
     setPos(snapped);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snapped));
-    if (!hasMoved.current) {
-      navigate("/cart");
-    }
+    if (!hasMoved.current) navigate("/cart");
   }
 
   if (!visible) return null;
@@ -133,9 +126,7 @@ export function FloatingCartIcon() {
       <div className="relative w-full h-full rounded-full bg-foreground shadow-2xl flex items-center justify-center border-2 border-background/20">
         <ShoppingBag className="h-6 w-6 text-background" />
         {cartItemCount > 0 && (
-          <span
-            className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-accent text-accent-foreground text-[10px] font-bold flex items-center justify-center border-2 border-background shadow"
-          >
+          <span className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-accent text-accent-foreground text-[10px] font-bold flex items-center justify-center border-2 border-background shadow">
             {cartItemCount > 99 ? "99+" : cartItemCount}
           </span>
         )}
