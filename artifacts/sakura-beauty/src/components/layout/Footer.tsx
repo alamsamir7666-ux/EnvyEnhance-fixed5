@@ -68,8 +68,8 @@ export function Footer() {
         {/* Brand */}
         <div className="space-y-4 md:col-span-1">
           <div className="flex items-center gap-2">
-            <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-8 w-8 rounded-full object-cover" />
-            <span className="font-serif text-xl font-medium tracking-wide">EnvyEnhance</span>
+            <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain dark:hidden" /><img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain hidden dark:block" />
+            
           </div>
           <p className="text-sm text-background/80 leading-relaxed">
             EnvyEnhance brings you premium Japanese and other countries skincare, haircare, and body essentials. Get authentic products, best quality, and a smooth beauty experience — made to elevate your everyday glow. Discover beauty with us!
