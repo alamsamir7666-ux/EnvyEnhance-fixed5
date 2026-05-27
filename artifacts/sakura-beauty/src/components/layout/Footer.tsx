@@ -68,7 +68,7 @@ export function Footer() {
         {/* Brand */}
         <div className="space-y-4 md:col-span-1">
           <div className="flex items-center gap-2">
-            <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain dark:hidden" /><img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain hidden dark:block" /><span className="font-serif text-xl font-medium tracking-wide">EnvyEnhance</span>
+            <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-10 w-10 object-cover rounded-full dark:hidden" /><img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" alt="EnvyEnhance" className="h-10 w-10 object-cover rounded-full hidden dark:block" /><span className="font-serif text-xl font-medium tracking-wide">EnvyEnhance</span>
             
           </div>
           <p className="text-gray-800 dark:text-zinc-200 text-sm text-gray-700 dark:text-zinc-300 text-gray-700 dark:text-zinc-300 leading-relaxed">
