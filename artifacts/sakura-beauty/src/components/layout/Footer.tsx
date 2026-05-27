@@ -71,7 +71,7 @@ export function Footer() {
             <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain dark:hidden" /><img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain hidden dark:block" /><span className="font-serif text-xl font-medium tracking-wide">EnvyEnhance</span>
             
           </div>
-          <p className="text-gray-800 dark:text-zinc-200 text-sm text-gray-700 dark:text-zinc-300 text-background/80 leading-relaxed">
+          <p className="text-gray-800 dark:text-zinc-200 text-sm text-gray-700 dark:text-zinc-300 text-gray-700 dark:text-zinc-300 leading-relaxed">
             EnvyEnhance brings you premium Japanese and other countries skincare, haircare, and body essentials. Get authentic products, best quality, and a smooth beauty experience — made to elevate your everyday glow. Discover beauty with us!
           </p>
         </div>
@@ -79,23 +79,23 @@ export function Footer() {
         {/* Support */}
         <div className="space-y-4">
           <h4 className="text-gray-900 dark:text-white font-medium text-lg">Support</h4>
-          <ul className="space-y-2 text-sm text-background/80">
-            <li><Link href="/track" className="hover:text-accent transition-colors">Track Order</Link></li>
-            <li><Link href="/orders" className="hover:text-accent transition-colors">My Orders</Link></li>
-            <li><Link href="/wishlist" className="hover:text-accent transition-colors">Wishlist</Link></li>
-            <li><Link href="/profile" className="hover:text-accent transition-colors">Account</Link></li>
+          <ul className="space-y-2 text-sm text-gray-700 dark:text-zinc-300">
+            <li><Link href="/track" className="text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-white transition-colors">Track Order</Link></li>
+            <li><Link href="/orders" className="text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-white transition-colors">My Orders</Link></li>
+            <li><Link href="/wishlist" className="text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-white transition-colors">Wishlist</Link></li>
+            <li><Link href="/profile" className="text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-white transition-colors">Account</Link></li>
           </ul>
         </div>
 
         {/* Newsletter */}
         <div className="space-y-4">
           <h4 className="text-gray-900 dark:text-white font-medium text-lg">Stay Updated</h4>
-          <p className="text-gray-800 dark:text-zinc-200 text-sm text-gray-700 dark:text-zinc-300 text-background/80">Subscribe for exclusive deals and new arrivals.</p>
+          <p className="text-gray-800 dark:text-zinc-200 text-sm text-gray-700 dark:text-zinc-300 text-gray-700 dark:text-zinc-300">Subscribe for exclusive deals and new arrivals.</p>
           <div className="flex gap-2">
             <input
               type="email"
               placeholder="Your email address"
-              className="bg-transparent border border-background/30 rounded-lg px-4 py-2 text-sm w-full focus:outline-none focus:border-accent transition-colors"
+              className="bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-600 rounded-lg px-4 py-2 text-sm w-full text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-accent transition-colors"
               aria-label="Email address for newsletter"
             />
             <button
@@ -126,7 +126,7 @@ export function Footer() {
         {/* Connect With Us */}
         <div className="space-y-4">
           <h4 className="text-gray-900 dark:text-white font-medium text-lg">Connect With Us</h4>
-          <p className="text-gray-800 dark:text-zinc-200 text-sm text-gray-700 dark:text-zinc-300 text-background/80">Follow us on social media for daily beauty inspo.</p>
+          <p className="text-gray-800 dark:text-zinc-200 text-sm text-gray-700 dark:text-zinc-300 text-gray-700 dark:text-zinc-300">Follow us on social media for daily beauty inspo.</p>
           <div className="flex flex-wrap gap-3">
             {socials.map(({ label, href, icon: Icon, color }) => (
               <a
@@ -135,7 +135,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className={`h-10 w-10 rounded-full border border-background/25 bg-background/10 flex items-center justify-center transition-all duration-200 hover:scale-110 hover:border-transparent text-background/80 hover:text-white ${color}`}
+                className={`h-10 w-10 rounded-full border border-gray-300 dark:border-zinc-600 bg-background/10 flex items-center justify-center transition-all duration-200 hover:scale-110 hover:border-transparent text-gray-700 dark:text-zinc-300 hover:text-white ${color}`}
               >
                 <Icon />
               </a>
@@ -144,11 +144,11 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 mt-12 pt-8 border-t border-stone-200 dark:border-zinc-700 border-background/20 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-background/60">
+      <div className="container mx-auto px-4 mt-12 pt-8 border-t border-stone-200 dark:border-zinc-700 border-gray-200 dark:border-zinc-700 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500 dark:text-zinc-400">
         <p>&copy; {new Date().getFullYear()} EnvyEnhance. All rights reserved.</p>
         <div className="flex gap-4">
-          <a href="/privacy" className="hover:text-background transition-colors">Privacy Policy</a>
-          <a href="/terms" className="hover:text-background transition-colors">Terms of Service</a>
+          <a href="/privacy" className="text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white transition-colors">Privacy Policy</a>
+          <a href="/terms" className="text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white transition-colors">Terms of Service</a>
         </div>
       </div>
     </footer>
