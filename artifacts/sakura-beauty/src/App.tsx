@@ -295,15 +295,17 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   const flashSaleEnd = FLASH_SALE_END;
 
   return (
-    <div className="min-h-[100dvh] flex flex-col">
-      <FlashSaleBanner label="Flash Sale — Up to 30% Off" endsAt={flashSaleEnd} href="/products" />
-      <Navbar />
-      <main className="flex-1">
-        {children}
-      </main>
-      {pageReady && <Footer />}
-    </div>
-    <FloatingCartIcon />
+    <>
+      <div className="min-h-[100dvh] flex flex-col">
+        <FlashSaleBanner label="Flash Sale — Up to 30% Off" endsAt={flashSaleEnd} href="/products" />
+        <Navbar />
+        <main className="flex-1">
+          {children}
+        </main>
+        {pageReady && <Footer />}
+      </div>
+      <FloatingCartIcon />
+    </>
   );
 }
 
