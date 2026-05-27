@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { productQATable, ordersTable } from "@workspace/db";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, desc, gt } from "drizzle-orm";
 import { requireAuth, requireAdmin } from "../middlewares/auth";
 
 const router = Router();
@@ -57,6 +57,17 @@ router.post("/products/:productId/qa", requireAuth, async (req: any, res) => {
       return;
     }
 
+
+    // 1-hour cooldown per user
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const [recentQ] = await db.select().from(productQATable)
+      .where(and(eq(productQATable.userId, req.userId), gt(productQATable.createdAt, oneHourAgo)))
+      .orderBy(desc(productQATable.createdAt)).limit(1);
+    if (recentQ) {
+      const waitMin = Math.ceil((recentQ.createdAt.getTime() + 3600000 - Date.now()) / 60000);
+      res.status(429).json({ error: `You can ask another question in ${waitMin} minute${waitMin !== 1 ? "s" : ""}.` });
+      return;
+    }
     const dbUser = req.dbUser;
     const userName =
       `${dbUser?.firstName ?? ""} ${dbUser?.lastName ?? ""}`.trim() ||

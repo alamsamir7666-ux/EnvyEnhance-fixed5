@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Gift, Star, TrendingUp, ShoppingBag } from "lucide-react";
 import { updateSEO } from "@/lib/seo";
-import { useUser } from "@clerk/react";
+import { useUser, useAuth } from "@clerk/react";
 import { apiClient } from "@/lib/apiClient";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -26,10 +26,19 @@ function PointsBadge({ points }: { points: number }) {
 
 export default function LoyaltyPage() {
   const { user } = useUser();
+  const { getToken } = useAuth();
 
   const { data, isLoading } = useQuery({
     queryKey: ["loyalty"],
-    queryFn: () => apiClient.get("/api/loyalty/me").then((r) => r.data),
+    queryFn: async () => {
+      const token = await getToken();
+      const res = await fetch(
+        (import.meta.env.VITE_API_BASE_URL ?? "") + "/api/loyalty/me",
+        { headers: { Authorization: "Bearer " + token } }
+      );
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
     enabled: !!user,
   });
 

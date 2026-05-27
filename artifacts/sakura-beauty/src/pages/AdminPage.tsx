@@ -2574,17 +2574,26 @@ function QATab() {
   const [answerText, setAnswerText] = useState("");
   const [saving, setSaving] = useState(false);
 
+  const { getToken: getQAToken } = useAuth();
+  const API = import.meta.env.VITE_API_BASE_URL ?? "";
+
   useEffect(() => {
-    fetch("/api/admin/qa/unanswered", { credentials: "include" })
-      .then(r => r.json()).then(setQuestions).catch(() => {}).finally(() => setLoading(false));
+    (async () => {
+      try {
+        const token = await getQAToken();
+        const r = await fetch(`${API}/api/admin/qa/unanswered`, { headers: { Authorization: "Bearer " + token } });
+        setQuestions(await r.json());
+      } catch {} finally { setLoading(false); }
+    })();
   }, []);
 
   async function submitAnswer(id: number) {
     if (!answerText.trim() || answerText.trim().length < 2) return;
     setSaving(true);
     try {
-      const r = await fetch(`/api/admin/qa/${id}/answer`, {
-        method: "PUT", headers: { "Content-Type": "application/json" }, credentials: "include",
+      const token = await getQAToken();
+      const r = await fetch(`${API}/api/admin/qa/${id}/answer`, {
+        method: "PUT", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
         body: JSON.stringify({ answer: answerText.trim() }),
       });
       if (r.ok) {
@@ -2596,7 +2605,8 @@ function QATab() {
 
   async function deleteQuestion(id: number) {
     if (!confirm("Delete this question?")) return;
-    await fetch(`/api/admin/qa/${id}`, { method: "DELETE", credentials: "include" });
+    const token = await getQAToken();
+    await fetch(`${API}/api/admin/qa/${id}`, { method: "DELETE", headers: { Authorization: "Bearer " + token } });
     setQuestions(prev => prev.filter(q => q.id !== id));
   }
 

@@ -55,8 +55,12 @@ export function ProductQA({ productId }: { productId: number }) {
         setShowForm(false);
         setSubmitMsg("Your question has been submitted. We'll answer it shortly!");
         setTimeout(() => setSubmitMsg(""), 5000);
+      } else {
+        const err = await r.json().catch(() => ({}));
+        setSubmitMsg(err.error ?? "Failed to submit. Please try again.");
+        setTimeout(() => setSubmitMsg(""), 6000);
       }
-    } catch {}
+    } catch { setSubmitMsg("Network error. Please try again."); setTimeout(() => setSubmitMsg(""), 5000); }
     setSubmitting(false);
   }
 
@@ -108,7 +112,7 @@ export function ProductQA({ productId }: { productId: number }) {
       )}
 
       {submitMsg && (
-        <p className="text-sm text-green-600 mb-4 text-center">{submitMsg}</p>
+        <p className={`text-sm mb-4 text-center ${submitMsg.includes("question") ? "text-green-600" : "text-red-500"}`}>{submitMsg}</p>
       )}
 
       {loading ? (
