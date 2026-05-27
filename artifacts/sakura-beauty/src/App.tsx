@@ -46,9 +46,8 @@ import { useUser } from "@clerk/react";
 
 function TokenSync() {
   const { getToken, isSignedIn } = useAuth();
-  useEffect(() => {
-    setAuthTokenGetter(isSignedIn ? () => getToken() : null);
-  }, [getToken, isSignedIn]);
+  // Set synchronously so queries have token on first render
+  setAuthTokenGetter(isSignedIn ? () => getToken() : null);
   return null;
 }
 
