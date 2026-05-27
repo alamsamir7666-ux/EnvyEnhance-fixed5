@@ -63,7 +63,7 @@ const socials = [
 
 export function Footer() {
   return (
-    <footer className="bg-stone-100 text-stone-800 dark:bg-zinc-900 dark:text-zinc-100 py-16">
+    <footer className="bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-100 py-16">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Brand */}
         <div className="space-y-4 md:col-span-1">
@@ -71,14 +71,14 @@ export function Footer() {
             <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain dark:hidden" /><img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" alt="EnvyEnhance" className="h-10 w-auto max-w-[150px] object-contain hidden dark:block" /><span className="font-serif text-xl font-medium tracking-wide">EnvyEnhance</span>
             
           </div>
-          <p className="text-sm text-background/80 leading-relaxed">
+          <p className="text-gray-800 dark:text-zinc-200 text-sm text-gray-700 dark:text-zinc-300 text-background/80 leading-relaxed">
             EnvyEnhance brings you premium Japanese and other countries skincare, haircare, and body essentials. Get authentic products, best quality, and a smooth beauty experience — made to elevate your everyday glow. Discover beauty with us!
           </p>
         </div>
 
         {/* Support */}
         <div className="space-y-4">
-          <h4 className="font-medium text-lg">Support</h4>
+          <h4 className="text-gray-900 dark:text-white font-medium text-lg">Support</h4>
           <ul className="space-y-2 text-sm text-background/80">
             <li><Link href="/track" className="hover:text-accent transition-colors">Track Order</Link></li>
             <li><Link href="/orders" className="hover:text-accent transition-colors">My Orders</Link></li>
@@ -89,8 +89,8 @@ export function Footer() {
 
         {/* Newsletter */}
         <div className="space-y-4">
-          <h4 className="font-medium text-lg">Stay Updated</h4>
-          <p className="text-sm text-background/80">Subscribe for exclusive deals and new arrivals.</p>
+          <h4 className="text-gray-900 dark:text-white font-medium text-lg">Stay Updated</h4>
+          <p className="text-gray-800 dark:text-zinc-200 text-sm text-gray-700 dark:text-zinc-300 text-background/80">Subscribe for exclusive deals and new arrivals.</p>
           <div className="flex gap-2">
             <input
               type="email"
@@ -125,8 +125,8 @@ export function Footer() {
 
         {/* Connect With Us */}
         <div className="space-y-4">
-          <h4 className="font-medium text-lg">Connect With Us</h4>
-          <p className="text-sm text-background/80">Follow us on social media for daily beauty inspo.</p>
+          <h4 className="text-gray-900 dark:text-white font-medium text-lg">Connect With Us</h4>
+          <p className="text-gray-800 dark:text-zinc-200 text-sm text-gray-700 dark:text-zinc-300 text-background/80">Follow us on social media for daily beauty inspo.</p>
           <div className="flex flex-wrap gap-3">
             {socials.map(({ label, href, icon: Icon, color }) => (
               <a
