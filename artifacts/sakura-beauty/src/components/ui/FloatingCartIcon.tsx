@@ -28,7 +28,10 @@ export function FloatingCartIcon() {
   const ICON_SIZE = 56;
   const EDGE_SNAP = 16;
 
-  const [pos, setPos] = useState({ x: 300, y: 600 });
+  const [pos, setPos] = useState(() => ({
+    x: typeof window !== "undefined" ? window.innerWidth - 72 : 300,
+    y: typeof window !== "undefined" ? window.innerHeight * 0.75 : 600,
+  }));
   const isDragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0 });
   const hasMoved = useRef(false);
@@ -68,8 +71,7 @@ export function FloatingCartIcon() {
     const safeX = clamp(x, EDGE_SNAP, w - ICON_SIZE - EDGE_SNAP);
     const safeY = clamp(y, EDGE_SNAP + 64, h - ICON_SIZE - EDGE_SNAP);
     if (isMobile) {
-      const snapLeft = safeX < w / 2 ? EDGE_SNAP : w - ICON_SIZE - EDGE_SNAP;
-      return { x: snapLeft, y: safeY };
+      return { x: w - ICON_SIZE - EDGE_SNAP, y: safeY };
     }
     return { x: safeX, y: safeY };
   }
