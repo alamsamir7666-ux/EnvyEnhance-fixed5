@@ -28,7 +28,7 @@ export function FloatingCartIcon() {
   const ICON_SIZE = 56;
   const EDGE_SNAP = 16;
 
-  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [pos, setPos] = useState({ x: 300, y: 600 });
   const isDragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0 });
   const hasMoved = useRef(false);
