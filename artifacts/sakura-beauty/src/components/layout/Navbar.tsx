@@ -139,7 +139,7 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full hidden sm:flex">
                     {user?.imageUrl ? (
-                      <img src={resolvedTheme === "dark" ? "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" : "https://res.cloudinary.com/dcfbtdp6r/image/upload/w_200,f_auto,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg"} alt="EnvyEnhance" className="h-8 w-auto max-w-[140px] object-contain" />
+                      <img src={user.imageUrl} alt="Profile" className="h-7 w-7 rounded-full object-cover" />
           </Link>
           <Button variant="ghost" size="icon" onClick={() => setMobileOpen(false)}>
             <X className="h-5 w-5" />
