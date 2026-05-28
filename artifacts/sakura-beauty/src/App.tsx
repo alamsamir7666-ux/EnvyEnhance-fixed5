@@ -207,9 +207,10 @@ function ScrollManager() {
   // Detect back/forward navigation — capture leaving path before wouter updates
   useEffect(() => {
     const onPopState = () => {
-      saveScrollPosition(prevPathRef.current);
+      // Do NOT save here — scrollY is already 0 by the time popstate fires.
+      // The scroll listener already saved the correct position continuously.
       isPopStateRef.current = true;
-      console.log("[scroll] popstate fired, saved:", prevPathRef.current, "scrollY:", window.scrollY);
+      console.log("[scroll] popstate fired, prev:", prevPathRef.current);
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
