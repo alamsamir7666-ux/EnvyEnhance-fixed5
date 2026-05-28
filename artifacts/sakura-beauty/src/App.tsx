@@ -217,6 +217,7 @@ function ScrollManager() {
       // Do NOT save here — scrollY is already 0 by the time popstate fires.
       // The scroll listener already saved the correct position continuously.
       isPopStateRef.current = true;
+      console.log("[scroll] saved value for /:", sessionStorage.getItem("__scroll__/"));
       console.log("[scroll] popstate fired, prev:", prevPathRef.current);
     };
     window.addEventListener("popstate", onPopState);
