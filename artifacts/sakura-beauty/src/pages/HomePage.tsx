@@ -181,7 +181,7 @@ export function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative flex items-center overflow-hidden py-12 bg-gradient-to-br from-[#fdf6f0] via-[#fdf0f2] to-[#f0f5f2]">
+      <section className="relative flex items-center overflow-hidden pt-8 pb-6 bg-gradient-to-br [#f9f8f6]">
         <div
           className="absolute inset-0 opacity-30"
           style={{
