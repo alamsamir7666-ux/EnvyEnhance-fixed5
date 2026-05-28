@@ -209,6 +209,7 @@ function ScrollManager() {
     const onPopState = () => {
       saveScrollPosition(prevPathRef.current);
       isPopStateRef.current = true;
+      console.log("[scroll] popstate fired, saved:", prevPathRef.current, "scrollY:", window.scrollY);
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
@@ -249,6 +250,7 @@ function ScrollManager() {
         const viewportHeight = window.innerHeight;
 
         if (pageHeight - viewportHeight >= targetY || attempts >= MAX_ATTEMPTS) {
+          console.log("[scroll] restoring to:", targetY, "pageHeight:", pageHeight, "attempts:", attempts);
           window.scrollTo({ top: targetY, behavior: "instant" as ScrollBehavior });
           pendingScrollRef.current = null;
         } else {
