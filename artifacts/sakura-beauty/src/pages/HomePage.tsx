@@ -59,20 +59,7 @@ function CollectionSliderSkeleton() {
 function HomePageSkeleton() {
   return (
     <div className="min-h-screen">
-      <section className="relative min-h-[52vh] flex items-center bg-gradient-to-br from-[#fdf6f0] via-[#fdf0f2] to-[#f0f5f2]">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl space-y-6">
-            <div className="space-y-3">
-              <Skeleton className="h-16 w-4/5 md:h-20 lg:h-24" />
-              <Skeleton className="h-16 w-3/5 md:h-20 lg:h-24" />
-            </div>
-            <div className="flex gap-4">
-              <Skeleton className="h-12 w-36 rounded-full" />
-              <Skeleton className="h-12 w-36 rounded-full" />
-            </div>
-          </div>
-        </div>
-      </section>
+
       <CollectionSliderSkeleton />
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
