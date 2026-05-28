@@ -161,6 +161,10 @@ if (typeof window !== "undefined") {
 
 const SCROLL_KEY = (path: string) => `__scroll__${path}`;
 
+// Module-level flag — survives React render batching unlike a ref
+let _isPop = false;
+let _lastScrollY = 0;
+
 function saveScrollPosition(path: string) {
   try {
     sessionStorage.setItem(SCROLL_KEY(path), String(Math.round(window.scrollY)));
@@ -235,8 +239,9 @@ function ScrollManager() {
   useEffect(() => {
     prevPathRef.current = fullHref;
 
-    if (isPopStateRef.current) {
+    if (isPopStateRef.current || _isPop) {
       isPopStateRef.current = false;
+      _isPop = false;
       const targetY = readScrollPosition(fullHref);
       console.log("[scroll] reading key:", SCROLL_KEY(fullHref), "got:", targetY);
       pendingScrollRef.current = targetY;
