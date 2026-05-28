@@ -181,7 +181,7 @@ export function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative flex items-center overflow-hidden pt-8 pb-6 bg-gradient-to-br [#f9f8f6]">
+      <section className="relative flex items-center overflow-hidden pt-8 pb-0 bg-gradient-to-br [#f9f8f6]">
         <div
           className="absolute inset-0 opacity-30"
           style={{
@@ -190,7 +190,7 @@ export function HomePage() {
           }}
         />
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-2xl">
+          <div className="max-w-2xl pb-8">
             <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl font-medium leading-[0.95] mb-10 text-foreground">
               Glow with
               <br />
