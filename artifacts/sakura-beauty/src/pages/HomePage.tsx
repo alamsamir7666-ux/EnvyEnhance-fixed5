@@ -191,7 +191,7 @@ export function HomePage() {
         />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-2xl pb-8">
-            <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl font-medium leading-[0.95] mb-10 text-foreground">
+            <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl font-medium leading-[0.95] mb-0 text-foreground">
               Glow with
               <br />
               <em className="text-accent not-italic">purpose.</em>
