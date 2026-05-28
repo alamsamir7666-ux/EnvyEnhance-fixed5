@@ -192,13 +192,20 @@ function ScrollManager() {
   const isPopStateRef = useRef(false);
   const pendingScrollRef = useRef<number | null>(null);
 
-  // Save scroll on every scroll event + pagehide (covers bfcache)
+  // Track last known scrollY in a ref so cleanup can save correct value
+  const lastScrollYRef = useRef(0);
   useEffect(() => {
-    const save = () => saveScrollPosition(fullHref);
+    const save = () => {
+      lastScrollYRef.current = window.scrollY;
+      saveScrollPosition(fullHref);
+    };
     window.addEventListener("scroll", save, { passive: true });
     window.addEventListener("pagehide", save);
     return () => {
-      saveScrollPosition(fullHref); // flush on unmount / route change
+      // Save using the last known scrollY, not window.scrollY (which may be 0 already)
+      try {
+        sessionStorage.setItem(SCROLL_KEY(fullHref), String(Math.round(lastScrollYRef.current)));
+      } catch (_) {}
       window.removeEventListener("scroll", save);
       window.removeEventListener("pagehide", save);
     };
