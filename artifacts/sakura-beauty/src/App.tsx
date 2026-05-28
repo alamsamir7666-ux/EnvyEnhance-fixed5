@@ -238,6 +238,7 @@ function ScrollManager() {
     if (isPopStateRef.current) {
       isPopStateRef.current = false;
       const targetY = readScrollPosition(fullHref);
+      console.log("[scroll] reading key:", SCROLL_KEY(fullHref), "got:", targetY);
       pendingScrollRef.current = targetY;
 
       if (targetY === 0) {
