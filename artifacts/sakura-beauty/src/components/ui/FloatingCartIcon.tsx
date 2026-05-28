@@ -14,7 +14,7 @@ function clamp(val: number, min: number, max: number) {
 export function FloatingCartIcon() {
   const { user } = useUser();
   const [, navigate] = useLocation();
-  const { data: cart } = useGetCart({
+  const { data: cart, isLoading } = useGetCart({
     query: { enabled: !!user, retry: false, queryKey: getGetCartQueryKey() },
   });
   const guestCart = useGuestCart();
@@ -57,12 +57,12 @@ export function FloatingCartIcon() {
       setVisible(true);
       setTimeout(() => setAnimateIn(true), 50);
       return undefined;
-    } else {
+    } else if (!isLoading) {
       setAnimateIn(false);
       const t = setTimeout(() => setVisible(false), 300);
       return () => clearTimeout(t);
     }
-  }, [cartItemCount]);
+  }, [cartItemCount, isLoading]);
 
   function snapToEdge(x: number, y: number) {
     const w = window.innerWidth;
