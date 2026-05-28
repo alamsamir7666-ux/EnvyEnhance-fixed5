@@ -207,13 +207,19 @@ function ScrollManager() {
   // Detect back/forward navigation — capture leaving path before wouter updates
   useEffect(() => {
     const onPopState = () => {
-      // Save using full href captured before wouter updates
       saveScrollPosition(prevPathRef.current);
       isPopStateRef.current = true;
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
+
+  // Flush scroll position on every navigation (belt-and-suspenders)
+  useEffect(() => {
+    const onBeforeUnload = () => saveScrollPosition(fullHref);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [fullHref]);
 
   // Handle scroll on route change
   useEffect(() => {
@@ -234,8 +240,8 @@ function ScrollManager() {
       // MAX_ATTEMPTS × INTERVAL_MS = max wait time before giving up.
       // Increased to handle slow API responses on all pages.
       let attempts = 0;
-      const MAX_ATTEMPTS = 25;
-      const INTERVAL_MS = 80;
+      const MAX_ATTEMPTS = 50;
+      const INTERVAL_MS = 100;
 
       function tryScroll() {
         if (pendingScrollRef.current === null) return; // cancelled
