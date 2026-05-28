@@ -153,7 +153,132 @@ function ClerkQueryClientCacheInvalidator() {
   return null;
 }
 
-// ScrollManager moved to @/components/ui/ScrollManager
+// Must be set at module level — before any component renders — so the browser
+// never auto-scrolls on popstate before we can intercept it.
+if (typeof window !== "undefined") {
+  window.history.scrollRestoration = "manual";
+}
+
+const SCROLL_KEY = (path: string) => `__scroll__${path}`;
+
+function saveScrollPosition(path: string) {
+  try {
+    sessionStorage.setItem(SCROLL_KEY(path), String(Math.round(window.scrollY)));
+  } catch (_) {}
+}
+
+function readScrollPosition(path: string): number {
+  try {
+    const v = sessionStorage.getItem(SCROLL_KEY(path));
+    return v ? parseInt(v, 10) : 0;
+  } catch (_) { return 0; }
+}
+
+// Fixed ScrollManager — handles async/data-fetching pages correctly.
+// Root cause of the original bug: double-rAF fired before data-fetching pages
+// finished rendering their full content, so scrollTo(y) landed on a skeleton
+// page that was still short. The page then grew below the viewport.
+//
+// Fix: poll body.scrollHeight every 80ms until the page is tall enough to
+// accommodate the saved Y position, then scroll. Self-cancels on new navigation.
+function ScrollManager() {
+  // Use full URL (pathname + search) as the scroll key so back/forward
+  // across filter/search state (?q=, ?category=) is correctly restored.
+  const [location] = useLocation();
+  const fullHref = typeof window !== "undefined"
+    ? window.location.pathname + window.location.search
+    : location;
+  const prevPathRef = useRef(fullHref);
+  const isPopStateRef = useRef(false);
+  const pendingScrollRef = useRef<number | null>(null);
+
+  // Track last known scrollY in a ref so cleanup can save correct value
+  const lastScrollYRef = useRef(0);
+  useEffect(() => {
+    const save = () => {
+      lastScrollYRef.current = window.scrollY;
+      saveScrollPosition(fullHref);
+    };
+    window.addEventListener("scroll", save, { passive: true });
+    window.addEventListener("pagehide", save);
+    return () => {
+      // Save using the last known scrollY, not window.scrollY (which may be 0 already)
+      try {
+        sessionStorage.setItem(SCROLL_KEY(fullHref), String(Math.round(lastScrollYRef.current)));
+      } catch (_) {}
+      window.removeEventListener("scroll", save);
+      window.removeEventListener("pagehide", save);
+    };
+  }, [fullHref]);
+
+  // Detect back/forward navigation — capture leaving path before wouter updates
+  useEffect(() => {
+    const onPopState = () => {
+      // Do NOT save here — scrollY is already 0 by the time popstate fires.
+      // The scroll listener already saved the correct position continuously.
+      isPopStateRef.current = true;
+      console.log("[scroll] saved value for /:", sessionStorage.getItem("__scroll__/"));
+      console.log("[scroll] popstate fired, prev:", prevPathRef.current);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  // Flush scroll position on every navigation (belt-and-suspenders)
+  useEffect(() => {
+    const onBeforeUnload = () => saveScrollPosition(fullHref);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [fullHref]);
+
+  // Handle scroll on route change
+  useEffect(() => {
+    prevPathRef.current = fullHref;
+
+    if (isPopStateRef.current) {
+      isPopStateRef.current = false;
+      const targetY = readScrollPosition(fullHref);
+      console.log("[scroll] reading key:", SCROLL_KEY(fullHref), "got:", targetY);
+      pendingScrollRef.current = targetY;
+
+      if (targetY === 0) {
+        window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+        pendingScrollRef.current = null;
+        return;
+      }
+
+      // Poll until page is tall enough, then scroll.
+      // MAX_ATTEMPTS × INTERVAL_MS = max wait time before giving up.
+      // Increased to handle slow API responses on all pages.
+      let attempts = 0;
+      const MAX_ATTEMPTS = 50;
+      const INTERVAL_MS = 100;
+
+      function tryScroll() {
+        if (pendingScrollRef.current === null) return; // cancelled
+        const pageHeight = document.body.scrollHeight;
+        const viewportHeight = window.innerHeight;
+
+        if (pageHeight - viewportHeight >= targetY || attempts >= MAX_ATTEMPTS) {
+          console.log("[scroll] restoring to:", targetY, "pageHeight:", pageHeight, "attempts:", attempts);
+          window.scrollTo({ top: targetY, behavior: "instant" as ScrollBehavior });
+          pendingScrollRef.current = null;
+        } else {
+          attempts++;
+          setTimeout(tryScroll, INTERVAL_MS);
+        }
+      }
+
+      requestAnimationFrame(() => requestAnimationFrame(tryScroll));
+    } else {
+      // Forward navigation — cancel pending restoration and go to top
+      pendingScrollRef.current = null;
+      window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    }
+  }, [fullHref]);
+
+  return null;
+}
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   return (
