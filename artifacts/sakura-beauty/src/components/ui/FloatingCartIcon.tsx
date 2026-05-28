@@ -1,84 +1,72 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ShoppingBag } from "lucide-react";
 import { useLocation } from "wouter";
 import { useGetCart, getGetCartQueryKey } from "@workspace/api-client-react";
 import { useUser } from "@clerk/react";
 import { useGuestCart } from "@/hooks/useGuestCart";
 
-const STORAGE_KEY = "sakura_cart_icon_pos_v2";
+const STORAGE_KEY = "sakura_float_v3";
+const ICON_SIZE = 56;
+const EDGE = 16;
 
-function clamp(val: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, val));
+function clamp(v: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, v));
 }
 
 export function FloatingCartIcon() {
   const { user } = useUser();
   const [, navigate] = useLocation();
-  const { data: cart, isLoading } = useGetCart({
-    query: { enabled: !!user, retry: false, queryKey: getGetCartQueryKey() },
+  const { data: cart } = useGetCart({
+    query: { enabled: !!user, queryKey: getGetCartQueryKey() },
   });
   const guestCart = useGuestCart();
 
-  const serverCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
-  const cartItemCount = user ? (serverCount || guestCart.totalCount) : guestCart.totalCount;
+  const serverCount = cart?.items?.reduce((s, i) => s + i.quantity, 0) ?? 0;
+  const count = user ? serverCount : guestCart.totalCount;
 
-  const [visible, setVisible] = useState(false);
-  const [animateIn, setAnimateIn] = useState(false);
-  const [pos, setPos] = useState({ x: -200, y: -200 }); // off-screen until useEffect
-
-  const ICON_SIZE = 56;
-  const EDGE_SNAP = 16;
-
+  const [pos, setPos] = useState({ x: -999, y: -999 });
   const isDragging = useRef(false);
-  const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0 });
+  const dragStart = useRef({ x: 0, y: 0, px: 0, py: 0 });
   const hasMoved = useRef(false);
-  const iconRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Set correct position after mount
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const p = JSON.parse(saved);
-        if (p.x > 0 && p.y > 0) {
-          setPos({ x: p.x, y: p.y });
+      const s = localStorage.getItem(STORAGE_KEY);
+      if (s) {
+        const p = JSON.parse(s);
+        if (p.x > 0 && p.y > 0 && p.x < window.innerWidth && p.y < window.innerHeight) {
+          setPos(p);
           return;
         }
       }
     } catch {}
     setPos({
-      x: window.innerWidth - ICON_SIZE - EDGE_SNAP,
+      x: window.innerWidth - ICON_SIZE - EDGE,
       y: window.innerHeight * 0.75,
     });
   }, []);
 
+  // Recalculate on resize/orientation change
   useEffect(() => {
-    if (cartItemCount > 0) {
-      setVisible(true);
-      setTimeout(() => setAnimateIn(true), 50);
-      return undefined;
-    } else if (!isLoading) {
-      setAnimateIn(false);
-      const t = setTimeout(() => setVisible(false), 300);
-      return () => clearTimeout(t);
-    }
-  }, [cartItemCount, isLoading]);
+    const onResize = () => {
+      setPos(prev => {
+        const x = clamp(prev.x, EDGE, window.innerWidth - ICON_SIZE - EDGE);
+        const y = clamp(prev.y, EDGE + 64, window.innerHeight - ICON_SIZE - EDGE);
+        return { x, y };
+      });
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
-  function snapToEdge(x: number, y: number) {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const safeX = clamp(x, EDGE_SNAP, w - ICON_SIZE - EDGE_SNAP);
-    const safeY = clamp(y, EDGE_SNAP + 64, h - ICON_SIZE - EDGE_SNAP);
-    // Always snap to right edge on mobile
-    if (w < 768) return { x: w - ICON_SIZE - EDGE_SNAP, y: safeY };
-    return { x: safeX, y: safeY };
-  }
+  if (count === 0) return null;
 
   function onPointerDown(e: React.PointerEvent) {
     isDragging.current = true;
     hasMoved.current = false;
-    dragStart.current = { x: e.clientX, y: e.clientY, posX: pos.x, posY: pos.y };
-    iconRef.current?.setPointerCapture(e.pointerId);
+    dragStart.current = { x: e.clientX, y: e.clientY, px: pos.x, py: pos.y };
+    ref.current?.setPointerCapture(e.pointerId);
   }
 
   function onPointerMove(e: React.PointerEvent) {
@@ -87,24 +75,25 @@ export function FloatingCartIcon() {
     const dy = e.clientY - dragStart.current.y;
     if (Math.abs(dx) > 4 || Math.abs(dy) > 4) hasMoved.current = true;
     setPos({
-      x: clamp(dragStart.current.posX + dx, EDGE_SNAP, window.innerWidth - ICON_SIZE - EDGE_SNAP),
-      y: clamp(dragStart.current.posY + dy, EDGE_SNAP + 64, window.innerHeight - ICON_SIZE - EDGE_SNAP),
+      x: clamp(dragStart.current.px + dx, EDGE, window.innerWidth - ICON_SIZE - EDGE),
+      y: clamp(dragStart.current.py + dy, EDGE + 64, window.innerHeight - ICON_SIZE - EDGE),
     });
   }
 
-  function onPointerUp(_e: React.PointerEvent) {
+  function onPointerUp() {
     isDragging.current = false;
-    const snapped = snapToEdge(pos.x, pos.y);
-    setPos(snapped);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(snapped));
+    const final = {
+      x: window.innerWidth < 768 ? window.innerWidth - ICON_SIZE - EDGE : pos.x,
+      y: clamp(pos.y, EDGE + 64, window.innerHeight - ICON_SIZE - EDGE),
+    };
+    setPos(final);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(final));
     if (!hasMoved.current) navigate("/cart");
   }
 
-  if (!visible) return null;
-
   return (
     <div
-      ref={iconRef}
+      ref={ref}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
@@ -115,21 +104,16 @@ export function FloatingCartIcon() {
         width: ICON_SIZE,
         height: ICON_SIZE,
         zIndex: 9999,
-        cursor: isDragging.current ? "grabbing" : "grab",
         touchAction: "none",
         userSelect: "none",
-        transition: isDragging.current ? "none" : "opacity 0.3s, transform 0.3s",
-        opacity: animateIn ? 1 : 0,
-        transform: animateIn ? "scale(1)" : "scale(0.6)",
+        cursor: "grab",
       }}
     >
       <div className="relative w-full h-full rounded-full bg-foreground shadow-2xl flex items-center justify-center border-2 border-background/20">
         <ShoppingBag className="h-6 w-6 text-background" />
-        {cartItemCount > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-accent text-accent-foreground text-[10px] font-bold flex items-center justify-center border-2 border-background shadow">
-            {cartItemCount > 99 ? "99+" : cartItemCount}
-          </span>
-        )}
+        <span className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-accent text-accent-foreground text-[10px] font-bold flex items-center justify-center border-2 border-background shadow">
+          {count > 99 ? "99+" : count}
+        </span>
       </div>
     </div>
   );
