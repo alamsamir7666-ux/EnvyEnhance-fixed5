@@ -76,7 +76,7 @@ const clerkAppearance = {
   options: {
     logoPlacement: "inside" as const,
     logoLinkUrl: basePath || "/",
-    logoImageUrl: `${window.location.origin}${basePath}/logo.svg`,
+    logoImageUrl: `${window.location.origin}/logo.svg`,
   },
   variables: {
     colorPrimary: "hsl(20 10% 18%)",
@@ -107,8 +107,8 @@ const clerkAppearance = {
     alertText: "text-destructive",
     logoBox: "flex justify-center mb-2",
     logoImage: "h-10 w-auto",
-    socialButtonsBlockButton: "border border-border hover:bg-muted/50",
-    formButtonPrimary: "bg-primary text-primary-foreground hover:bg-primary/90 font-medium",
+    socialButtonsBlockButton: "border border-border hover:bg-muted/50 rounded-full h-11 font-medium transition-all",
+    formButtonPrimary: "bg-primary text-primary-foreground hover:bg-primary/90 font-medium rounded-full h-11 tracking-wide",
     footerAction: "bg-muted/30 pb-6 pt-4",
     dividerLine: "bg-border",
     alert: "bg-destructive/10 border-destructive/20 text-destructive",
