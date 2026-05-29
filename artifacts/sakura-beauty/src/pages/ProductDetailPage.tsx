@@ -308,6 +308,72 @@ export function ProductDetailPage() {
               )}
             </div>
 
+            <div className="flex items-center gap-2 mb-4">
+              {product.stock === 0 ? (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
+                  Out of stock
+                </span>
+              ) : product.stock <= 3 ? (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-600 text-sm font-semibold animate-pulse">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  Only {product.stock} left!
+                </span>
+              ) : product.stock <= 10 ? (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-sm font-medium">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  Only {product.stock} left
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 border border-green-200 text-green-700 text-sm font-medium">
+                  In stock
+                </span>
+              )}
+            </div>
+
+            {/* Quantity + actions */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="inline-flex items-center border border-border rounded-full h-11">
+                <button
+                  onClick={() => setQty(Math.max(1, qty - 1))}
+                  className="h-full px-3.5 flex items-center justify-center text-muted-foreground hover:text-foreground rounded-l-full transition-colors"
+                  aria-label="Decrease quantity"
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+                <span className="w-10 font-medium text-center select-none tabular-nums text-sm">{qty}</span>
+                <button
+                  onClick={() => setQty(Math.min(product.stock, qty + 1))}
+                  className="h-full px-3.5 flex items-center justify-center text-muted-foreground hover:text-foreground rounded-r-full transition-colors"
+                  aria-label="Increase quantity"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+              <Button
+                className={`flex-1 rounded-full transition-all duration-200 ${justAdded ? "bg-green-600 hover:bg-green-600" : ""}`}
+                size="lg"
+                onClick={handleAddToCart}
+                disabled={product.stock === 0 || addToCart.isPending}
+              >
+                {justAdded ? (
+                  <><Check className="h-4 w-4 mr-2" /> Added to Bag</>
+                ) : (
+                  <><ShoppingBag className="h-4 w-4 mr-2" /> Add to Bag</>
+                )}
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full h-12 w-12"
+                onClick={handleWishlist}
+              >
+                <Heart className={`h-5 w-5 ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`} />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+
             <p className="text-muted-foreground leading-relaxed mb-6">{product.description}</p>
 
             {/* Key Benefits */}
@@ -384,70 +450,6 @@ export function ProductDetailPage() {
               </details>
             )}
 
-            <div className="flex items-center gap-2 mb-4">
-              {product.stock === 0 ? (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
-                  Out of stock
-                </span>
-              ) : product.stock <= 3 ? (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-600 text-sm font-semibold animate-pulse">
-                  <AlertTriangle className="h-3.5 w-3.5" />
-                  Only {product.stock} left!
-                </span>
-              ) : product.stock <= 10 ? (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-sm font-medium">
-                  <AlertTriangle className="h-3.5 w-3.5" />
-                  Only {product.stock} left
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 border border-green-200 text-green-700 text-sm font-medium">
-                  In stock
-                </span>
-              )}
-            </div>
-
-            {/* Quantity + actions */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="inline-flex items-center border border-border rounded-full h-11">
-                <button
-                  onClick={() => setQty(Math.max(1, qty - 1))}
-                  className="h-full px-3.5 flex items-center justify-center text-muted-foreground hover:text-foreground rounded-l-full transition-colors"
-                  aria-label="Decrease quantity"
-                >
-                  <Minus className="h-4 w-4" />
-                </button>
-                <span className="w-10 font-medium text-center select-none tabular-nums text-sm">{qty}</span>
-                <button
-                  onClick={() => setQty(Math.min(product.stock, qty + 1))}
-                  className="h-full px-3.5 flex items-center justify-center text-muted-foreground hover:text-foreground rounded-r-full transition-colors"
-                  aria-label="Increase quantity"
-                >
-                  <Plus className="h-4 w-4" />
-                </button>
-              </div>
-              <Button
-                className={`flex-1 rounded-full transition-all duration-200 ${justAdded ? "bg-green-600 hover:bg-green-600" : ""}`}
-                size="lg"
-                onClick={handleAddToCart}
-                disabled={product.stock === 0 || addToCart.isPending}
-              >
-                {justAdded ? (
-                  <><Check className="h-4 w-4 mr-2" /> Added to Bag</>
-                ) : (
-                  <><ShoppingBag className="h-4 w-4 mr-2" /> Add to Bag</>
-                )}
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full h-12 w-12"
-                onClick={handleWishlist}
-              >
-                <Heart className={`h-5 w-5 ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`} />
-              </Button>
-            </div>
-          </div>
-        </div>
 
         {/* Reviews */}
         <section className="border-t pt-12 mb-16">
