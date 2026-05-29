@@ -106,7 +106,7 @@ const clerkAppearance = {
     formFieldSuccessText: "text-green-600",
     alertText: "text-destructive",
     logoBox: "flex justify-center mb-2",
-    logoImage: "h-10 w-auto rounded-full object-cover",
+    logoImage: "h-12 w-12 rounded-full object-cover object-center",
     socialButtonsBlockButton: "border border-border hover:bg-muted/50 rounded-full h-11 font-medium transition-all",
     formButtonPrimary: "bg-primary text-primary-foreground hover:bg-primary/90 font-medium rounded-full h-11 tracking-wide",
     footerAction: "bg-muted/30 pb-6 pt-4",
