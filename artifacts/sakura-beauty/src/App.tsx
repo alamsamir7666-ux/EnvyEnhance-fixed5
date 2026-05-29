@@ -91,7 +91,7 @@ const clerkAppearance = {
     borderRadius: "0.5rem",
   },
   elements: {
-    rootBox: "w-full flex justify-center",
+    rootBox: "w-full flex justify-center min-h-[500px] items-start pt-4",
     cardBox: "bg-card rounded-xl w-[440px] max-w-full overflow-hidden border border-border shadow-lg",
     card: "!shadow-none !border-0 !bg-transparent",
     footer: "!shadow-none !border-0 !bg-transparent",
