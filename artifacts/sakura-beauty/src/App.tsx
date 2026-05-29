@@ -239,6 +239,7 @@ function ScrollManager() {
   useEffect(() => {
     prevPathRef.current = fullHref;
 
+    console.log("[scroll] effect ran, fullHref:", fullHref, "_isPop:", _isPop, "isPopRef:", isPopStateRef.current);
     if (isPopStateRef.current || _isPop) {
       isPopStateRef.current = false;
       _isPop = false;
