@@ -239,12 +239,9 @@ function ScrollManager() {
   useEffect(() => {
     prevPathRef.current = fullHref;
 
-    console.log("[scroll] effect ran, fullHref:", fullHref, "_isPop:", _isPop, "isPopRef:", isPopStateRef.current);
-    if (isPopStateRef.current || _isPop) {
-      isPopStateRef.current = false;
-      _isPop = false;
-      const targetY = readScrollPosition(fullHref);
-      console.log("[scroll] reading key:", SCROLL_KEY(fullHref), "got:", targetY);
+    const targetY = readScrollPosition(fullHref);
+    console.log("[scroll] effect ran, fullHref:", fullHref, "savedY:", targetY);
+    if (targetY > 0) {
       pendingScrollRef.current = targetY;
 
       if (targetY === 0) {
@@ -277,7 +274,6 @@ function ScrollManager() {
 
       requestAnimationFrame(() => requestAnimationFrame(tryScroll));
     } else {
-      // Forward navigation — cancel pending restoration and go to top
       pendingScrollRef.current = null;
       window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
     }
