@@ -76,7 +76,7 @@ const clerkAppearance = {
   options: {
     logoPlacement: "inside" as const,
     logoLinkUrl: basePath || "/",
-    logoImageUrl: `${window.location.origin}/logo.webp`,
+    logoImageUrl: 'https://res.cloudinary.com/dcfbtdp6r/image/upload/q_auto/f_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg',
   },
   variables: {
     colorPrimary: "hsl(20 10% 18%)",
