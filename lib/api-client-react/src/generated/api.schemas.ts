@@ -204,6 +204,9 @@ export interface CreateOrderBody {
   shippingAddress: AddressBody;
   /** @nullable */
   couponCode?: string | null;
+  giftWrap?: boolean;
+  /** @nullable */
+  giftMessage?: string | null;
 }
 
 export interface UpdateOrderStatusBody {
