@@ -155,6 +155,8 @@ router.post("/orders", requireAuth, async (req: any, res) => {
         shippingAddress,
         couponCode: couponCode ?? null,
         discountAmount: String(discountAmount),
+		giftWrap: giftWrap ? "true" : "false",
+		giftMessage: giftMessage ?? null,
       })
       .returning();
 
