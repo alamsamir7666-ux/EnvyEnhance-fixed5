@@ -40,6 +40,7 @@ export function Navbar() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [accountExpanded, setAccountExpanded] = useState(false);
   const { theme, setTheme } = useTheme();
   const guestCart = useGuestCart();
 
@@ -226,7 +227,7 @@ export function Navbar() {
               variant="ghost"
               size="icon"
               className="md:hidden"
-              onClick={() => setMobileOpen((v) => !v)}
+              onClick={() => { setMobileOpen((v) => !v); setAccountExpanded(false); }}
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -266,9 +267,6 @@ export function Navbar() {
         </div>
 
         <nav className="flex-1 overflow-y-auto py-2 scrollbar-hide">
-          <div className="px-4 py-3">
-            <SearchAutocomplete onClose={() => setMobileOpen(false)} />
-          </div>
           <div className="py-1">
           <Link href="/" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/" ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Home className="h-[21px] w-[21px] shrink-0" />Home</Link>
 
@@ -317,7 +315,11 @@ export function Navbar() {
             </div>
           </Show>
           <Show when="signed-in">
-            <div className="flex items-center gap-3 px-5 py-3.5 border-b">
+            {/* User info row with expand toggle */}
+            <button
+              className="w-full flex items-center gap-3 px-5 py-3.5 hover:bg-muted/30 transition-colors"
+              onClick={() => setAccountExpanded(v => !v)}
+            >
               {user?.imageUrl ? (
                 <img src={user.imageUrl} alt="Profile" className="h-10 w-10 rounded-full object-cover shrink-0" />
               ) : (
@@ -325,19 +327,32 @@ export function Navbar() {
                   <UserIcon className="h-5 w-5 text-accent" />
                 </div>
               )}
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-1 text-left">
                 <p className="font-semibold text-sm truncate">{user?.firstName} {user?.lastName}</p>
                 <p className="text-xs text-muted-foreground truncate">{user?.emailAddresses[0]?.emailAddress}</p>
               </div>
-            </div>
+              {accountExpanded
+                ? <X className="h-4 w-4 text-muted-foreground shrink-0" />
+                : <Menu className="h-4 w-4 text-muted-foreground shrink-0" />
+              }
+            </button>
+
+            {/* Always visible: Profile */}
             <Link href="/profile" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><UserIcon className="h-[21px] w-[21px] shrink-0" />Profile</Link>
-            <Link href="/orders" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Package className="h-[21px] w-[21px] shrink-0" />My Orders</Link>
-            <Link href="/loyalty" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Star className="h-[21px] w-[21px] shrink-0" />Loyalty Points</Link>
-            <Link href="/referral" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Share2 className="h-[21px] w-[21px] shrink-0" />Refer a Friend</Link>
-            <Link href="/wishlist" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Heart className="h-[21px] w-[21px] shrink-0" />Wishlist</Link>
-            {isAdmin && (
-              <Link href="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Settings className="h-[21px] w-[21px] shrink-0" />Admin Dashboard</Link>
+
+            {/* Collapsible items */}
+            {accountExpanded && (
+              <>
+                <Link href="/orders" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Package className="h-[21px] w-[21px] shrink-0" />My Orders</Link>
+                <Link href="/loyalty" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Star className="h-[21px] w-[21px] shrink-0" />Loyalty Points</Link>
+                <Link href="/referral" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Share2 className="h-[21px] w-[21px] shrink-0" />Refer a Friend</Link>
+                <Link href="/wishlist" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Heart className="h-[21px] w-[21px] shrink-0" />Wishlist</Link>
+                {isAdmin && (
+                  <Link href="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Settings className="h-[21px] w-[21px] shrink-0" />Admin Dashboard</Link>
+                )}
+              </>
             )}
+
             <div className="h-px bg-border mx-4 my-1" />
             <button onClick={() => { signOut(); setMobileOpen(false); }} className="w-full flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-destructive hover:bg-destructive/5 transition-colors">
               <LogOut className="h-[21px] w-[21px] shrink-0" />Log out
