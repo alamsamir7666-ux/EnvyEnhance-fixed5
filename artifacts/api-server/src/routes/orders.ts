@@ -32,6 +32,8 @@ function formatOrder(o: typeof ordersTable.$inferSelect) {
     couponCode: o.couponCode,
     discountAmount: Number(o.discountAmount),
     cancellationReason: o.cancellationReason ?? null,
+    giftWrap: o.giftWrap ?? "false",
+    giftMessage: o.giftMessage ?? null,
     createdAt: o.createdAt.toISOString(),
     updatedAt: o.updatedAt.toISOString(),
   };
