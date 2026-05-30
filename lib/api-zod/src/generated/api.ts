@@ -564,7 +564,9 @@ export const CreateOrderBody = zod.object({
   "postalCode": zod.string().nullish(),
   "isDefault": zod.boolean().optional()
 }),
-  "couponCode": zod.string().nullish()
+  "couponCode": zod.string().nullish(),
+  "giftWrap": zod.boolean().optional(),
+  "giftMessage": zod.string().nullish()
 })
 
 
