@@ -105,7 +105,7 @@ export function ProfilePage() {
                     <div className="bg-card border rounded-xl p-4 hover:shadow-sm transition-shadow cursor-pointer">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium">Order #{recentOrders.length - index}</p>
+                          <p className="text-sm font-medium">Order #{(orders ?? []).length - index}</p>
                           <p className="text-xs text-muted-foreground mt-0.5">{new Date(order.createdAt).toLocaleDateString()}</p>
                         </div>
                         <div className="text-right">
