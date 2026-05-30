@@ -102,3 +102,7 @@ CREATE TABLE IF NOT EXISTS loyalty_transactions (
   order_id INTEGER,
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+-- Add gift wrap columns to orders
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS gift_wrap TEXT DEFAULT 'false';
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS gift_message TEXT;
