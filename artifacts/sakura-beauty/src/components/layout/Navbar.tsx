@@ -245,72 +245,43 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       <div
-        className={`fixed top-0 left-0 z-50 h-full w-72 bg-background shadow-2xl transform transition-transform duration-300 ease-out md:hidden flex flex-col ${
+        className={`fixed top-0 left-0 z-50 h-full w-[300px] bg-background shadow-2xl transform transition-transform duration-300 ease-out md:hidden flex flex-col ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between px-5 h-16 border-b shrink-0">
+        <div className="flex items-center justify-between px-4 py-4 border-b shrink-0">
           <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-            <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-8 w-auto max-w-[140px] object-contain dark:hidden" /><img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" alt="EnvyEnhance" className="h-8 w-auto max-w-[140px] object-contain hidden dark:block" />
+            <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-8 w-auto max-w-[130px] object-contain dark:hidden" />
+            <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" alt="EnvyEnhance" className="h-8 w-auto max-w-[130px] object-contain hidden dark:block" />
           </Link>
-          <Button variant="ghost" size="icon" onClick={() => setMobileOpen(false)}>
-            <X className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center gap-1.5">
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-muted/50" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} aria-label="Toggle dark mode">
+              <Sun className="h-4 w-4 dark:hidden" />
+              <Moon className="h-4 w-4 hidden dark:block" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-muted/50" onClick={() => setMobileOpen(false)}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1">
-          <div className="mb-4">
+        <nav className="flex-1 overflow-y-auto py-2 scrollbar-hide">
+          <div className="px-4 py-3">
             <SearchAutocomplete onClose={() => setMobileOpen(false)} />
           </div>
-          <Link
-            href="/"
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-              location === "/" ? "bg-accent/10 text-accent" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-            }`}
-          >
-            <Home className="h-4 w-4 shrink-0" />
-            Home
-          </Link>
+          <div className="py-1">
+          <Link href="/" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/" ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Home className="h-[21px] w-[21px] shrink-0" />Home</Link>
 
-          <Link
-            href="/products"
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-              location === "/products" && !activeCategory
-                ? "bg-accent/10 text-accent"
-                : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-            }`}
-          >
-            <Sparkles className="h-4 w-4 shrink-0" />
-            Shop All
-          </Link>
+          <Link href="/products" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/products" && !activeCategory ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Sparkles className="h-[21px] w-[21px] shrink-0" />Shop All</Link>
 
-          <Link
-            href="/quiz"
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-              location === "/quiz"
-                ? "bg-accent/10 text-accent"
-                : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-            }`}
-          >
-            <Sparkles className="h-4 w-4 shrink-0" />
-            Skin Quiz
-          </Link>
+          <Link href="/quiz" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/quiz" ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Sparkles className="h-[21px] w-[21px] shrink-0" />Skin Quiz</Link>
 
-          <Link
-            href="/blog"
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-              location === "/blog"
-                ? "bg-accent/10 text-accent"
-                : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-            }`}
-          >
-            <Sparkles className="h-4 w-4 shrink-0" />
-            Skincare Blog
-          </Link>
+          <Link href="/blog" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/blog" ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Sparkles className="h-[21px] w-[21px] shrink-0" />Skincare Blog</Link>
+          </div>
 
-          <p className="text-xs uppercase tracking-widest text-muted-foreground/60 px-4 pt-4 pb-1 font-medium">
-            Categories
-          </p>
+          <div className="h-px bg-border mx-4 my-1.5" />
+
+          <div className="py-1"><p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground px-5 py-2.5">Categories</p>
 
           {categories.map((cat) => {
             const Icon = getCategoryIcon(cat.slug);
@@ -319,108 +290,58 @@ export function Navbar() {
               <button
                 key={cat.slug}
                 onClick={() => handleMobileCategory(cat.slug)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-left ${
-                  isActive
-                    ? "bg-accent/10 text-accent"
-                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                }`}
+                className={`w-full flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors text-left ${isActive ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}
               >
-                <Icon className="h-4 w-4 shrink-0" />
+                <Icon className="h-[21px] w-[21px] shrink-0" />
                 {cat.name}
               </button>
             );
           })}
 
-          <p className="text-xs uppercase tracking-widest text-muted-foreground/60 px-4 pt-4 pb-1 font-medium">
-            More
-          </p>
+          </div>
 
-          <Link
-            href="/track"
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-              location === "/track"
-                ? "bg-accent/10 text-accent"
-                : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-            }`}
-          >
-            <Package className="h-4 w-4 shrink-0" />
-            Track Order
-          </Link>
+          <div className="h-px bg-border mx-4 my-1.5" />
+
+          <div className="py-1"><p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground px-5 py-2.5">More</p>
+
+          <Link href="/track" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/track" ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Package className="h-[21px] w-[21px] shrink-0" />Track Order</Link>
+          </div>
         </nav>
 
-        <div className="px-4 py-5 border-t shrink-0 space-y-2">
-          <div className="flex justify-end mb-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="gap-2 text-sm text-muted-foreground"
-              aria-label="Toggle dark mode"
-            >
-              <Sun className="h-4 w-4 dark:hidden" />
-              <Moon className="h-4 w-4 hidden dark:block" />
-              {theme === "dark" ? "Light Mode" : "Dark Mode"}
-            </Button>
-          </div>
+        <div className="border-t shrink-0 bg-background">
           <Show when="signed-out">
-            <Link href="/sign-in">
-              <Button className="w-full rounded-xl" size="sm">Sign In</Button>
-            </Link>
+            <div className="px-4 py-4">
+              <Link href="/sign-in" onClick={() => setMobileOpen(false)}>
+                <Button className="w-full rounded-full" size="sm">Sign In</Button>
+              </Link>
+            </div>
           </Show>
           <Show when="signed-in">
-            <div className="flex items-center gap-3 px-2 mb-3">
+            <div className="flex items-center gap-3 px-5 py-3.5 border-b">
               {user?.imageUrl ? (
-                <img src={user.imageUrl} alt="Profile" className="h-9 w-9 rounded-full object-cover" />
+                <img src={user.imageUrl} alt="Profile" className="h-10 w-10 rounded-full object-cover shrink-0" />
               ) : (
-                <div className="h-9 w-9 rounded-full bg-accent/20 flex items-center justify-center">
-                  <UserIcon className="h-4 w-4 text-accent" />
+                <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
+                  <UserIcon className="h-5 w-5 text-accent" />
                 </div>
               )}
-              <div className="min-w-0">
-                <p className="font-medium text-sm truncate">{user?.firstName} {user?.lastName}</p>
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-sm truncate">{user?.firstName} {user?.lastName}</p>
                 <p className="text-xs text-muted-foreground truncate">{user?.emailAddresses[0]?.emailAddress}</p>
               </div>
             </div>
-            <Link href="/profile">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-sm rounded-xl" size="sm">
-                <UserIcon className="h-4 w-4" /> Profile
-              </Button>
-            </Link>
-            <Link href="/orders">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-sm rounded-xl" size="sm">
-                <Package className="h-4 w-4" /> My Orders
-              </Button>
-            </Link>
-            <Link href="/loyalty">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-sm rounded-xl" size="sm">
-                <Star className="h-4 w-4" /> Loyalty Points
-              </Button>
-            </Link>
-            <Link href="/referral">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-sm rounded-xl" size="sm">
-                <Share2 className="h-4 w-4" /> Refer a Friend
-              </Button>
-            </Link>
-            <Link href="/wishlist">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-sm rounded-xl" size="sm">
-                <Heart className="h-4 w-4" /> Wishlist
-              </Button>
-            </Link>
+            <Link href="/profile" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><UserIcon className="h-[21px] w-[21px] shrink-0" />Profile</Link>
+            <Link href="/orders" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Package className="h-[21px] w-[21px] shrink-0" />My Orders</Link>
+            <Link href="/loyalty" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Star className="h-[21px] w-[21px] shrink-0" />Loyalty Points</Link>
+            <Link href="/referral" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Share2 className="h-[21px] w-[21px] shrink-0" />Refer a Friend</Link>
+            <Link href="/wishlist" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Heart className="h-[21px] w-[21px] shrink-0" />Wishlist</Link>
             {isAdmin && (
-              <Link href="/admin">
-                <Button variant="ghost" className="w-full justify-start gap-2 text-sm rounded-xl" size="sm">
-                  <Settings className="h-4 w-4" /> Admin Dashboard
-                </Button>
-              </Link>
+              <Link href="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-foreground hover:bg-muted/50 transition-colors"><Settings className="h-[21px] w-[21px] shrink-0" />Admin Dashboard</Link>
             )}
-            <Button
-              variant="ghost"
-              className="w-full justify-start gap-2 text-sm text-destructive hover:text-destructive rounded-xl"
-              size="sm"
-              onClick={() => signOut()}
-            >
-              <LogOut className="h-4 w-4" /> Log out
-            </Button>
+            <div className="h-px bg-border mx-4 my-1" />
+            <button onClick={() => { signOut(); setMobileOpen(false); }} className="w-full flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium text-destructive hover:bg-destructive/5 transition-colors">
+              <LogOut className="h-[21px] w-[21px] shrink-0" />Log out
+            </button>
           </Show>
         </div>
       </div>
