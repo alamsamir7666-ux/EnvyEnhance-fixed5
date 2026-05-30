@@ -103,6 +103,8 @@ export function CheckoutPage() {
         transactionId: transactionId || null,
         couponCode: couponApplied ? couponCode : null,
         loyaltyPointsToRedeem: usePoints && maxPointsDiscount > 0 ? Math.ceil(maxPointsDiscount / 1) : 0,
+        giftWrap,
+        giftMessage: giftWrap ? giftMessage : null,
       },
     }, {
       onSuccess: (order) => {

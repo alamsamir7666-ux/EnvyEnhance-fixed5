@@ -52,7 +52,7 @@ router.get("/orders", requireAuth, async (req: any, res) => {
 
 router.post("/orders", requireAuth, async (req: any, res) => {
   try {
-    const { paymentMethod, transactionId, shippingAddress, couponCode, loyaltyPointsToRedeem } = req.body;
+    const { paymentMethod, transactionId, shippingAddress, couponCode, loyaltyPointsToRedeem, giftWrap, giftMessage } = req.body;
 
     // Validate required fields
     if (!paymentMethod) {

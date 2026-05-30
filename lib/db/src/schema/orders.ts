@@ -45,6 +45,8 @@ export const ordersTable = pgTable("orders", {
   })
     .notNull()
     .default("0"),
+  giftWrap: text("gift_wrap").default("false"),
+  giftMessage: text("gift_message"),
   cancellationReason: text("cancellation_reason"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

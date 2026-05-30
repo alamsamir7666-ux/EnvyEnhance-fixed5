@@ -1327,6 +1327,12 @@ export function AdminPage() {
                                 </div>
                               </div>
                               <div>
+                                {o.giftWrap === "true" && (
+                                  <div className="mb-3 p-2 bg-pink-50 border border-pink-200 rounded-lg">
+                                    <p className="text-xs font-semibold text-pink-600 uppercase tracking-wider mb-1">🎁 Gift Wrapping</p>
+                                    {o.giftMessage && <p className="text-sm text-gray-700">{o.giftMessage}</p>}
+                                  </div>
+                                )}
                                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Payment Info</p>
                                 <p className="text-xs text-gray-600 capitalize">Method: {(o as any).paymentMethod}</p>
                                 <p className={`text-xs capitalize ${(o as any).paymentStatus === "paid" ? "text-green-600" : "text-amber-600"}`}>
