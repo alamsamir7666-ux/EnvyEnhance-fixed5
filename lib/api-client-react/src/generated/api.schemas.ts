@@ -175,6 +175,9 @@ export interface Order {
   discountAmount: number;
   /** @nullable */
   cancellationReason?: string | null;
+  giftWrap?: string | null;
+  /** @nullable */
+  giftMessage?: string | null;
   createdAt: string;
   updatedAt: string;
 }
