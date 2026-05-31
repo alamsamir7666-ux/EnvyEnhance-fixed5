@@ -534,7 +534,7 @@ export function AdminPage() {
     setCouponsLoading(true);
     try {
       const token = await getToken();
-      const res = await fetch("/api/coupons", { headers: { Authorization: `Bearer ${token}` } });
+      const res = await fetch(API+"/api/coupons", { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       setCoupons(Array.isArray(data) ? data : []);
     } catch {
@@ -549,7 +549,7 @@ export function AdminPage() {
     setMonthlyLoading(true);
     try {
       const token = await getToken();
-      const res = await fetch("/api/admin/monthly-records", { headers: { Authorization: `Bearer ${token}` } });
+      const res = await fetch(API+"/api/admin/monthly-records", { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       setMonthlyRecords(Array.isArray(data) ? data : []);
     } catch {
@@ -590,20 +590,20 @@ export function AdminPage() {
   async function handleDeleteCoupon(id: number) {
     if (!confirm("Delete this coupon? This cannot be undone.")) return;
     const token = await getToken();
-    await fetch(`/api/coupons/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
+    await fetch(`${API}/api/coupons/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
     fetchCoupons();
   }
 
   async function handleToggleCoupon(id: number) {
     const token = await getToken();
-    await fetch(`/api/coupons/${id}/toggle`, { method: "PATCH", headers: { Authorization: `Bearer ${token}` } });
+    await fetch(`${API}/api/coupons/${id}/toggle`, { method: "PATCH", headers: { Authorization: `Bearer ${token}` } });
     fetchCoupons();
   }
 
   async function handleArchiveNow() {
     if (!confirm("Archive last month's data now? This will save last month's stats to Monthly History.")) return;
     const token = await getToken();
-    const res = await fetch("/api/admin/monthly-records/archive", {
+    const res = await fetch(API+"/api/admin/monthly-records/archive", {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -712,7 +712,7 @@ export function AdminPage() {
     setSeedingCategories(true);
     try {
       const token = await getToken();
-      await fetch("/api/categories/seed", {
+      await fetch(API+"/api/categories/seed", {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -1952,14 +1952,14 @@ function ReturnsTab() {
   const [updatingId, setUpdatingId] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch("/api/admin/returns", { credentials: "include" })
+    fetch(API+"/api/admin/returns", { credentials: "include" })
       .then(r => r.json()).then(setReturns).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   async function updateStatus(id: number, status: string, adminNote?: string, refundAmount?: string) {
     setUpdatingId(id);
     try {
-      const r = await fetch(`/api/admin/returns/${id}`, {
+      const r = await fetch(`${API}/api/admin/returns/${id}`, {
         method: "PUT", headers: { "Content-Type": "application/json" }, credentials: "include",
         body: JSON.stringify({ status, adminNote, refundAmount }),
       });
@@ -2043,14 +2043,14 @@ function AffiliatesTab() {
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch("/api/admin/affiliates", { credentials: "include" })
+    fetch(API+"/api/admin/affiliates", { credentials: "include" })
       .then(r => r.json()).then(setAffiliates).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   async function handleCreate() {
     setSaving(true); setError("");
     try {
-      const r = await fetch("/api/admin/affiliates", {
+      const r = await fetch(API+"/api/admin/affiliates", {
         method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
         body: JSON.stringify(form),
       });
@@ -2069,7 +2069,7 @@ function AffiliatesTab() {
   async function handleSaveEdit(id: number) {
     setSaving(true);
     try {
-      const r = await fetch(`/api/admin/affiliates/${id}`, {
+      const r = await fetch(`${API}/api/admin/affiliates/${id}`, {
         method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "include",
         body: JSON.stringify(editForm),
       });
@@ -2082,7 +2082,7 @@ function AffiliatesTab() {
   }
 
   async function handleDelete(id: number) {
-    const r = await fetch(`/api/admin/affiliates/${id}`, { method: "DELETE", credentials: "include" });
+    const r = await fetch(`${API}/api/admin/affiliates/${id}`, { method: "DELETE", credentials: "include" });
     if (r.ok) {
       setAffiliates(prev => prev.filter(a => a.id !== id));
       setDeleteConfirm(null);
@@ -2090,7 +2090,7 @@ function AffiliatesTab() {
   }
 
   async function toggleAffiliate(id: number) {
-    const r = await fetch(`/api/admin/affiliates/${id}/toggle`, { method: "PATCH", credentials: "include" });
+    const r = await fetch(`${API}/api/admin/affiliates/${id}/toggle`, { method: "PATCH", credentials: "include" });
     if (r.ok) {
       const updated = await r.json();
       setAffiliates(prev => prev.map(a => a.id === id ? updated : a));
@@ -2256,7 +2256,7 @@ function BlogTab() {
   const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
-    fetch("/api/blog-posts", { credentials: "include" })
+    fetch(API+"/api/blog-posts", { credentials: "include" })
       .then(r => r.json())
       .then(data => setPosts(Array.isArray(data) ? data : []))
       .catch(() => {})
@@ -2311,7 +2311,7 @@ function BlogTab() {
   }
 
   async function handleDelete(id: number) {
-    const r = await fetch(`/api/admin/blog-posts/${id}`, { method: "DELETE", credentials: "include" });
+    const r = await fetch(`${API}/api/admin/blog-posts/${id}`, { method: "DELETE", credentials: "include" });
     if (r.ok) { setPosts(prev => prev.filter(p => p.id !== id)); setDeleteConfirm(null); }
   }
 
@@ -2463,7 +2463,7 @@ function AnalyticsTab() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/admin/analytics/products", { credentials: "include" })
+    fetch(API+"/api/admin/analytics/products", { credentials: "include" })
       .then(r => r.json()).then(setData).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
@@ -2527,7 +2527,7 @@ function AuditLogsTab() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/admin/audit-logs?limit=50", { credentials: "include" })
+    fetch(API+"/api/admin/audit-logs?limit=50", { credentials: "include" })
       .then(r => r.json()).then(setLogs).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
@@ -2690,7 +2690,7 @@ function BulkImportTab() {
     if (!csvText.trim()) { setError("Please paste CSV content first."); return; }
     setLoading(true); setError(""); setResult(null);
     try {
-      const r = await fetch("/api/admin/products/bulk-import", {
+      const r = await fetch(API+"/api/admin/products/bulk-import", {
         method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
         body: JSON.stringify({ csv: csvText }),
       });
