@@ -29,9 +29,12 @@ import {
 } from "lucide-react";
 import { useAuth } from "@clerk/react";
 import {
+
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer,
 } from "recharts";
+
+const API = import.meta.env.VITE_API_BASE_URL ?? "";
 
 // ─── Status helpers ─────────────────────────────────────────────────────────
 const statusConfig: Record<string, { color: string; icon: React.ElementType }> = {
@@ -2581,7 +2584,6 @@ function QATab() {
   const [saving, setSaving] = useState(false);
 
   const { getToken: getQAToken } = useAuth();
-  const API = import.meta.env.VITE_API_BASE_URL ?? "";
 
   useEffect(() => {
     (async () => {
