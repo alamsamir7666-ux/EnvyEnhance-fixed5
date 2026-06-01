@@ -1957,7 +1957,7 @@ function ReturnsTab() {
 
   useEffect(() => {
     getToken().then(token => fetch(API+"/api/admin/returns", { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json()).then(setReturns).catch(() => {}).finally(() => setLoading(false));
+      .then(r => r.json()).then(d => { if (Array.isArray(d)) setReturns(d); }).catch(() => {}).finally(() => setLoading(false)));
   }, []);
 
   async function updateStatus(id: number, status: string, adminNote?: string, refundAmount?: string) {
