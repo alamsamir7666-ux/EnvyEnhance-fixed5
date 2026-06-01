@@ -2055,7 +2055,7 @@ function AffiliatesTab() {
     setSaving(true); setError("");
     try {
       const r = await fetch(API+"/api/admin/affiliates", {
-        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getToken()}` },
         body: JSON.stringify(form),
       });
       const data = await r.json();
@@ -2074,7 +2074,7 @@ function AffiliatesTab() {
     setSaving(true);
     try {
       const r = await fetch(`${API}/api/admin/affiliates/${id}`, {
-        method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "include",
+        method: "PATCH", headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getToken()}` },
         body: JSON.stringify(editForm),
       });
       if (r.ok) {
@@ -2086,7 +2086,7 @@ function AffiliatesTab() {
   }
 
   async function handleDelete(id: number) {
-    const r = await fetch(`${API}/api/admin/affiliates/${id}`, { method: "DELETE", credentials: "include" });
+    const r = await fetch(`${API}/api/admin/affiliates/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${await getToken()}` } });
     if (r.ok) {
       setAffiliates(prev => prev.filter(a => a.id !== id));
       setDeleteConfirm(null);
@@ -2094,7 +2094,7 @@ function AffiliatesTab() {
   }
 
   async function toggleAffiliate(id: number) {
-    const r = await fetch(`${API}/api/admin/affiliates/${id}/toggle`, { method: "PATCH", credentials: "include" });
+    const r = await fetch(`${API}/api/admin/affiliates/${id}/toggle`, { method: "PATCH", headers: { Authorization: `Bearer ${await getToken()}` } });
     if (r.ok) {
       const updated = await r.json();
       setAffiliates(prev => prev.map(a => a.id === id ? updated : a));
