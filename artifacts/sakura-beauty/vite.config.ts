@@ -35,7 +35,7 @@ export default defineConfig({
     target: "es2020",
     minify: "esbuild",
     chunkSizeWarningLimit: 600,
-        modulePreload: { polyfill: false },
+        modulePreload: false,
     rollupOptions: {
       output: {
         manualChunks(id) {
