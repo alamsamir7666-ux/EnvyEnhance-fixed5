@@ -1,3 +1,4 @@
+import { logAudit } from "../lib/audit";
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { returnsTable, ordersTable } from "@workspace/db";
@@ -132,6 +133,7 @@ router.put("/admin/returns/:id", requireAdmin, async (req: any, res) => {
       res.status(404).json({ error: "Return not found" });
       return;
     }
+    await logAudit({ adminId: req.auth.userId, action: "return.updated", targetType: "return", targetId: String(id) });
     res.json(fmt(updated));
   } catch {
     res.status(500).json({ error: "Failed to update return" });

@@ -3,6 +3,7 @@ import { db } from "@workspace/db";
 import { blogPostsTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth";
+import { logAudit } from "../lib/audit";
 
 const router = Router();
 

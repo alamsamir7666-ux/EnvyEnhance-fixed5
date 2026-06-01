@@ -4,6 +4,7 @@ import { ordersTable, usersTable, productsTable } from "@workspace/db";
 import { eq, desc, sql } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth";
 import { sendOrderStatusUpdate } from "../lib/email";
+import { logAudit } from "../lib/audit";
 
 const router = Router();
 
@@ -318,6 +319,7 @@ router.put("/admin/orders/:id/status", requireAdmin, async (req: any, res) => {
       }
     }
 
+    await logAudit({ adminId: req.auth.userId, action: "order.status_changed", targetType: "order", targetId: String(id), after: { status: orderStatus } });
     res.json(formatOrder(order));
   } catch (err) {
     res.status(500).json({ error: "Failed to update order status" });
@@ -350,6 +352,7 @@ router.put("/admin/orders/:id/payment", requireAdmin, async (req: any, res) => {
       return;
     }
 
+    await logAudit({ adminId: req.auth.userId, action: "order.payment_updated", targetType: "order", targetId: String(id), after: { paymentStatus } });
     res.json(formatOrder(order));
   } catch (err) {
     res.status(500).json({ error: "Failed to update payment status" });

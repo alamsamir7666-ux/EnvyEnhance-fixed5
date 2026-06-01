@@ -3,6 +3,7 @@ import { db } from "@workspace/db";
 import { affiliatesTable, ordersTable, couponsTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth";
+import { logAudit } from "../lib/audit";
 import crypto from "crypto";
 
 const router = Router();

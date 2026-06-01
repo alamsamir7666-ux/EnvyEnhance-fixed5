@@ -1,3 +1,4 @@
+import { logAudit } from "../lib/audit";
 import { Router } from "express";
 import multerPkg from "multer";
 import { v2 as cloudinaryV2 } from "cloudinary";
