@@ -2247,6 +2247,7 @@ function AffiliatesTab() {
 
 // ─── Blog Tab ────────────────────────────────────────────────────────────────
 function BlogTab() {
+  const { getToken } = useAuth();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQ, setSearchQ] = useState("");
@@ -2299,7 +2300,7 @@ function BlogTab() {
       const url = editingPost ? `${API}/api/admin/blog-posts/${editingPost.id}` : API+"/api/admin/blog-posts";
       const method = editingPost ? "PATCH" : "POST";
       const r = await fetch(url, {
-        method, headers: { "Content-Type": "application/json" }, credentials: "include",
+        method, headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getToken()}` },
         body: JSON.stringify(body),
       });
       const data = await r.json();
@@ -2315,7 +2316,7 @@ function BlogTab() {
   }
 
   async function handleDelete(id: number) {
-    const r = await fetch(`${API}/api/admin/blog-posts/${id}`, { method: "DELETE", credentials: "include" });
+    const r = await fetch(`${API}/api/admin/blog-posts/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${await getToken()}` } });
     if (r.ok) { setPosts(prev => prev.filter(p => p.id !== id)); setDeleteConfirm(null); }
   }
 
