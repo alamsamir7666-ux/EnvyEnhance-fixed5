@@ -575,7 +575,7 @@ export function AdminPage() {
     setCouponSaving(true);
     try {
       const token = await getToken();
-      const url = editingCoupon ? `/api/coupons/${editingCoupon.id}` : "/api/coupons";
+      const url = editingCoupon ? `${API}/api/coupons/${editingCoupon.id}` : API+"/api/coupons";
       const method = editingCoupon ? "PUT" : "POST";
       await fetch(url, {
         method,
@@ -2034,6 +2034,7 @@ function ReturnsTab() {
 
 // ─── Affiliates Tab ───────────────────────────────────────────────────────────
 function AffiliatesTab() {
+  const { getToken } = useAuth();
   const [affiliates, setAffiliates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -2047,7 +2048,7 @@ function AffiliatesTab() {
 
   useEffect(() => {
     fetch(API+"/api/admin/affiliates", { credentials: "include" })
-      .then(r => r.json()).then(setAffiliates).catch(() => {}).finally(() => setLoading(false));
+      .then(r => r.json()).then(d => setAffiliates(Array.isArray(d) ? d : [])).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   async function handleCreate() {
@@ -2526,12 +2527,13 @@ function AnalyticsTab() {
 
 // ─── Audit Logs Tab ───────────────────────────────────────────────────────────
 function AuditLogsTab() {
+  const { getToken } = useAuth();
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(API+"/api/admin/audit-logs?limit=50", { credentials: "include" })
-      .then(r => r.json()).then(setLogs).catch(() => {}).finally(() => setLoading(false));
+      .then(r => r.json()).then(d => setLogs(Array.isArray(d) ? d : [])).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   if (loading) return <div className="h-40 bg-muted animate-pulse rounded-xl" />;
