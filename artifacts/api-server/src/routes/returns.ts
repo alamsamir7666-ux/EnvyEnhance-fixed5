@@ -133,7 +133,7 @@ router.put("/admin/returns/:id", requireAdmin, async (req: any, res) => {
       res.status(404).json({ error: "Return not found" });
       return;
     }
-    await logAudit({ adminId: req.userId, action: "return.updated", targetType: "return", targetId: String(id) });
+    await logAudit({ adminId: req.userId, adminEmail: req.dbUser?.email, action: "return.updated", targetType: "return", targetId: String(id) });
     res.json(fmt(updated));
   } catch {
     res.status(500).json({ error: "Failed to update return" });
