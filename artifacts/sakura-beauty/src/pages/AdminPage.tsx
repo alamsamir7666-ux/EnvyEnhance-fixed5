@@ -1949,13 +1949,14 @@ export function AdminPage() {
 
 
 // ─── Returns Tab ─────────────────────────────────────────────────────────────
-function ReturnsTab() {
+function ReturnsTab()
+  const { getToken } = useAuth(); {
   const [returns, setReturns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch(API+"/api/admin/returns", { credentials: "include" })
+    getToken().then(token => fetch(API+"/api/admin/returns", { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json()).then(setReturns).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
@@ -1963,7 +1964,7 @@ function ReturnsTab() {
     setUpdatingId(id);
     try {
       const r = await fetch(`${API}/api/admin/returns/${id}`, {
-        method: "PUT", headers: { "Content-Type": "application/json" }, credentials: "include",
+        method: "PUT", headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getToken()}` },
         body: JSON.stringify({ status, adminNote, refundAmount }),
       });
       if (r.ok) {
@@ -2261,7 +2262,7 @@ function BlogTab() {
   const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
-    fetch(API+"/api/blog-posts", { credentials: "include" })
+    getToken().then(token => fetch(API+"/api/blog-posts", { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(data => setPosts(Array.isArray(data) ? data : []))
       .catch(() => {})
@@ -2463,12 +2464,13 @@ function BlogTab() {
 }
 
 // ─── Analytics Tab ────────────────────────────────────────────────────────────
-function AnalyticsTab() {
+function AnalyticsTab()
+  const { getToken } = useAuth(); {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(API+"/api/admin/analytics/products", { credentials: "include" })
+    getToken().then(token => fetch(API+"/api/admin/analytics/products", { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json()).then(setData).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
@@ -2533,7 +2535,7 @@ function AuditLogsTab() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(API+"/api/admin/audit-logs?limit=50", { credentials: "include" })
+    getToken().then(token => fetch(API+"/api/admin/audit-logs?limit=50", { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json()).then(d => setLogs(Array.isArray(d) ? d : [])).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
@@ -2696,7 +2698,7 @@ function BulkImportTab() {
     setLoading(true); setError(""); setResult(null);
     try {
       const r = await fetch(API+"/api/admin/products/bulk-import", {
-        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getToken()}` },
         body: JSON.stringify({ csv: csvText }),
       });
       const data = await r.json();
