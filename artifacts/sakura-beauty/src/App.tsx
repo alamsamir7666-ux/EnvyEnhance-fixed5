@@ -34,7 +34,7 @@ import { OrderDetailPage } from "./pages/OrderDetailPage";
 import { WishlistPage } from "./pages/WishlistPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { TrackOrderPage } from "./pages/TrackOrderPage";
-import { AdminPage } from "./pages/AdminPage";
+const AdminPage = lazy(() => import("./pages/AdminPage").then(m => ({ default: m.AdminPage })));
 const SubscriptionsPage = lazy(() => import("@/pages/SubscriptionsPage").then(m => ({ default: m.SubscriptionsPage })));
 const GiftCardsPage = lazy(() => import("@/pages/GiftCardsPage").then(m => ({ default: m.GiftCardsPage })));
 const EmailPreferencesPage = lazy(() => import("@/pages/EmailPreferencesPage").then(m => ({ default: m.EmailPreferencesPage })));
@@ -316,7 +316,7 @@ function AdminRoute() {
   if (isLoading) return null;
   if (isLoading) return null;
   if (!isLoading && dbUser?.role !== "admin" && clerkUser?.publicMetadata?.role !== "admin") return <Redirect to="/" />;
-  return <AdminPage />;
+  return <Suspense fallback={<div className="min-h-[60vh]" />}><AdminPage /></Suspense>;
 }
 
 // Compute flash sale end time once at module level — not inside the component
