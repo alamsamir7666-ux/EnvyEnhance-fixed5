@@ -2266,7 +2266,7 @@ function BlogTab() {
       .then(r => r.json())
       .then(data => setPosts(Array.isArray(data) ? data : []))
       .catch(() => {})
-      .finally(() => setLoading(false));
+      .finally(() => setLoading(false)));
   }, []);
 
   function openCreate() {
