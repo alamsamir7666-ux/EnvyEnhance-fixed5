@@ -1949,8 +1949,8 @@ export function AdminPage() {
 
 
 // ─── Returns Tab ─────────────────────────────────────────────────────────────
-function ReturnsTab()
-  const { getToken } = useAuth(); {
+function ReturnsTab() {
+  const { getToken } = useAuth();
   const [returns, setReturns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
@@ -2464,8 +2464,8 @@ function BlogTab() {
 }
 
 // ─── Analytics Tab ────────────────────────────────────────────────────────────
-function AnalyticsTab()
-  const { getToken } = useAuth(); {
+function AnalyticsTab() {
+  const { getToken } = useAuth();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
