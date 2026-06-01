@@ -2574,7 +2574,13 @@ function AuditLogsTab() {
                   by <span className="font-medium text-foreground">{log.adminEmail ?? log.adminId?.slice(0, 8)}</span>
                   {log.targetType && <> · {log.targetType} #{log.targetId}</>}
                 </p>
+                {(log.after || log.before) && (
                 <p className="text-xs text-muted-foreground mt-0.5">
+                  {log.before && <span className="line-through mr-1">{JSON.stringify(log.before).replace(/[{}"]/g, '')}</span>}
+                  {log.after && <span className="text-foreground">{JSON.stringify(log.after).replace(/[{}"]/g, '')}</span>}
+                </p>
+              )}
+              <p className="text-xs text-muted-foreground mt-0.5">
                   {new Date(log.createdAt).toLocaleString("en-BD")}
                 </p>
               </div>
