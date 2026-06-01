@@ -2296,7 +2296,7 @@ function BlogTab() {
       // Convert plain text content to simple paragraph blocks
       const contentBlocks = form.content.split("\n\n").filter(Boolean).map(t => ({ type: "p", text: t.trim() }));
       const body = { ...form, content: contentBlocks };
-      const url = editingPost ? `/api/admin/blog-posts/${editingPost.id}` : "/api/admin/blog-posts";
+      const url = editingPost ? `${API}/api/admin/blog-posts/${editingPost.id}` : API+"/api/admin/blog-posts";
       const method = editingPost ? "PATCH" : "POST";
       const r = await fetch(url, {
         method, headers: { "Content-Type": "application/json" }, credentials: "include",
