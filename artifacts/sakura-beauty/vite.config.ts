@@ -41,7 +41,7 @@ export default defineConfig({
         manualChunks(id) {
           if (id.includes("node_modules")) {
             if (id.includes("@clerk")) return "clerk";
-            if (id.includes("recharts") || id.includes("d3-")) return "charts";
+            if (id.includes("recharts") || id.includes("d3-")) return "page-admin";
             if (id.includes("@radix-ui")) return "radix";
             if (id.includes("react-dom")) return "react-dom";
             if (id.includes("react") && !id.includes("react-dom")) return "react";
