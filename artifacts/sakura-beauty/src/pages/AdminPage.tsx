@@ -2047,8 +2047,8 @@ function AffiliatesTab() {
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch(API+"/api/admin/affiliates", { credentials: "include" })
-      .then(r => r.json()).then(d => setAffiliates(Array.isArray(d) ? d : [])).catch(() => {}).finally(() => setLoading(false));
+    getToken().then(token => fetch(API+"/api/admin/affiliates", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json()).then(d => { if (Array.isArray(d)) setAffiliates(d); }).catch(() => {}).finally(() => setLoading(false)));
   }, []);
 
   async function handleCreate() {
