@@ -2470,8 +2470,14 @@ function AnalyticsTab() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getToken().then(token => fetch(API+"/api/admin/analytics/products", { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json()).then(d => setData(d)).catch(() => {}).finally(() => setLoading(false)));
+    getToken().then(async token => {
+      try {
+        const r = await fetch(API+"/api/admin/analytics/products", { headers: { Authorization: `Bearer ${token}` } });
+        const d = await r.json();
+        setData(d);
+      } catch(e) { console.error("Analytics fetch error:", e); }
+      finally { setLoading(false); }
+    });
   }, []);
 
   if (loading) return <div className="space-y-4">{[1,2,3].map(i => <div key={i} className="h-32 bg-muted animate-pulse rounded-xl" />)}</div>;
