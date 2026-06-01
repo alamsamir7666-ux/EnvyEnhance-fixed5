@@ -2471,7 +2471,7 @@ function AnalyticsTab() {
 
   useEffect(() => {
     getToken().then(token => fetch(API+"/api/admin/analytics/products", { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json()).then(setData).catch(() => {}).finally(() => setLoading(false));
+      .then(r => r.json()).then(d => setData(d)).catch(() => {}).finally(() => setLoading(false)));
   }, []);
 
   if (loading) return <div className="space-y-4">{[1,2,3].map(i => <div key={i} className="h-32 bg-muted animate-pulse rounded-xl" />)}</div>;
