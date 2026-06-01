@@ -2536,7 +2536,7 @@ function AuditLogsTab() {
 
   useEffect(() => {
     getToken().then(token => fetch(API+"/api/admin/audit-logs?limit=50", { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json()).then(d => setLogs(Array.isArray(d) ? d : [])).catch(() => {}).finally(() => setLoading(false));
+      .then(r => r.json()).then(d => setLogs(Array.isArray(d) ? d : [])).catch(() => {}).finally(() => setLoading(false)));
   }, []);
 
   if (loading) return <div className="h-40 bg-muted animate-pulse rounded-xl" />;
