@@ -2657,7 +2657,7 @@ function BulkImportTab() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const TEMPLATE = `name,price,discountPrice,category,stock,description,images,keyBenefits,mainIngredients,bestFor,texture
+  const TEMPLATE = `name,price,discountPrice,category,stock,description,images,keyBenefits,mainIngredients,bestFor,texture,ingredients
 "Skin Aqua Super Moisture Gel SPF50+",1450,,Sunscreens,50,"A Japanese water gel sunscreen with SPF50+ PA++++. Triple Hyaluronic Acid complex for intense moisture while protecting from UV rays.","https://example.com/img1.jpg|https://example.com/img2.jpg","Maximum SPF50+ PA++++ protection|Triple Hyaluronic Acid for deep hydration|Lightweight no white cast|Sweat and water resistant","💧 Sodium Hyaluronate (Hyaluronic Acid)|🧬 Hydrolyzed Collagen|🌿 Arginine|☀️ Ethylhexyl Methoxycinnamate","Dry skin|Oily skin|All skin types","Ultra-light watery gel that melts into skin instantly"`;
 
   const FORMAT_NOTES = [
@@ -2672,6 +2672,7 @@ function BulkImportTab() {
     { field: "mainIngredients", note: "Ingredients with emoji separated by | (e.g. 💧 Hyaluronic Acid|🌿 Niacinamide)" },
     { field: "bestFor", note: "Skin types separated by | (e.g. Dry skin|Oily skin)" },
     { field: "texture", note: "Texture description (single line)" },
+    { field: "ingredients", note: "Full INCI ingredients list (single line)" },
   ];
 
   async function handleImport() {

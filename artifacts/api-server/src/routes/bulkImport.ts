@@ -90,6 +90,7 @@ router.post("/admin/products/bulk-import", requireAdmin, async (req: any, res) =
     const mainIngredientsIdx = headers.indexOf("mainingredients");
     const bestForIdx = headers.indexOf("bestfor");
     const textureIdx = headers.indexOf("texture");
+    const ingredientsIdx = headers.indexOf("ingredients");
 
     const created: number[] = [];
     const errors: string[] = [];
@@ -119,6 +120,7 @@ router.post("/admin/products/bulk-import", requireAdmin, async (req: any, res) =
         const mainIngredients = mainIngredientsIdx >= 0 ? parseIngredients(cols[mainIngredientsIdx] ?? "") : [];
         const bestFor = bestForIdx >= 0 ? parseList(cols[bestForIdx] ?? "") : [];
         const texture = textureIdx >= 0 ? (cols[textureIdx] ?? "") : "";
+        const ingredients = ingredientsIdx >= 0 ? (cols[ingredientsIdx] ?? "") : "";
 
         const [p] = await db.insert(productsTable).values({
           name,
@@ -133,6 +135,7 @@ router.post("/admin/products/bulk-import", requireAdmin, async (req: any, res) =
           mainIngredients,
           bestFor,
           texture: texture || null,
+          ingredients: ingredients || null,
         }).returning({ id: productsTable.id });
 
         await logAudit({ adminId: req.userId, action: "product.created", targetType: "product", targetId: String(p.id), after: { name } });
