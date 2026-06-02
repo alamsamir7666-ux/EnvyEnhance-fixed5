@@ -305,31 +305,6 @@ export function HomePage() {
 
       {/* Instagram Feed */}
       <InstagramFeed />
-
-      {/* Skin Quiz CTA Section */}
-      <section className="py-16 bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-950/20 dark:to-rose-950/20">
-        <div className="container mx-auto px-4 text-center max-w-2xl">
-          <p className="text-xs uppercase tracking-widest text-accent mb-3 font-medium">Personalised For You</p>
-          <h2 className="font-serif text-3xl font-medium mb-4">Not sure where to start?</h2>
-          <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
-            Take our 2-minute skin quiz and get a personalised Japanese skincare routine built around your skin type, concerns, and lifestyle.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a
-              href="/quiz"
-              className="inline-flex items-center justify-center gap-2 bg-accent text-white px-8 py-3 rounded-full text-sm font-medium hover:bg-accent/90 transition-all hover:shadow-lg hover:-translate-y-0.5"
-            >
-              ✨ Take the Skin Quiz
-            </a>
-            <a
-              href="/blog"
-              className="inline-flex items-center justify-center gap-2 border border-border bg-background px-8 py-3 rounded-full text-sm font-medium hover:bg-muted/50 transition-colors"
-            >
-              📖 Read Skincare Tips
-            </a>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
