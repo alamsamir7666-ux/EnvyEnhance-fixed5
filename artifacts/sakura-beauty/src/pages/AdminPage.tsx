@@ -614,10 +614,11 @@ export function AdminPage() {
   }
 
   async function handleDeleteCoupon(id: number) {
-    // confirm replaced
-    const token = await getToken();
-    await fetch(`${API}/api/coupons/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
-    fetchCoupons();
+    askConfirm("Delete Coupon", "This coupon will be permanently deleted.", async () => {
+      const token = await getToken();
+      await fetch(`${API}/api/coupons/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
+      fetchCoupons();
+    });
   }
 
   async function handleToggleCoupon(id: number) {
@@ -627,7 +628,7 @@ export function AdminPage() {
   }
 
   async function handleArchiveNow() {
-    // confirm replaced
+    if (!window.confirm("Archive last month's data now?")) return;
     const token = await getToken();
     const res = await fetch(API+"/api/admin/monthly-records/archive", {
       method: "POST",
@@ -671,8 +672,9 @@ export function AdminPage() {
   );
 
   function handleDeleteProduct(id: number) {
-    // confirm replaced
-    deleteProduct.mutate({ id }, { onSuccess: () => qc.invalidateQueries({ queryKey: getListProductsQueryKey() }) });
+    askConfirm("Delete Product", "This product will be permanently deleted and cannot be recovered.", () => {
+      deleteProduct.mutate({ id }, { onSuccess: () => qc.invalidateQueries({ queryKey: getListProductsQueryKey() }) });
+    });
   }
 
   // Filtered reviews with search
@@ -699,14 +701,16 @@ export function AdminPage() {
   );
 
   function handleDeleteCategory(id: number) {
-    // confirm replaced
-    deleteCategory.mutate({ id }, { onSuccess: () => qc.invalidateQueries({ queryKey: getListCategoriesQueryKey() }) });
+    askConfirm("Delete Category", "This category will be permanently deleted.", () => {
+      deleteCategory.mutate({ id }, { onSuccess: () => qc.invalidateQueries({ queryKey: getListCategoriesQueryKey() }) });
+    });
   }
 
   function handleDeleteReview(productId: number, reviewId: number) {
-    // confirm replaced
-    deleteReview.mutate({ productId, reviewId }, {
-      onSuccess: () => qc.invalidateQueries({ queryKey: ["listAllReviews"] }),
+    askConfirm("Delete Review", "This review will be permanently deleted.", () => {
+      deleteReview.mutate({ productId, reviewId }, {
+        onSuccess: () => qc.invalidateQueries({ queryKey: ["listAllReviews"] }),
+      });
     });
   }
 
@@ -2581,7 +2585,7 @@ function QATab() {
   }
 
   async function deleteQuestion(id: number) {
-    // confirm replaced
+    if (!window.confirm("Delete this question?")) return;
     const token = await getQAToken();
     await fetch(`${API}/api/admin/qa/${id}`, { method: "DELETE", headers: { Authorization: "Bearer " + token } });
     setQuestions(prev => prev.filter(q => q.id !== id));
