@@ -2,6 +2,7 @@ import { Router } from "express";
 import { db } from "@workspace/db";
 import { productsTable } from "@workspace/db";
 import { requireAdmin } from "../middlewares/auth";
+import { logAudit } from "../lib/audit";
 import crypto from "crypto";
 
 const router = Router();
@@ -26,10 +27,36 @@ function parseCsvLine(line: string): string[] {
   return result;
 }
 
+function parseList(val: string): string[] {
+  if (!val) return [];
+  return val.split("|").map(s => s.trim()).filter(Boolean);
+}
+
+function parseIngredients(val: string): { name: string; icon: string }[] {
+  if (!val) return [];
+  return val.split("|").map(s => {
+    const trimmed = s.trim();
+    // Extract emoji icon if present at start
+    const emojiMatch = trimmed.match(/^(\p{Emoji_Presentation}|\p{Emoji}\uFE0F|[\u{1F300}-\u{1FFFF}]|[\u2600-\u27FF])/u);
+    if (emojiMatch) {
+      const icon = emojiMatch[0];
+      const name = trimmed.slice(icon.length).trim();
+      return { icon, name };
+    }
+    return { icon: "🌿", name: trimmed };
+  }).filter(i => i.name);
+}
+
 /**
  * POST /api/admin/products/bulk-import
  * Body: { csv: string } — raw CSV text
- * Expected headers: name,price,discountPrice,category,stock,description,images
+ * Headers: name,price,discountPrice,category,stock,description,images,keyBenefits,mainIngredients,bestFor,texture
+ * 
+ * Multi-value fields use | as separator:
+ *   keyBenefits: "Benefit 1|Benefit 2|Benefit 3"
+ *   mainIngredients: "💧 Hyaluronic Acid|🌿 Arginine"
+ *   bestFor: "Dry skin|Oily skin"
+ *   images: "https://url1.jpg|https://url2.jpg"
  */
 router.post("/admin/products/bulk-import", requireAdmin, async (req: any, res) => {
   try {
@@ -59,6 +86,10 @@ router.post("/admin/products/bulk-import", requireAdmin, async (req: any, res) =
     const stockIdx = headers.indexOf("stock");
     const descIdx = headers.indexOf("description");
     const imagesIdx = headers.indexOf("images");
+    const keyBenefitsIdx = headers.indexOf("keybenefits");
+    const mainIngredientsIdx = headers.indexOf("mainingredients");
+    const bestForIdx = headers.indexOf("bestfor");
+    const textureIdx = headers.indexOf("texture");
 
     const created: number[] = [];
     const errors: string[] = [];
@@ -74,13 +105,20 @@ router.post("/admin/products/bulk-import", requireAdmin, async (req: any, res) =
       }
 
       try {
-        const slug = name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "") + "-" + crypto.randomBytes(3).toString("hex");
-        const discountPrice = discountPriceIdx >= 0 && cols[discountPriceIdx] ? parseFloat(cols[discountPriceIdx]) : null;
+        const slug = name.toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, "")
+          + "-" + crypto.randomBytes(3).toString("hex");
+
+        const discountPrice = discountPriceIdx >= 0 && cols[discountPriceIdx]
+          ? parseFloat(cols[discountPriceIdx]) : null;
         const stock = stockIdx >= 0 ? parseInt(cols[stockIdx] ?? "0") : 0;
         const description = descIdx >= 0 ? (cols[descIdx] ?? "") : "";
-        const images = imagesIdx >= 0 && cols[imagesIdx]
-          ? cols[imagesIdx].split("|").map((u: string) => u.trim()).filter(Boolean)
-          : [];
+        const images = imagesIdx >= 0 ? parseList(cols[imagesIdx] ?? "") : [];
+        const keyBenefits = keyBenefitsIdx >= 0 ? parseList(cols[keyBenefitsIdx] ?? "") : [];
+        const mainIngredients = mainIngredientsIdx >= 0 ? parseIngredients(cols[mainIngredientsIdx] ?? "") : [];
+        const bestFor = bestForIdx >= 0 ? parseList(cols[bestForIdx] ?? "") : [];
+        const texture = textureIdx >= 0 ? (cols[textureIdx] ?? "") : "";
 
         const [p] = await db.insert(productsTable).values({
           name,
@@ -91,10 +129,13 @@ router.post("/admin/products/bulk-import", requireAdmin, async (req: any, res) =
           stock: isNaN(stock) ? 0 : stock,
           description,
           images,
-          keyBenefits: [],
-          mainIngredients: [],
-          bestFor: [],
+          keyBenefits,
+          mainIngredients,
+          bestFor,
+          texture: texture || null,
         }).returning({ id: productsTable.id });
+
+        await logAudit({ adminId: req.userId, action: "product.created", targetType: "product", targetId: String(p.id), after: { name } });
         created.push(p.id);
       } catch (err: any) {
         errors.push(`Row ${i + 1}: ${err.message ?? "Failed to insert"}`);
