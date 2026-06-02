@@ -264,11 +264,6 @@ export function BlogArticlePage() {
         {/* CTA */}
         <div className="mt-12 p-6 bg-card border rounded-2xl text-center">
           <p className="text-sm text-muted-foreground mb-4">Ready to start your skincare journey?</p>
-          <Link href="/quiz">
-            <a className="inline-flex items-center gap-2 bg-accent text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-accent/90 transition-colors">
-              Take the Skin Quiz →
-            </a>
-          </Link>
         </div>
       </div>
     </article>

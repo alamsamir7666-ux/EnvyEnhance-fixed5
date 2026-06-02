@@ -272,8 +272,6 @@ export function Navbar() {
 
           <Link href="/products" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/products" && !activeCategory ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Sparkles className="h-[21px] w-[21px] shrink-0" />Shop All</Link>
 
-          <Link href="/quiz" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/quiz" ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Sparkles className="h-[21px] w-[21px] shrink-0" />Skin Quiz</Link>
-
           <Link href="/blog" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/blog" ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Sparkles className="h-[21px] w-[21px] shrink-0" />Skincare Blog</Link>
           </div>
 

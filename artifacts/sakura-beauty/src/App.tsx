@@ -13,7 +13,6 @@ import { PageProvider, usePageContext } from "@/contexts/PageContext";
 import { Navbar } from "./components/layout/Navbar";
 import { Footer } from "./components/layout/Footer";
 import { lazy, Suspense } from "react";
-const SkinQuizPage = lazy(() => import("@/pages/SkinQuizPage").then(m => ({ default: m.SkinQuizPage })));
 const AddressesPage = lazy(() => import("@/pages/AddressesPage").then(m => ({ default: m.AddressesPage })));
 const BlogPage = lazy(() => import("@/pages/BlogPage").then(m => ({ default: m.BlogPage })));
 const BlogArticlePage = lazy(() => import("@/pages/BlogArticlePage").then(m => ({ default: m.BlogArticlePage })));
@@ -408,7 +407,6 @@ function ClerkProviderWithRoutes() {
                 </Route>
                 <Route path="/compare" component={ComparePage} />
                 <Route path="/track" component={TrackOrderPage} />
-                <Route path="/quiz" component={SkinQuizPage} />
                 <Route path="/addresses" component={AddressesPage} />
                 <Route path="/blog" component={BlogPage} />
                 <Route path="/blog/:slug" component={BlogArticlePage} />
