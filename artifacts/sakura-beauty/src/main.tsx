@@ -2,12 +2,9 @@ import { createRoot } from "react-dom/client";
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import App from "./App";
 import "./index.css";
-import { initGA, initMetaPixel } from "./lib/analytics";
 import { setBaseUrl, setAuthTokenGetter } from "@workspace/api-client-react";
 setBaseUrl(import.meta.env.VITE_API_BASE_URL ?? "");
 
-initGA();
-initMetaPixel();
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   constructor(props: { children: ReactNode }) {
