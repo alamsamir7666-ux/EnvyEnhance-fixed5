@@ -2657,9 +2657,22 @@ function BulkImportTab() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const TEMPLATE = `name,price,discountPrice,category,stock,description,images
-"Vitamin C Serum 30ml",1200,999,serum,50,"Brightening Vitamin C serum with 15% L-Ascorbic Acid","https://example.com/img.jpg"
-"Hyaluronic Acid Moisturiser",1800,,moisturizer,30,"Deep hydration cream for all skin types",""`;
+  const TEMPLATE = `name,price,discountPrice,category,stock,description,images,keyBenefits,mainIngredients,bestFor,texture
+"Skin Aqua Super Moisture Gel SPF50+",1450,,Sunscreens,50,"A Japanese water gel sunscreen with SPF50+ PA++++. Triple Hyaluronic Acid complex for intense moisture while protecting from UV rays.","https://example.com/img1.jpg|https://example.com/img2.jpg","Maximum SPF50+ PA++++ protection|Triple Hyaluronic Acid for deep hydration|Lightweight no white cast|Sweat and water resistant","💧 Sodium Hyaluronate (Hyaluronic Acid)|🧬 Hydrolyzed Collagen|🌿 Arginine|☀️ Ethylhexyl Methoxycinnamate","Dry skin|Oily skin|All skin types","Ultra-light watery gel that melts into skin instantly"`;
+
+  const FORMAT_NOTES = [
+    { field: "name", note: "Product name (required)" },
+    { field: "price", note: "Price in BDT, numbers only (required)" },
+    { field: "discountPrice", note: "Sale price — leave empty if no discount" },
+    { field: "category", note: "Category name (required)" },
+    { field: "stock", note: "Stock quantity" },
+    { field: "description", note: "Full product description" },
+    { field: "images", note: "Image URLs separated by |" },
+    { field: "keyBenefits", note: "Benefits separated by | (e.g. Deep hydration|Brightening)" },
+    { field: "mainIngredients", note: "Ingredients with emoji separated by | (e.g. 💧 Hyaluronic Acid|🌿 Niacinamide)" },
+    { field: "bestFor", note: "Skin types separated by | (e.g. Dry skin|Oily skin)" },
+    { field: "texture", note: "Texture description (single line)" },
+  ];
 
   async function handleImport() {
     if (!csvText.trim()) { setError("Please paste CSV content first."); return; }
