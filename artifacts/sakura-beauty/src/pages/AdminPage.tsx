@@ -2832,6 +2832,7 @@ function BulkImportTab() {
       )}
 
       {/* Cancellation Reason Modal */}
+      <ConfirmDialog open={cdg.open} title={cdg.title} message={cdg.message} onConfirm={()=>{cdg.onConfirm();closeCdg();}} onCancel={closeCdg} danger={cdg.danger} />
       <Dialog open={!!cancelModal} onOpenChange={(open) => { if (!open) setCancelModal(null); }}>
         <DialogContent className="sm:max-w-md rounded-2xl">
           <DialogHeader>
