@@ -1,5 +1,6 @@
 import { useState, useMemo, Fragment, useEffect, useCallback } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
+import {
   useListProducts, useCreateProduct, useUpdateProduct, useDeleteProduct,
   getGetFeaturedProductsQueryKey, getGetHomepageProductsQueryKey,
   useListAllOrders, useUpdateOrderStatus,
@@ -18,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
   LayoutDashboard, Package2, ShoppingCart, Users, Tag, Settings,
   Plus, Pencil, Trash2, Search, TrendingUp, DollarSign, Star,
   ChevronRight, X, Menu, BarChart3, CheckCircle2, Clock, Truck,
@@ -2456,3 +2458,377 @@ function BlogTab() {
   );
 }
 
+// ─── Audit Logs Tab ───────────────────────────────────────────────────────────
+function AuditLogsTab() {
+  const { getToken } = useAuth();
+  const [logs, setLogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getToken().then(token => fetch(API+"/api/admin/audit-logs?limit=50", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json()).then(d => setLogs(Array.isArray(d) ? d : [])).catch(() => {}).finally(() => setLoading(false)));
+  }, []);
+
+  if (loading) return <div className="h-40 bg-muted animate-pulse rounded-xl" />;
+
+  const actionColors: Record<string, string> = {
+    "order.status_changed": "bg-blue-100 text-blue-700",
+    "product.deleted": "bg-red-100 text-red-700",
+    "product.created": "bg-green-100 text-green-700",
+    "user.blocked": "bg-orange-100 text-orange-700",
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Admin Audit Logs</h2>
+        <span className="text-xs text-muted-foreground">Last 50 actions</span>
+      </div>
+      {logs.length === 0 ? (
+        <p className="text-sm text-muted-foreground py-8 text-center">No audit logs yet. Admin actions will appear here.</p>
+      ) : (
+        <div className="space-y-2">
+          {logs.map(log => (
+            <div key={log.id} className="bg-card border rounded-xl p-4 flex items-start gap-3">
+              <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 mt-0.5 ${actionColors[log.action] ?? "bg-muted text-muted-foreground"}`}>
+                {log.action}
+              </span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-muted-foreground">
+                  by <span className="font-medium text-foreground">{log.adminEmail ?? log.adminId?.slice(0, 8)}</span>
+                  {log.targetType && <> · {log.targetType} #{log.targetId}</>}
+                </p>
+                {(log.after || log.before) && (
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {log.before && <span className="line-through mr-1">{JSON.stringify(log.before).replace(/[{}"]/g, '')}</span>}
+                  {log.after && <span className="text-foreground">{JSON.stringify(log.after).replace(/[{}"]/g, '')}</span>}
+                </p>
+              )}
+              <p className="text-xs text-muted-foreground mt-0.5">
+                  {new Date(log.createdAt).toLocaleString("en-BD")}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Q&A Tab ──────────────────────────────────────────────────────────────────
+function QATab() {
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [answeringId, setAnsweringId] = useState<number | null>(null);
+  const [answerText, setAnswerText] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const { getToken: getQAToken } = useAuth();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const token = await getQAToken();
+        const r = await fetch(`${API}/api/admin/qa/unanswered`, { headers: { Authorization: "Bearer " + token } });
+        setQuestions(await r.json());
+      } catch {} finally { setLoading(false); }
+    })();
+  }, []);
+
+  async function submitAnswer(id: number) {
+    if (!answerText.trim() || answerText.trim().length < 2) return;
+    setSaving(true);
+    try {
+      const token = await getQAToken();
+      const r = await fetch(`${API}/api/admin/qa/${id}/answer`, {
+        method: "PUT", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+        body: JSON.stringify({ answer: answerText.trim() }),
+      });
+      if (r.ok) {
+        setQuestions(prev => prev.filter(q => q.id !== id));
+        setAnsweringId(null); setAnswerText("");
+      }
+    } finally { setSaving(false); }
+  }
+
+  async function deleteQuestion(id: number) {
+    if (!confirm("Delete this question?")) return;
+    const token = await getQAToken();
+    await fetch(`${API}/api/admin/qa/${id}`, { method: "DELETE", headers: { Authorization: "Bearer " + token } });
+    setQuestions(prev => prev.filter(q => q.id !== id));
+  }
+
+  if (loading) return <div className="h-40 bg-muted animate-pulse rounded-xl" />;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Unanswered Questions</h2>
+        <Badge variant="secondary">{questions.length} pending</Badge>
+      </div>
+      {questions.length === 0 ? (
+        <div className="text-center py-10 text-muted-foreground">
+          <p className="text-2xl mb-2">✅</p>
+          <p className="font-medium">All questions answered!</p>
+          <p className="text-sm">No pending product questions.</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {questions.map(q => (
+            <div key={q.id} className="bg-card border rounded-xl p-5 space-y-3">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">{q.userName} · Product #{q.productId} · {new Date(q.createdAt).toLocaleDateString()}</p>
+                  <p className="font-medium text-sm">{q.question}</p>
+                </div>
+                <button onClick={() => deleteQuestion(q.id)} className="text-muted-foreground hover:text-destructive transition-colors shrink-0">
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+              {answeringId === q.id ? (
+                <div className="space-y-2">
+                  <Textarea
+                    placeholder="Write your answer…"
+                    value={answerText}
+                    onChange={e => setAnswerText(e.target.value)}
+                    rows={3} maxLength={1000}
+                    className="text-sm resize-none"
+                  />
+                  <div className="flex gap-2">
+                    <button onClick={() => submitAnswer(q.id)} disabled={saving || answerText.trim().length < 2}
+                      className="text-xs bg-accent text-white px-4 py-1.5 rounded-full hover:bg-accent/90 transition-colors disabled:opacity-50">
+                      {saving ? "Posting…" : "Post Answer"}
+                    </button>
+                    <button onClick={() => { setAnsweringId(null); setAnswerText(""); }}
+                      className="text-xs text-muted-foreground hover:text-foreground">Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <button onClick={() => { setAnsweringId(q.id); setAnswerText(""); }}
+                  className="text-xs bg-accent/10 text-accent px-4 py-1.5 rounded-full hover:bg-accent/20 transition-colors font-medium">
+                  Answer Question
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Bulk Import Tab ──────────────────────────────────────────────────────────
+function BulkImportTab() {
+  const [csvText, setCsvText] = useState("");
+  const [result, setResult] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const TEMPLATE = `name,price,discountPrice,category,stock,description,images
+"Vitamin C Serum 30ml",1200,999,serum,50,"Brightening Vitamin C serum with 15% L-Ascorbic Acid","https://example.com/img.jpg"
+"Hyaluronic Acid Moisturiser",1800,,moisturizer,30,"Deep hydration cream for all skin types",""`;
+
+  async function handleImport() {
+    if (!csvText.trim()) { setError("Please paste CSV content first."); return; }
+    setLoading(true); setError(""); setResult(null);
+    try {
+      const r = await fetch(API+"/api/admin/products/bulk-import", {
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getToken()}` },
+        body: JSON.stringify({ csv: csvText }),
+      });
+      const data = await r.json();
+      if (!r.ok) { setError(data.error ?? "Import failed"); return; }
+      setResult(data);
+    } finally { setLoading(false); }
+  }
+
+  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => setCsvText((ev.target?.result as string) ?? "");
+    reader.readAsText(file);
+  }
+
+  return (
+    <div className="space-y-5 max-w-2xl">
+      <div>
+        <h2 className="text-lg font-semibold">Bulk Product Import</h2>
+        <p className="text-sm text-muted-foreground mt-1">Upload a CSV file or paste CSV content to import multiple products at once.</p>
+      </div>
+
+      {/* Template download */}
+      <div className="bg-muted/40 border rounded-xl p-4">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Required CSV Format</p>
+        <pre className="text-xs text-foreground/80 font-mono overflow-x-auto whitespace-pre-wrap">{TEMPLATE}</pre>
+        <button
+          onClick={() => { const blob = new Blob([TEMPLATE], { type: "text/csv" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "product_import_template.csv"; a.click(); }}
+          className="mt-3 text-xs text-accent hover:underline"
+        >
+          Download Template CSV
+        </button>
+      </div>
+
+      {/* File upload */}
+      <div>
+        <Label className="text-sm">Upload CSV File</Label>
+        <input type="file" accept=".csv" onChange={handleFile} className="mt-1 block w-full text-sm text-muted-foreground file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:bg-accent file:text-white hover:file:bg-accent/90 file:cursor-pointer" />
+      </div>
+
+      {/* Or paste */}
+      <div>
+        <Label className="text-sm">Or Paste CSV Content</Label>
+        <Textarea
+          className="mt-1 font-mono text-xs resize-none"
+          rows={8}
+          value={csvText}
+          onChange={e => setCsvText(e.target.value)}
+          placeholder="Paste your CSV content here…"
+        />
+      </div>
+
+      {error && <p className="text-sm text-destructive">{error}</p>}
+
+      {result && (
+        <div className={`rounded-xl p-4 ${result.errors > 0 ? "bg-yellow-50 border-yellow-200 border" : "bg-green-50 border-green-200 border"}`}>
+          <p className="font-medium text-sm">{result.message}</p>
+          {result.errorDetails?.length > 0 && (
+            <ul className="mt-2 space-y-1">
+              {result.errorDetails.map((e: string, i: number) => (
+                <li key={i} className="text-xs text-red-600">• {e}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      <Button onClick={handleImport} disabled={loading || !csvText.trim()} className="rounded-full gap-2">
+        <Upload className="h-4 w-4" />
+        {loading ? "Importing…" : "Import Products"}
+      </Button>
+    </div>
+  );
+}
+
+
+  const tabContent: Record<string, React.ReactNode> = {
+    dashboard:  <DashboardTab />,
+    products:   <ProductsTab />,
+    categories: <CategoriesTab />,
+    orders:     <OrdersTab />,
+    archived:   <ArchivedOrdersTab />,
+    users:      <UsersTab />,
+    reviews:    <ReviewsTab />,
+    coupons:    <CouponsTab />,
+    monthly:    <MonthlyHistoryTab />,
+    settings:   <SettingsTab />,
+    returns:    <ReturnsTab />,
+    affiliates: <AffiliatesTab />,
+    blog:       <BlogTab />,
+    auditlogs:  <AuditLogsTab />,
+    qa:         <QATab />,
+    bulkimport: <BulkImportTab />,
+  };
+
+  const activeNav = navItems.find(n => n.id === activeTab);
+
+  return (
+    <div className="flex h-screen bg-[#fafafa] overflow-hidden font-sans">
+      <div className="hidden md:flex shrink-0">
+        <Sidebar />
+      </div>
+
+      {sidebarOpen && (
+        <>
+          <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden" onClick={() => setSidebarOpen(false)} />
+          <div className="fixed inset-y-0 left-0 z-50 md:hidden">
+            <Sidebar mobile />
+          </div>
+        </>
+      )}
+
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <header className="h-16 bg-white border-b flex items-center justify-between px-5 shrink-0">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <Menu className="h-5 w-5 text-gray-500" />
+            </button>
+            <div>
+              <h1 className="font-semibold text-gray-900 text-sm sm:text-base">{activeNav?.label ?? "Dashboard"}</h1>
+              <p className="text-xs text-gray-400 hidden sm:block">EnvyEnhance Admin</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-pink-300 to-rose-400 flex items-center justify-center">
+              <span className="text-white text-xs font-bold">{(me as any)?.firstName?.[0] ?? "A"}</span>
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
+          <div className="max-w-7xl mx-auto">
+            {tabContent[activeTab]}
+          </div>
+        </main>
+      </div>
+
+      {(showProductModal || editingProduct) && (
+        <ProductModal
+          product={editingProduct}
+          categories={categories as any[]}
+          onClose={() => { setShowProductModal(false); setEditingProduct(null); }}
+        />
+      )}
+
+      {(showCategoryModal || editingCategory) && (
+        <CategoryModal
+          category={editingCategory}
+          onClose={() => { setShowCategoryModal(false); setEditingCategory(null); }}
+        />
+      )}
+
+      {(showCouponModal) && (
+        <CouponModal
+          coupon={editingCoupon}
+          onClose={() => { setShowCouponModal(false); setEditingCoupon(null); }}
+        />
+      )}
+
+      {/* Cancellation Reason Modal */}
+      <Dialog open={!!cancelModal} onOpenChange={(open) => { if (!open) setCancelModal(null); }}>
+        <DialogContent className="sm:max-w-md rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-base font-semibold">Cancel Order</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <p className="text-sm text-muted-foreground">Provide a reason for cancellation (optional). This will be visible to the customer.</p>
+            <Textarea
+              placeholder="e.g. Item out of stock, customer requested cancellation…"
+              className="rounded-xl resize-none text-sm"
+              rows={3}
+              value={cancelModal?.reason ?? ""}
+              onChange={e => setCancelModal(m => m ? { ...m, reason: e.target.value } : m)}
+            />
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" className="rounded-xl" onClick={() => setCancelModal(null)}>
+              Keep Order
+            </Button>
+            <Button
+              className="rounded-xl bg-red-600 hover:bg-red-700 text-white"
+              disabled={updateOrderStatus.isPending}
+              onClick={confirmCancellation}
+            >
+              Confirm Cancellation
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
