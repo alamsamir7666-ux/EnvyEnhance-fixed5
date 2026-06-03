@@ -115,11 +115,11 @@ export function ProductDetailPage() {
   }, [product?.id]);
 
   useEffect(() => {
-    if (!product || product.stock !== 0) return;
-    // Wait 1.5s so page fully renders before sheet appears
-    const t = setTimeout(() => setShowStockSheet(true), 1500);
+    if (isLoading || !product || product.stock !== 0) return;
+    // Wait 2s after loading completes so page fully paints
+    const t = setTimeout(() => setShowStockSheet(true), 2000);
     return () => clearTimeout(t);
-  }, [product?.id]);
+  }, [isLoading, product?.id]);
 
   if (isLoading) {
     return (
