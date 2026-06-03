@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, Heart, ShoppingBag, Minus, Plus, ChevronLeft, Check, ShieldCheck, Package, Truck, Bike, Pencil, Trash2, AlertTriangle, Lock } from "lucide-react";
+import { Star, Heart, ShoppingBag, Minus, Plus, ChevronLeft, Check, ShieldCheck, Package, Truck, Bike, Pencil, Trash2, AlertTriangle, Lock, Bell } from "lucide-react";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { saveRecentlyViewed, useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 import { VariantSelector } from "@/components/ui/VariantSelector";
