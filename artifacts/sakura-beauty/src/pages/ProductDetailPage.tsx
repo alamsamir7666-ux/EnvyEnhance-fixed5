@@ -165,6 +165,13 @@ export function ProductDetailPage() {
 
   const imgs = product.images.length > 0 ? product.images : ["https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600&q=80&fm=webp"];
 
+  // Auto-show stock sheet when product is out of stock
+  useEffect(() => {
+    if (!product || product.stock !== 0 || stockSheetDismissed) return;
+    const timer = setTimeout(() => setShowStockSheet(true), 600);
+    return () => clearTimeout(timer);
+  }, [product?.stock, stockSheetDismissed]);
+
   function handleAddToCart() {
     if (!user) {
       if (!product) return;
