@@ -114,6 +114,13 @@ export function ProductDetailPage() {
     });
   }, [product?.id]);
 
+  // Auto-show stock sheet when product is out of stock
+  useEffect(() => {
+    if (!product || product.stock !== 0 || stockSheetDismissed) return;
+    const timer = setTimeout(() => setShowStockSheet(true), 600);
+    return () => clearTimeout(timer);
+  }, [product?.id, product?.stock, stockSheetDismissed]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
@@ -164,13 +171,6 @@ export function ProductDetailPage() {
   if (!product) return <div className="py-20 text-center text-muted-foreground">Product not found</div>;
 
   const imgs = product.images.length > 0 ? product.images : ["https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600&q=80&fm=webp"];
-
-  // Auto-show stock sheet when product is out of stock
-  useEffect(() => {
-    if (!product || product.stock !== 0 || stockSheetDismissed) return;
-    const timer = setTimeout(() => setShowStockSheet(true), 600);
-    return () => clearTimeout(timer);
-  }, [product?.id, product?.stock, stockSheetDismissed]);
 
   function handleAddToCart() {
     if (!user) {
