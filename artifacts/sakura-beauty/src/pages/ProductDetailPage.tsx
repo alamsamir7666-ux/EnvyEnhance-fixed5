@@ -722,7 +722,7 @@ export function ProductDetailPage() {
         <div onClick={() => setShowStockSheet(false)} style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.4)' }} />
       )}
       {showStockSheet && product && (
-        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999, background: '#ffffff', borderRadius: '20px 20px 0 0', padding: '24px', boxShadow: '0 -4px 24px rgba(0,0,0,0.15)' }}>
+        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999, backgroundColor: 'white', borderRadius: '20px 20px 0 0', padding: '24px', boxShadow: '0 -4px 24px rgba(0,0,0,0.15)', minHeight: '280px' }}>
           <div style={{ width: 40, height: 4, background: '#e5e7eb', borderRadius: 99, margin: '0 auto 16px' }} />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
             <div>
