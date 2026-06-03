@@ -255,7 +255,7 @@ export function ProductDetailPage() {
           crumbs={[
             { label: "Products", href: "/products", icon: <ShoppingBag className="h-3 w-3" /> },
             ...(product.category ? [{ label: product.category.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()), href: `/products?category=${product.category}`, icon: <Package className="h-3 w-3" /> }] : []),
-            { label: product.name.length > 35 ? product.name.slice(0, 35) + "\u2026" : product.name },
+            { label: product.name.length > 35 ? product.name.slice(0, 35) + "…" : product.name },
           ]}
           className="mb-4"
         />
@@ -304,10 +304,10 @@ export function ProductDetailPage() {
             </div>
 
             <div className="flex items-baseline gap-3 mb-6">
-              <span className="text-3xl font-semibold">\u09F3{displayPrice.toLocaleString()}</span>
+              <span className="text-3xl font-semibold">৳{displayPrice.toLocaleString()}</span>
               {product.discountPrice && (
                 <>
-                  <span className="text-lg text-muted-foreground line-through">\u09F3{product.price.toLocaleString()}</span>
+                  <span className="text-lg text-muted-foreground line-through">৳{product.price.toLocaleString()}</span>
                   <Badge className="bg-accent/15 text-accent border-accent/30">{discountPct}% off</Badge>
                 </>
               )}
@@ -316,7 +316,7 @@ export function ProductDetailPage() {
             <div className="flex items-center gap-2 mb-4">
               {product.stock === 0 ? (
                 <button onClick={() => setShowStockSheet(true)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
-                  \uD83D\uDD14 Out of stock \u2014 Notify me
+                  🔔 Out of stock — Notify me
                 </button>
               ) : product.stock <= 3 ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-600 text-sm font-semibold animate-pulse">
@@ -367,7 +367,7 @@ export function ProductDetailPage() {
             <ul className="space-y-1.5">
               {(product as ExtendedProduct).keyBenefits.map((b: string, i: number) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="mt-0.5 shrink-0 h-4 w-4 rounded-full bg-accent/15 text-accent flex items-center justify-center text-[10px] font-bold">\u2713</span>
+                  <span className="mt-0.5 shrink-0 h-4 w-4 rounded-full bg-accent/15 text-accent flex items-center justify-center text-[10px] font-bold">✓</span>
                   {b}
                 </li>
               ))}
@@ -422,7 +422,7 @@ export function ProductDetailPage() {
           <details className="mb-6 group">
             <summary className="cursor-pointer text-sm font-medium text-foreground flex items-center gap-2 mb-2 list-none">
               <span className="text-xs uppercase tracking-wider">Full Ingredients</span>
-              <span className="text-muted-foreground group-open:rotate-180 transition-transform">\u25be</span>
+              <span className="text-muted-foreground group-open:rotate-180 transition-transform">▾</span>
             </summary>
             <p className="text-sm text-muted-foreground leading-relaxed pl-2 border-l-2 border-accent/30">{product.ingredients}</p>
           </details>
@@ -465,7 +465,7 @@ export function ProductDetailPage() {
               <div>
                 <p className="font-medium text-foreground mb-0.5">Reviews are for verified purchasers</p>
                 <p>You need to buy this product before you can leave a review.</p>
-                <Link href="/orders"><span className="text-accent underline underline-offset-2 hover:text-accent/80 mt-1 inline-block">View your orders \u2192</span></Link>
+                <Link href="/orders"><span className="text-accent underline underline-offset-2 hover:text-accent/80 mt-1 inline-block">View your orders →</span></Link>
               </div>
             </div>
           )}
@@ -476,7 +476,7 @@ export function ProductDetailPage() {
               <div>
                 <p className="font-medium text-foreground mb-0.5">Sign in to leave a review</p>
                 <p>Only verified purchasers can review products.</p>
-                <Link href="/sign-in"><span className="text-accent underline underline-offset-2 hover:text-accent/80 mt-1 inline-block">Sign in \u2192</span></Link>
+                <Link href="/sign-in"><span className="text-accent underline underline-offset-2 hover:text-accent/80 mt-1 inline-block">Sign in →</span></Link>
               </div>
             </div>
           )}
@@ -565,9 +565,9 @@ export function ProductDetailPage() {
               </div>
               <div className="flex-1 pb-2">
                 <p className="font-semibold text-sm">Standard Delivery</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Delivery Time: 2\u20135 business days</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Delivery Time: 2–5 business days</p>
                 <div className="mt-3 inline-flex items-center gap-1.5 bg-accent/8 border border-accent/20 text-accent text-xs font-medium px-3 py-1.5 rounded-full">
-                  <span>\u09F360 within Dhaka City</span><span className="text-accent/40">\u00b7</span><span>\u09F3120 outside Dhaka</span>
+                  <span>৳60 within Dhaka City</span><span className="text-accent/40">·</span><span>৳120 outside Dhaka</span>
                 </div>
               </div>
             </div>
@@ -577,7 +577,7 @@ export function ProductDetailPage() {
                 <p className="font-semibold text-sm">Dhaka City Same Day Delivery</p>
                 <p className="text-xs text-muted-foreground mt-0.5">Delivery Time: Within 24h</p>
                 <div className="mt-3 inline-flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 text-xs font-medium px-3 py-1.5 rounded-full">
-                  <span>3pm \u2013 9pm</span><span className="text-green-400">\u00b7</span><span>Except Friday</span>
+                  <span>3pm – 9pm</span><span className="text-green-400">·</span><span>Except Friday</span>
                 </div>
               </div>
             </div>
@@ -593,7 +593,7 @@ export function ProductDetailPage() {
                 <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">Your browsing history</p>
                 <h2 className="font-serif text-3xl font-medium">Recently Viewed</h2>
               </div>
-              <Link href="/products"><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all \u2192</Button></Link>
+              <Link href="/products"><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all →</Button></Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
               {recentlyViewed.slice(0, 4).map((p) => (<ProductCard key={p.id} product={p as ExtendedProduct} />))}
@@ -608,7 +608,7 @@ export function ProductDetailPage() {
                 <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">You may also like</p>
                 <h2 className="font-serif text-3xl font-medium">Related Products</h2>
               </div>
-              <Link href={`/products?category=${product.category}`}><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all {product.category} \u2192</Button></Link>
+              <Link href={`/products?category=${product.category}`}><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all {product.category} →</Button></Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
               {relatedProducts.map((p) => (<ProductCard key={p.id} product={p} />))}
@@ -623,14 +623,14 @@ export function ProductDetailPage() {
       )}
       {/* Stock sheet panel */}
       {showStockSheet && product && (
-        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999, backgroundColor: 'white', borderRadius: '20px 20px 0 0', padding: '24px', boxShadow: '0 -4px 24px rgba(0,0,0,0.15)', minHeight: '280px' }}>
+        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999, backgroundColor: '#ffffff', borderRadius: '20px 20px 0 0', padding: '24px', boxShadow: '0 -4px 24px rgba(0,0,0,0.15)', minHeight: '280px' }}>
           <div style={{ width: 40, height: 4, background: '#e5e7eb', borderRadius: 99, margin: '0 auto 16px' }} />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
             <div>
               <p style={{ fontWeight: 700, fontSize: 18, marginBottom: 4 }}>Back in Stock Soon!</p>
               <p style={{ color: '#6b7280', fontSize: 14 }}>Get notified the moment this product is available again.</p>
             </div>
-            <button onClick={() => setShowStockSheet(false)} style={{ background: '#f3f4f6', border: 'none', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', fontSize: 16 }}>\u2715</button>
+            <button onClick={() => setShowStockSheet(false)} style={{ background: '#f3f4f6', border: 'none', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', fontSize: 16 }}>✕</button>
           </div>
           <StockAlertButton productId={product.id} productName={product.name} sheetMode />
         </div>
