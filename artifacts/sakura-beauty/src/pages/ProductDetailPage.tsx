@@ -749,7 +749,7 @@ export function ProductDetailPage() {
           />
           {/* Sheet */}
           <div
-            style={{ transform: "translateY(0)", transition: "transform 0.3s ease-out" }} className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-2xl"
+            style={{ background: "#ffffff", minHeight: "320px", zIndex: 9999 }} className="fixed bottom-0 left-0 right-0 rounded-t-2xl shadow-2xl"
           >
             <div className="flex justify-center pt-3 pb-1">
               <div className="w-10 h-1 rounded-full bg-gray-200" />
