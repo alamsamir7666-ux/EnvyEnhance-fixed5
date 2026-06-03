@@ -32,13 +32,13 @@ function FormContent({ method, setMethod, status, phone, setPhone, email, setEma
     <div className="space-y-4">
       <div className="flex gap-3">
         <button type="button" onClick={() => setMethod("phone")}
-          style={{ background: method === "phone" ? "var(--accent, #e05c9a)" : "transparent", color: method === "phone" ? "#fff" : undefined }}
-          className={`flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full border transition-colors ${method === "phone" ? "border-transparent" : "border-border text-muted-foreground"}`}>
+          style={{ background: method === "phone" ? "var(--accent, #e05c9a)" : "transparent", color: method === "phone" ? "#fff" : "inherit" }}
+          className={`flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full border transition-colors ${method === "phone" ? "border-transparent" : "border-border"}`}>
           <Phone className="h-4 w-4" /> Phone
         </button>
         <button type="button" onClick={() => setMethod("email")}
-          style={{ background: method === "email" ? "var(--accent, #e05c9a)" : "transparent", color: method === "email" ? "#fff" : undefined }}
-          className={`flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full border transition-colors ${method === "email" ? "border-transparent" : "border-border text-muted-foreground"}`}>
+          style={{ background: method === "email" ? "var(--accent, #e05c9a)" : "transparent", color: method === "email" ? "#fff" : "inherit" }}
+          className={`flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full border transition-colors ${method === "email" ? "border-transparent" : "border-border"}`}>
           <Mail className="h-4 w-4" /> Email
         </button>
       </div>

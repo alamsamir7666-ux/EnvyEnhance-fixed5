@@ -117,7 +117,7 @@ export function ProductDetailPage() {
   useEffect(() => {
     if (isLoading || !product || product.stock !== 0) return;
     // Wait 2s after loading completes so page fully paints
-    const t = setTimeout(() => setShowStockSheet(true), 2000);
+    const t = setTimeout(() => setShowStockSheet(true), 300);
     return () => clearTimeout(t);
   }, [isLoading, product?.id]);
 
