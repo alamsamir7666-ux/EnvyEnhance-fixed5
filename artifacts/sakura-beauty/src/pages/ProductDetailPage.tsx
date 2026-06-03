@@ -722,7 +722,7 @@ export function ProductDetailPage() {
       </div>
 
       {/* Bell FAB — only when out of stock and sheet dismissed */}
-      {product.stock === 0 && stockSheetDismissed && (
+      {product && product.stock === 0 && stockSheetDismissed && (
         <button
           onClick={() => setShowStockSheet(true)}
           className="fixed bottom-24 right-4 z-40 h-12 w-12 rounded-full bg-accent shadow-lg flex items-center justify-center text-white hover:bg-accent/90 transition-all"
@@ -733,7 +733,7 @@ export function ProductDetailPage() {
       )}
 
       {/* Stock alert bottom sheet */}
-      {product.stock === 0 && (
+      {product && product.stock === 0 && (
         <>
           {/* Backdrop */}
           <div
@@ -760,7 +760,7 @@ export function ProductDetailPage() {
                   ✕
                 </button>
               </div>
-              <StockAlertButton productId={product.id} productName={product.name} sheetMode />
+              {product && <StockAlertButton productId={product.id} productName={product.name} sheetMode />}
             </div>
           </div>
         </>
