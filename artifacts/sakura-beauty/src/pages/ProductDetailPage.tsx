@@ -170,7 +170,7 @@ export function ProductDetailPage() {
     if (!product || product.stock !== 0 || stockSheetDismissed) return;
     const timer = setTimeout(() => setShowStockSheet(true), 600);
     return () => clearTimeout(timer);
-  }, [product?.stock, stockSheetDismissed]);
+  }, [product?.id, product?.stock, stockSheetDismissed]);
 
   function handleAddToCart() {
     if (!user) {
@@ -749,7 +749,7 @@ export function ProductDetailPage() {
           />
           {/* Sheet */}
           <div
-            className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-2xl animate-in slide-in-from-bottom duration-300"
+            style={{ transform: "translateY(0)", transition: "transform 0.3s ease-out" }} className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-2xl"
           >
             <div className="flex justify-center pt-3 pb-1">
               <div className="w-10 h-1 rounded-full bg-gray-200" />
