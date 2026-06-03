@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useParams, useLocation, useSearch, Link } from "wouter";
 import {
   useGetProduct, useListReviews, useCreateReview, useUpdateReview, useDeleteReview, useAddToCart,
@@ -617,22 +618,22 @@ export function ProductDetailPage() {
         )}
       </div>
 
-      {/* Stock sheet — backdrop + panel in one block */}
-      {showStockSheet && product && (
+      {showStockSheet && product && createPortal(
         <>
-          <div onClick={() => setShowStockSheet(false)} style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.4)' }} />
-          <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999, backgroundColor: 'rgb(255,255,255)', color: 'rgb(17,17,17)', borderRadius: '20px 20px 0 0', padding: '24px', boxShadow: '0 -4px 24px rgba(0,0,0,0.3)', minHeight: '300px' }}>
+          <div onClick={() => setShowStockSheet(false)} style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.5)' }} />
+          <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999, background: 'white', borderRadius: '20px 20px 0 0', padding: '24px', boxShadow: '0 -8px 32px rgba(0,0,0,0.2)', minHeight: '300px' }}>
             <div style={{ width: 40, height: 4, background: '#e5e7eb', borderRadius: 99, margin: '0 auto 16px' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
               <div>
-                <p style={{ fontWeight: 700, fontSize: 18, marginBottom: 4 }}>Back in Stock Soon!</p>
+                <p style={{ fontWeight: 700, fontSize: 18, marginBottom: 4, color: '#111' }}>Back in Stock Soon!</p>
                 <p style={{ color: '#6b7280', fontSize: 14 }}>Get notified the moment this product is available again.</p>
               </div>
               <button onClick={() => setShowStockSheet(false)} style={{ background: '#f3f4f6', border: 'none', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', fontSize: 16 }}>✕</button>
             </div>
             <StockAlertButton productId={product.id} productName={product.name} sheetMode />
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );
