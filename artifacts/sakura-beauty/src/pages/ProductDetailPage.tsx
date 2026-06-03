@@ -251,12 +251,11 @@ export function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        {/* Breadcrumb */}
         <PageBreadcrumb
           crumbs={[
             { label: "Products", href: "/products", icon: <ShoppingBag className="h-3 w-3" /> },
             ...(product.category ? [{ label: product.category.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()), href: `/products?category=${product.category}`, icon: <Package className="h-3 w-3" /> }] : []),
-            { label: product.name.length > 35 ? product.name.slice(0, 35) + "…" : product.name },
+            { label: product.name.length > 35 ? product.name.slice(0, 35) + "\u2026" : product.name },
           ]}
           className="mb-4"
         />
@@ -266,7 +265,8 @@ export function ProductDetailPage() {
           </Button>
         </Link>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+        {/* Image + Details grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-10">
           {/* Images */}
           <div className="space-y-4">
             <div className="aspect-square rounded-2xl overflow-hidden bg-muted/20 border">
@@ -294,7 +294,6 @@ export function ProductDetailPage() {
             </div>
             <h1 className="font-serif text-3xl md:text-4xl font-medium mb-3">{product.name}</h1>
 
-            {/* Rating */}
             <div className="flex items-center gap-2 mb-5">
               <div className="flex">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -304,12 +303,11 @@ export function ProductDetailPage() {
               <span className="text-sm text-muted-foreground">({product.reviewCount} reviews)</span>
             </div>
 
-            {/* Price */}
             <div className="flex items-baseline gap-3 mb-6">
-              <span className="text-3xl font-semibold">৳{displayPrice.toLocaleString()}</span>
+              <span className="text-3xl font-semibold">\u09F3{displayPrice.toLocaleString()}</span>
               {product.discountPrice && (
                 <>
-                  <span className="text-lg text-muted-foreground line-through">৳{product.price.toLocaleString()}</span>
+                  <span className="text-lg text-muted-foreground line-through">\u09F3{product.price.toLocaleString()}</span>
                   <Badge className="bg-accent/15 text-accent border-accent/30">{discountPct}% off</Badge>
                 </>
               )}
@@ -318,17 +316,15 @@ export function ProductDetailPage() {
             <div className="flex items-center gap-2 mb-4">
               {product.stock === 0 ? (
                 <button onClick={() => setShowStockSheet(true)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
-                  🔔 Out of stock — Notify me
+                  \uD83D\uDD14 Out of stock \u2014 Notify me
                 </button>
               ) : product.stock <= 3 ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-600 text-sm font-semibold animate-pulse">
-                  <AlertTriangle className="h-3.5 w-3.5" />
-                  Only {product.stock} left!
+                  <AlertTriangle className="h-3.5 w-3.5" /> Only {product.stock} left!
                 </span>
               ) : product.stock <= 10 ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-sm font-medium">
-                  <AlertTriangle className="h-3.5 w-3.5" />
-                  Only {product.stock} left
+                  <AlertTriangle className="h-3.5 w-3.5" /> Only {product.stock} left
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 border border-green-200 text-green-700 text-sm font-medium">
@@ -337,22 +333,13 @@ export function ProductDetailPage() {
               )}
             </div>
 
-            {/* Quantity + actions */}
             <div className="flex items-center gap-3 mb-4">
               <div className="inline-flex items-center border border-border rounded-full h-11">
-                <button
-                  onClick={() => setQty(Math.max(1, qty - 1))}
-                  className="h-full px-3.5 flex items-center justify-center text-muted-foreground hover:text-foreground rounded-l-full transition-colors"
-                  aria-label="Decrease quantity"
-                >
+                <button onClick={() => setQty(Math.max(1, qty - 1))} className="h-full px-3.5 flex items-center justify-center text-muted-foreground hover:text-foreground rounded-l-full transition-colors" aria-label="Decrease quantity">
                   <Minus className="h-4 w-4" />
                 </button>
                 <span className="w-10 font-medium text-center select-none tabular-nums text-sm">{qty}</span>
-                <button
-                  onClick={() => setQty(Math.min(product.stock, qty + 1))}
-                  className="h-full px-3.5 flex items-center justify-center text-muted-foreground hover:text-foreground rounded-r-full transition-colors"
-                  aria-label="Increase quantity"
-                >
+                <button onClick={() => setQty(Math.min(product.stock, qty + 1))} className="h-full px-3.5 flex items-center justify-center text-muted-foreground hover:text-foreground rounded-r-full transition-colors" aria-label="Increase quantity">
                   <Plus className="h-4 w-4" />
                 </button>
               </div>
@@ -362,123 +349,101 @@ export function ProductDetailPage() {
                 onClick={handleAddToCart}
                 disabled={product.stock === 0 || addToCart.isPending}
               >
-                {justAdded ? (
-                  <><Check className="h-4 w-4 mr-2" /> Added to Bag</>
-                ) : (
-                  <><ShoppingBag className="h-4 w-4 mr-2" /> Add to Bag</>
-                )}
+                {justAdded ? (<><Check className="h-4 w-4 mr-2" /> Added to Bag</>) : (<><ShoppingBag className="h-4 w-4 mr-2" /> Add to Bag</>)}
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full h-12 w-12"
-                onClick={handleWishlist}
-              >
+              <Button variant="outline" size="icon" className="rounded-full h-12 w-12" onClick={handleWishlist}>
                 <Heart className={`h-5 w-5 ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`} />
               </Button>
             </div>
           </div>
         </div>
 
+        {/* Description + extra fields — full width below the grid */}
         <p className="text-muted-foreground leading-relaxed mb-6">{product.description}</p>
 
-            {/* Key Benefits */}
-            {(product as ExtendedProduct).keyBenefits?.length > 0 && (
-              <div className="mb-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">Key Benefits</p>
-                <ul className="space-y-1.5">
-                  {(product as ExtendedProduct).keyBenefits.map((b: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <span className="mt-0.5 shrink-0 h-4 w-4 rounded-full bg-accent/15 text-accent flex items-center justify-center text-[10px] font-bold">✓</span>
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+        {(product as ExtendedProduct).keyBenefits?.length > 0 && (
+          <div className="mb-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">Key Benefits</p>
+            <ul className="space-y-1.5">
+              {(product as ExtendedProduct).keyBenefits.map((b: string, i: number) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <span className="mt-0.5 shrink-0 h-4 w-4 rounded-full bg-accent/15 text-accent flex items-center justify-center text-[10px] font-bold">\u2713</span>
+                  {b}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-            {/* Main Ingredients */}
-            {(product as ExtendedProduct).mainIngredients?.length > 0 && (
-              <div className="mb-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">Main Ingredients</p>
-                <div className="flex flex-wrap gap-2">
-                  {(product as ExtendedProduct).mainIngredients.map((ing: { name: string; icon: string }, i: number) => (
-                    <span key={i} className="inline-flex items-center gap-1.5 bg-muted/50 border border-border rounded-full px-3 py-1 text-xs font-medium text-foreground">
-                      <span className="text-base leading-none">{ing.icon}</span>
-                      {ing.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+        {(product as ExtendedProduct).mainIngredients?.length > 0 && (
+          <div className="mb-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">Main Ingredients</p>
+            <div className="flex flex-wrap gap-2">
+              {(product as ExtendedProduct).mainIngredients.map((ing: { name: string; icon: string }, i: number) => (
+                <span key={i} className="inline-flex items-center gap-1.5 bg-muted/50 border border-border rounded-full px-3 py-1 text-xs font-medium text-foreground">
+                  <span className="text-base leading-none">{ing.icon}</span>{ing.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
-            {/* Best For */}
-            {(product as ExtendedProduct).bestFor?.length > 0 && (
-              <div className="mb-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">Best For</p>
-                <div className="flex flex-wrap gap-2">
-                  {(product as ExtendedProduct).bestFor.map((b: string, i: number) => (
-                    <span key={i} className="bg-accent/10 text-accent border border-accent/20 rounded-full px-3 py-1 text-xs font-medium">{b}</span>
-                  ))}
-                </div>
-              </div>
-            )}
+        {(product as ExtendedProduct).bestFor?.length > 0 && (
+          <div className="mb-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">Best For</p>
+            <div className="flex flex-wrap gap-2">
+              {(product as ExtendedProduct).bestFor.map((b: string, i: number) => (
+                <span key={i} className="bg-accent/10 text-accent border border-accent/20 rounded-full px-3 py-1 text-xs font-medium">{b}</span>
+              ))}
+            </div>
+          </div>
+        )}
 
-            {/* Texture */}
-            {(product as ExtendedProduct).texture && (
-              <div className="mb-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-1">Texture</p>
-                <p className="text-sm text-muted-foreground">{(product as ExtendedProduct).texture}</p>
-              </div>
-            )}
+        {(product as ExtendedProduct).texture && (
+          <div className="mb-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-1">Texture</p>
+            <p className="text-sm text-muted-foreground">{(product as ExtendedProduct).texture}</p>
+          </div>
+        )}
 
-            {(product as any).videoUrl && (
-              <div className="mb-6">
-                <h3 className="text-xs uppercase tracking-wider font-medium text-foreground mb-2">Product Video</h3>
-                <div className="relative w-full" style={{paddingBottom: "56.25%"}}>
-                  <iframe
-                    className="absolute top-0 left-0 w-full h-full rounded-xl"
-                    src={(product as any).videoUrl.replace("watch?v=", "embed/")}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              </div>
-            )}
+        {(product as any).videoUrl && (
+          <div className="mb-6">
+            <h3 className="text-xs uppercase tracking-wider font-medium text-foreground mb-2">Product Video</h3>
+            <div className="relative w-full" style={{paddingBottom: "56.25%"}}>
+              <iframe className="absolute top-0 left-0 w-full h-full rounded-xl"
+                src={(product as any).videoUrl.replace("watch?v=", "embed/")}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen />
+            </div>
+          </div>
+        )}
 
-            {product.ingredients && (
-              <details className="mb-6 group">
-                <summary className="cursor-pointer text-sm font-medium text-foreground flex items-center gap-2 mb-2 list-none">
-                  <span className="text-xs uppercase tracking-wider">Full Ingredients</span>
-                  <span className="text-muted-foreground group-open:rotate-180 transition-transform">▾</span>
-                </summary>
-                <p className="text-sm text-muted-foreground leading-relaxed pl-2 border-l-2 border-accent/30">{product.ingredients}</p>
-              </details>
-            )}
-
+        {product.ingredients && (
+          <details className="mb-6 group">
+            <summary className="cursor-pointer text-sm font-medium text-foreground flex items-center gap-2 mb-2 list-none">
+              <span className="text-xs uppercase tracking-wider">Full Ingredients</span>
+              <span className="text-muted-foreground group-open:rotate-180 transition-transform">\u25be</span>
+            </summary>
+            <p className="text-sm text-muted-foreground leading-relaxed pl-2 border-l-2 border-accent/30">{product.ingredients}</p>
+          </details>
+        )}
 
         {/* Reviews */}
         <section className="border-t pt-12 mb-16">
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-serif text-2xl font-medium">Customer Reviews</h2>
-
-            {/* Review button — only shown if user can review */}
             {user && canReview && (
               <Button variant="outline" onClick={() => setShowReviewForm(!showReviewForm)}>
                 {showReviewForm ? "Cancel" : "Write a Review"}
               </Button>
             )}
-
-            {/* Already reviewed badge */}
             {user && alreadyReviewed && (
               <span className="flex items-center gap-1.5 text-sm text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full">
-                <Check className="h-3.5 w-3.5 text-green-600" />
-                You've reviewed this product
+                <Check className="h-3.5 w-3.5 text-green-600" /> You've reviewed this product
               </span>
             )}
           </div>
 
-          {/* Review form */}
           {showReviewForm && canReview && (
             <div className="bg-muted/30 rounded-2xl p-6 mb-8">
               <h3 className="font-medium mb-4">Your Review</h3>
@@ -489,43 +454,29 @@ export function ProductDetailPage() {
                   </button>
                 ))}
               </div>
-              <Textarea
-                placeholder="Share your experience with this product..."
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                className="mb-4"
-                rows={4}
-              />
-              <Button onClick={handleReview} disabled={createReview.isPending || !comment.trim()}>
-                Submit Review
-              </Button>
+              <Textarea placeholder="Share your experience with this product..." value={comment} onChange={(e) => setComment(e.target.value)} className="mb-4" rows={4} />
+              <Button onClick={handleReview} disabled={createReview.isPending || !comment.trim()}>Submit Review</Button>
             </div>
           )}
 
-          {/* Not purchased — purchase gate notice */}
           {user && notPurchased && !alreadyReviewed && (
             <div className="flex items-start gap-3 bg-muted/40 border border-border rounded-xl px-5 py-4 mb-8 text-sm text-muted-foreground">
               <Lock className="h-4 w-4 mt-0.5 shrink-0 text-muted-foreground/60" />
               <div>
                 <p className="font-medium text-foreground mb-0.5">Reviews are for verified purchasers</p>
                 <p>You need to buy this product before you can leave a review.</p>
-                <Link href="/orders">
-                  <span className="text-accent underline underline-offset-2 hover:text-accent/80 mt-1 inline-block">View your orders →</span>
-                </Link>
+                <Link href="/orders"><span className="text-accent underline underline-offset-2 hover:text-accent/80 mt-1 inline-block">View your orders \u2192</span></Link>
               </div>
             </div>
           )}
 
-          {/* Not signed in */}
           {!user && (
             <div className="flex items-start gap-3 bg-muted/40 border border-border rounded-xl px-5 py-4 mb-8 text-sm text-muted-foreground">
               <Lock className="h-4 w-4 mt-0.5 shrink-0 text-muted-foreground/60" />
               <div>
                 <p className="font-medium text-foreground mb-0.5">Sign in to leave a review</p>
                 <p>Only verified purchasers can review products.</p>
-                <Link href="/sign-in">
-                  <span className="text-accent underline underline-offset-2 hover:text-accent/80 mt-1 inline-block">Sign in →</span>
-                </Link>
+                <Link href="/sign-in"><span className="text-accent underline underline-offset-2 hover:text-accent/80 mt-1 inline-block">Sign in \u2192</span></Link>
               </div>
             </div>
           )}
@@ -552,17 +503,12 @@ export function ProductDetailPage() {
                         <span className="text-xs text-muted-foreground">{new Date(r.createdAt).toLocaleDateString()}</span>
                         {isOwner && !isEditing && (
                           <>
-                            <button onClick={() => startEditReview(r)} className="p-1.5 rounded-lg text-muted-foreground hover:text-blue-500 hover:bg-blue-50 transition-colors">
-                              <Pencil className="h-3.5 w-3.5" />
-                            </button>
-                            <button onClick={() => handleDeleteReview(r.id)} className="p-1.5 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors">
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </button>
+                            <button onClick={() => startEditReview(r)} className="p-1.5 rounded-lg text-muted-foreground hover:text-blue-500 hover:bg-blue-50 transition-colors"><Pencil className="h-3.5 w-3.5" /></button>
+                            <button onClick={() => handleDeleteReview(r.id)} className="p-1.5 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors"><Trash2 className="h-3.5 w-3.5" /></button>
                           </>
                         )}
                       </div>
                     </div>
-
                     {isEditing ? (
                       <div className="bg-muted/30 rounded-xl p-4 mt-2">
                         <div className="flex gap-1.5 mb-3">
@@ -572,19 +518,10 @@ export function ProductDetailPage() {
                             </button>
                           ))}
                         </div>
-                        <Textarea
-                          value={editComment}
-                          onChange={(e) => setEditComment(e.target.value)}
-                          className="mb-3"
-                          rows={3}
-                        />
+                        <Textarea value={editComment} onChange={(e) => setEditComment(e.target.value)} className="mb-3" rows={3} />
                         <div className="flex gap-2">
-                          <Button size="sm" onClick={handleUpdateReview} disabled={updateReview.isPending || !editComment.trim()}>
-                            Save
-                          </Button>
-                          <Button size="sm" variant="ghost" onClick={() => setEditingReviewId(null)}>
-                            Cancel
-                          </Button>
+                          <Button size="sm" onClick={handleUpdateReview} disabled={updateReview.isPending || !editComment.trim()}>Save</Button>
+                          <Button size="sm" variant="ghost" onClick={() => setEditingReviewId(null)}>Cancel</Button>
                         </div>
                       </div>
                     ) : (
@@ -600,29 +537,18 @@ export function ProductDetailPage() {
         {/* Trust Badges */}
         <section className="mb-8">
           <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
-            {/* Badge 1 — Authenticity */}
             <div className="snap-start shrink-0 w-[calc(100%-2rem)] sm:w-[calc(50%-0.5rem)] bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-100 rounded-2xl p-5 flex items-start gap-4">
-              <div className="shrink-0 h-12 w-12 rounded-full bg-rose-100 flex items-center justify-center">
-                <ShieldCheck className="h-6 w-6 text-rose-500" />
-              </div>
+              <div className="shrink-0 h-12 w-12 rounded-full bg-rose-100 flex items-center justify-center"><ShieldCheck className="h-6 w-6 text-rose-500" /></div>
               <div>
                 <p className="font-semibold text-sm text-foreground mb-1">100% Authentic Products</p>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  All products sold on EnvyEnhance are 100% authentic, sourced from trusted Japanese stores. No fakes, ever.
-                </p>
+                <p className="text-xs text-muted-foreground leading-relaxed">All products sold on EnvyEnhance are 100% authentic, sourced from trusted Japanese stores. No fakes, ever.</p>
               </div>
             </div>
-
-            {/* Badge 2 — Import Notice */}
             <div className="snap-start shrink-0 w-[calc(100%-2rem)] sm:w-[calc(50%-0.5rem)] bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 rounded-2xl p-5 flex items-start gap-4">
-              <div className="shrink-0 h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
-                <Package className="h-6 w-6 text-amber-500" />
-              </div>
+              <div className="shrink-0 h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center"><Package className="h-6 w-6 text-amber-500" /></div>
               <div>
                 <p className="font-semibold text-sm text-foreground mb-1">Import Notice</p>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  We import cosmetics directly from Japan. Due to shipping, outer packaging may have minor dents or scratches, but product quality and authenticity are unadulterated.
-                </p>
+                <p className="text-xs text-muted-foreground leading-relaxed">We import cosmetics directly from Japan. Due to shipping, outer packaging may have minor dents or scratches, but product quality and authenticity are unadulterated.</p>
               </div>
             </div>
           </div>
@@ -630,53 +556,36 @@ export function ProductDetailPage() {
 
         {/* Delivery Options */}
         <section className="mb-16 border rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b bg-muted/30">
-            <h3 className="font-serif text-lg font-medium">Delivery Options</h3>
-          </div>
+          <div className="px-6 py-4 border-b bg-muted/30"><h3 className="font-serif text-lg font-medium">Delivery Options</h3></div>
           <div className="divide-y">
-            {/* Standard Delivery */}
             <div className="flex items-start gap-4 px-6 py-5">
               <div className="relative flex flex-col items-center">
-                <div className="h-9 w-9 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
-                  <Truck className="h-4 w-4 text-accent" />
-                </div>
+                <div className="h-9 w-9 rounded-full bg-accent/10 flex items-center justify-center shrink-0"><Truck className="h-4 w-4 text-accent" /></div>
                 <div className="w-px flex-1 bg-border mt-2 min-h-[2rem]" />
               </div>
               <div className="flex-1 pb-2">
                 <p className="font-semibold text-sm">Standard Delivery</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Delivery Time: 2–5 business days</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Delivery Time: 2\u20135 business days</p>
                 <div className="mt-3 inline-flex items-center gap-1.5 bg-accent/8 border border-accent/20 text-accent text-xs font-medium px-3 py-1.5 rounded-full">
-                  <span>৳60 within Dhaka City</span>
-                  <span className="text-accent/40">·</span>
-                  <span>৳120 outside Dhaka</span>
+                  <span>\u09F360 within Dhaka City</span><span className="text-accent/40">\u00b7</span><span>\u09F3120 outside Dhaka</span>
                 </div>
               </div>
             </div>
-
-            {/* Same Day Delivery */}
             <div className="flex items-start gap-4 px-6 py-5">
-              <div className="h-9 w-9 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                <Bike className="h-4 w-4 text-green-600" />
-              </div>
+              <div className="h-9 w-9 rounded-full bg-green-100 flex items-center justify-center shrink-0"><Bike className="h-4 w-4 text-green-600" /></div>
               <div className="flex-1">
                 <p className="font-semibold text-sm">Dhaka City Same Day Delivery</p>
                 <p className="text-xs text-muted-foreground mt-0.5">Delivery Time: Within 24h</p>
                 <div className="mt-3 inline-flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 text-xs font-medium px-3 py-1.5 rounded-full">
-                  <span>3pm – 9pm</span>
-                  <span className="text-green-400">·</span>
-                  <span>Except Friday</span>
+                  <span>3pm \u2013 9pm</span><span className="text-green-400">\u00b7</span><span>Except Friday</span>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Product Q&A */}
-      <div className="container mx-auto px-4 max-w-5xl pb-0">
         <ProductQA productId={product.id} />
-      </div>
 
-      {/* Recently Viewed */}
         {recentlyViewed.length > 0 && (
           <section className="border-t pt-12 mb-12">
             <div className="flex items-end justify-between mb-8">
@@ -684,21 +593,14 @@ export function ProductDetailPage() {
                 <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">Your browsing history</p>
                 <h2 className="font-serif text-3xl font-medium">Recently Viewed</h2>
               </div>
-              <Link href="/products">
-                <Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">
-                  View all →
-                </Button>
-              </Link>
+              <Link href="/products"><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all \u2192</Button></Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-              {recentlyViewed.slice(0, 4).map((p) => (
-                <ProductCard key={p.id} product={p as ExtendedProduct} />
-              ))}
+              {recentlyViewed.slice(0, 4).map((p) => (<ProductCard key={p.id} product={p as ExtendedProduct} />))}
             </div>
           </section>
         )}
 
-        {/* Related Products */}
         {relatedProducts.length > 0 && (
           <section className="border-t pt-12">
             <div className="flex items-end justify-between mb-8">
@@ -706,23 +608,20 @@ export function ProductDetailPage() {
                 <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">You may also like</p>
                 <h2 className="font-serif text-3xl font-medium">Related Products</h2>
               </div>
-              <Link href={`/products?category=${product.category}`}>
-                <Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">
-                  View all {product.category} →
-                </Button>
-              </Link>
+              <Link href={`/products?category=${product.category}`}><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all {product.category} \u2192</Button></Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-              {relatedProducts.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
+              {relatedProducts.map((p) => (<ProductCard key={p.id} product={p} />))}
             </div>
           </section>
         )}
       </div>
+
+      {/* Stock sheet backdrop */}
       {showStockSheet && product && (
         <div onClick={() => setShowStockSheet(false)} style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.4)' }} />
       )}
+      {/* Stock sheet panel */}
       {showStockSheet && product && (
         <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999, backgroundColor: 'white', borderRadius: '20px 20px 0 0', padding: '24px', boxShadow: '0 -4px 24px rgba(0,0,0,0.15)', minHeight: '280px' }}>
           <div style={{ width: 40, height: 4, background: '#e5e7eb', borderRadius: 99, margin: '0 auto 16px' }} />
@@ -731,7 +630,7 @@ export function ProductDetailPage() {
               <p style={{ fontWeight: 700, fontSize: 18, marginBottom: 4 }}>Back in Stock Soon!</p>
               <p style={{ color: '#6b7280', fontSize: 14 }}>Get notified the moment this product is available again.</p>
             </div>
-            <button onClick={() => setShowStockSheet(false)} style={{ background: '#f3f4f6', border: 'none', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', fontSize: 16 }}>✕</button>
+            <button onClick={() => setShowStockSheet(false)} style={{ background: '#f3f4f6', border: 'none', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', fontSize: 16 }}>\u2715</button>
           </div>
           <StockAlertButton productId={product.id} productName={product.name} sheetMode />
         </div>
