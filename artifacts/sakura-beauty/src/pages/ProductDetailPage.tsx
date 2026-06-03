@@ -117,7 +117,7 @@ export function ProductDetailPage() {
     if (!product || product.stock !== 0) return;
     const t = setTimeout(() => setShowStockSheet(true), 800);
     return () => clearTimeout(t);
-  }, [product?.id, product?.stock]);
+  }, [product?.id]);
 
   if (isLoading) {
     return (
