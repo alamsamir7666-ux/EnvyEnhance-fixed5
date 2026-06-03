@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, Heart, ShoppingBag, Minus, Plus, ChevronLeft, Check, ShieldCheck, Package, Truck, Bike, Pencil, Trash2, AlertTriangle, Lock, Bell } from "lucide-react";
+import { Star, Heart, ShoppingBag, Minus, Plus, ChevronLeft, Check, ShieldCheck, Package, Truck, Bike, Pencil, Trash2, AlertTriangle, Lock } from "lucide-react";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { saveRecentlyViewed, useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 import { VariantSelector } from "@/components/ui/VariantSelector";
@@ -87,7 +87,6 @@ export function ProductDetailPage() {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
   const [showStockSheet, setShowStockSheet] = useState(false);
-  const [stockSheetDismissed, setStockSheetDismissed] = useState(false);
   const [editingReviewId, setEditingReviewId] = useState<number | null>(null);
   const [editRating, setEditRating] = useState(5);
   const [editComment, setEditComment] = useState("");
@@ -114,12 +113,11 @@ export function ProductDetailPage() {
     });
   }, [product?.id]);
 
-  // Auto-show stock sheet when product is out of stock
   useEffect(() => {
-    if (!product || product.stock !== 0 || stockSheetDismissed) return;
-    const timer = setTimeout(() => setShowStockSheet(true), 600);
-    return () => clearTimeout(timer);
-  }, [product?.id, product?.stock, stockSheetDismissed]);
+    if (!product || product.stock !== 0) return;
+    const t = setTimeout(() => setShowStockSheet(true), 800);
+    return () => clearTimeout(t);
+  }, [product?.id, product?.stock]);
 
   if (isLoading) {
     return (
@@ -319,12 +317,8 @@ export function ProductDetailPage() {
 
             <div className="flex items-center gap-2 mb-4">
               {product.stock === 0 ? (
-                <button
-                  onClick={() => setShowStockSheet(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium hover:bg-destructive/20 transition-colors"
-                >
-                  <Bell className="h-3.5 w-3.5" />
-                  Out of stock — Notify me
+                <button onClick={() => setShowStockSheet(true)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
+                  🔔 Out of stock — Notify me
                 </button>
               ) : product.stock <= 3 ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-600 text-sm font-semibold animate-pulse">
@@ -727,51 +721,25 @@ export function ProductDetailPage() {
           </section>
         )}
       </div>
-
-      {/* Bell FAB — only when out of stock and sheet dismissed */}
-      {product && product.stock === 0 && stockSheetDismissed && (
-        <button
-          onClick={() => setShowStockSheet(true)}
-          className="fixed bottom-24 right-4 z-40 h-12 w-12 rounded-full bg-accent shadow-lg flex items-center justify-center text-white hover:bg-accent/90 transition-all"
-          aria-label="Get notified when back in stock"
-        >
-          <Bell className="h-5 w-5" />
-        </button>
-      )}
-
-      {/* Stock alert bottom sheet */}
-      {product && product.stock === 0 && showStockSheet && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-40 bg-black/30"
-            onClick={() => { setShowStockSheet(false); setStockSheetDismissed(true); }}
-          />
-          {/* Sheet */}
-          <div
-            style={{ background: "#ffffff", minHeight: "320px", zIndex: 9999 }} className="fixed bottom-0 left-0 right-0 rounded-t-2xl shadow-2xl"
-          >
-            <div className="flex justify-center pt-3 pb-1">
-              <div className="w-10 h-1 rounded-full bg-gray-200" />
-            </div>
-            <div className="px-6 pb-8 pt-2">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="font-bold text-lg">Back in Stock Soon!</h3>
-                  <p className="text-sm text-muted-foreground mt-0.5">Get notified the moment this product is available again.</p>
-                </div>
-                <button
-                  onClick={() => { setShowStockSheet(false); setStockSheetDismissed(true); }}
-                  className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200"
-                >
-                  ✕
-                </button>
-              </div>
-              {product && <StockAlertButton productId={product.id} productName={product.name} sheetMode />}
-            </div>
-          </div>
-        </>
-      )}
     </div>
+
+      {/* Stock notification sheet */}
+      {showStockSheet && product && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.4)' }}
+          onClick={() => setShowStockSheet(false)} />
+      )}
+      {showStockSheet && product && (
+        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999, background: '#fff', borderRadius: '20px 20px 0 0', padding: '24px', boxShadow: '0 -4px 24px rgba(0,0,0,0.15)' }}>
+          <div style={{ width: 40, height: 4, background: '#e5e7eb', borderRadius: 99, margin: '0 auto 16px' }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+            <div>
+              <p style={{ fontWeight: 700, fontSize: 18, marginBottom: 4 }}>Back in Stock Soon!</p>
+              <p style={{ color: '#6b7280', fontSize: 14 }}>Get notified the moment this product is available again.</p>
+            </div>
+            <button onClick={() => setShowStockSheet(false)} style={{ background: '#f3f4f6', border: 'none', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', fontSize: 16 }}>✕</button>
+          </div>
+          <StockAlertButton productId={product.id} productName={product.name} sheetMode />
+        </div>
+      )}
   );
 }
