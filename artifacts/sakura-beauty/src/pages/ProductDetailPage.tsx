@@ -733,16 +733,16 @@ export function ProductDetailPage() {
       )}
 
       {/* Stock alert bottom sheet */}
-      {product && product.stock === 0 && (
+      {product && product.stock === 0 && showStockSheet && (
         <>
           {/* Backdrop */}
           <div
-            className={`fixed inset-0 z-40 bg-black/30 transition-opacity duration-300 ${showStockSheet ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+            className="fixed inset-0 z-40 bg-black/30"
             onClick={() => { setShowStockSheet(false); setStockSheetDismissed(true); }}
           />
           {/* Sheet */}
           <div
-            className={`fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-2xl transition-transform duration-400 ease-out ${showStockSheet ? "translate-y-0" : "translate-y-full"}`}
+            className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-2xl animate-in slide-in-from-bottom duration-300"
           >
             <div className="flex justify-center pt-3 pb-1">
               <div className="w-10 h-1 rounded-full bg-gray-200" />
