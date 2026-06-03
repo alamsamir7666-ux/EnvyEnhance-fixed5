@@ -86,6 +86,8 @@ export function ProductDetailPage() {
   const [comment, setComment] = useState("");
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
+  const [showStockSheet, setShowStockSheet] = useState(false);
+  const [stockSheetDismissed, setStockSheetDismissed] = useState(false);
   const [editingReviewId, setEditingReviewId] = useState<number | null>(null);
   const [editRating, setEditRating] = useState(5);
   const [editComment, setEditComment] = useState("");
@@ -310,9 +312,13 @@ export function ProductDetailPage() {
 
             <div className="flex items-center gap-2 mb-4">
               {product.stock === 0 ? (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
-                  Out of stock
-                </span>
+                <button
+                  onClick={() => setShowStockSheet(true)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium hover:bg-destructive/20 transition-colors"
+                >
+                  <Bell className="h-3.5 w-3.5" />
+                  Out of stock — Notify me
+                </button>
               ) : product.stock <= 3 ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-600 text-sm font-semibold animate-pulse">
                   <AlertTriangle className="h-3.5 w-3.5" />
@@ -714,6 +720,51 @@ export function ProductDetailPage() {
           </section>
         )}
       </div>
+
+      {/* Bell FAB — only when out of stock and sheet dismissed */}
+      {product.stock === 0 && stockSheetDismissed && (
+        <button
+          onClick={() => setShowStockSheet(true)}
+          className="fixed bottom-24 right-4 z-40 h-12 w-12 rounded-full bg-accent shadow-lg flex items-center justify-center text-white hover:bg-accent/90 transition-all"
+          aria-label="Get notified when back in stock"
+        >
+          <Bell className="h-5 w-5" />
+        </button>
+      )}
+
+      {/* Stock alert bottom sheet */}
+      {product.stock === 0 && (
+        <>
+          {/* Backdrop */}
+          <div
+            className={`fixed inset-0 z-40 bg-black/30 transition-opacity duration-300 ${showStockSheet ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+            onClick={() => { setShowStockSheet(false); setStockSheetDismissed(true); }}
+          />
+          {/* Sheet */}
+          <div
+            className={`fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-2xl transition-transform duration-400 ease-out ${showStockSheet ? "translate-y-0" : "translate-y-full"}`}
+          >
+            <div className="flex justify-center pt-3 pb-1">
+              <div className="w-10 h-1 rounded-full bg-gray-200" />
+            </div>
+            <div className="px-6 pb-8 pt-2">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="font-bold text-lg">Back in Stock Soon!</h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">Get notified the moment this product is available again.</p>
+                </div>
+                <button
+                  onClick={() => { setShowStockSheet(false); setStockSheetDismissed(true); }}
+                  className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200"
+                >
+                  ✕
+                </button>
+              </div>
+              <StockAlertButton productId={product.id} productName={product.name} sheetMode />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
