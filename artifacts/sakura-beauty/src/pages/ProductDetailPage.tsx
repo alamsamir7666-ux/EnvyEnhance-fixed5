@@ -377,8 +377,10 @@ export function ProductDetailPage() {
                 <Heart className={`h-5 w-5 ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`} />
               </Button>
             </div>
+          </div>
+        </div>
 
-            <p className="text-muted-foreground leading-relaxed mb-6">{product.description}</p>
+        <p className="text-muted-foreground leading-relaxed mb-6">{product.description}</p>
 
             {/* Key Benefits */}
             {(product as ExtendedProduct).keyBenefits?.length > 0 && (
