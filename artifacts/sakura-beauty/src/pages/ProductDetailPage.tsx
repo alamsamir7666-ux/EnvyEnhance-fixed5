@@ -116,7 +116,8 @@ export function ProductDetailPage() {
 
   useEffect(() => {
     if (!product || product.stock !== 0) return;
-    const t = setTimeout(() => setShowStockSheet(true), 800);
+    // Wait 1.5s so page fully renders before sheet appears
+    const t = setTimeout(() => setShowStockSheet(true), 1500);
     return () => clearTimeout(t);
   }, [product?.id]);
 
@@ -620,7 +621,7 @@ export function ProductDetailPage() {
 
       {showStockSheet && product && createPortal(
         <>
-          <div onClick={() => setShowStockSheet(false)} style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.5)' }} />
+          <div onClick={() => setShowStockSheet(false)} style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.4)', touchAction: 'none' }} />
           <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999, background: 'white', borderRadius: '20px 20px 0 0', padding: '24px', boxShadow: '0 -8px 32px rgba(0,0,0,0.2)', minHeight: '300px' }}>
             <div style={{ width: 40, height: 4, background: '#e5e7eb', borderRadius: 99, margin: '0 auto 16px' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
