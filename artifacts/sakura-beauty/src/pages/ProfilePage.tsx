@@ -100,12 +100,12 @@ export function ProfilePage() {
               </div>
             ) : (
               <div className="space-y-3">
-                {recentOrders.map((order, index) => (
-                  <Link key={order.id} href={`/orders/${order.id}`}>
+                {recentOrders.map((order, index) => { const rank = (orders ?? []).length - index; return (
+                  <Link key={order.id} href={`/orders/${order.id}?rank=${rank}`}>
                     <div className="bg-card border rounded-xl p-4 hover:shadow-sm transition-shadow cursor-pointer">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium">Order #{(orders ?? []).length - index}</p>
+                          <p className="text-sm font-medium">Order #{rank}</p>
                           <p className="text-xs text-muted-foreground mt-0.5">{new Date(order.createdAt).toLocaleDateString()}</p>
                         </div>
                         <div className="text-right">
@@ -117,7 +117,7 @@ export function ProfilePage() {
                       </div>
                     </div>
                   </Link>
-                ))}
+                )})}
               </div>
             )}
           </div>
