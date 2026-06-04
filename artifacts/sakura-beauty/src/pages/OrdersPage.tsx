@@ -113,7 +113,8 @@ export function OrdersPage() {
                 </div>
               </div>
             </Link>
-          )}}
+          )}
+          )}
         </div>
       </div>
     </div>
