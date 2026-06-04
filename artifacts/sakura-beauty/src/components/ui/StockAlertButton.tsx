@@ -31,40 +31,88 @@ function FormContent({ method, setMethod, status, phone, setPhone, email, setEma
   return (
     <div className="space-y-4">
       <div className="flex gap-3">
-        <button type="button" onClick={() => setMethod("phone")}
-          style={{ background: method === "phone" ? "var(--accent, #e05c9a)" : "transparent", color: method === "phone" ? "#fff" : "inherit" }}
-          className={`flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full border transition-colors ${method === "phone" ? "border-transparent" : "border-border"}`}>
-          <Phone className="h-4 w-4" /> Phone
+        <button
+          type="button"
+          onClick={() => setMethod("phone")}
+          style={{
+            background: method === "phone" ? "#e05c9a" : "transparent",
+            color: method === "phone" ? "#fff" : "#374151",
+            border: method === "phone" ? "2px solid #e05c9a" : "2px solid #d1d5db",
+            borderRadius: 999,
+            padding: "8px 18px",
+            fontWeight: 500,
+            fontSize: 14,
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            cursor: "pointer",
+          }}
+        >
+          <Phone size={15} /> Phone
         </button>
-        <button type="button" onClick={() => setMethod("email")}
-          style={{ background: method === "email" ? "var(--accent, #e05c9a)" : "transparent", color: method === "email" ? "#fff" : "inherit" }}
-          className={`flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full border transition-colors ${method === "email" ? "border-transparent" : "border-border"}`}>
-          <Mail className="h-4 w-4" /> Email
+        <button
+          type="button"
+          onClick={() => setMethod("email")}
+          style={{
+            background: method === "email" ? "#e05c9a" : "transparent",
+            color: method === "email" ? "#fff" : "#374151",
+            border: method === "email" ? "2px solid #e05c9a" : "2px solid #d1d5db",
+            borderRadius: 999,
+            padding: "8px 18px",
+            fontWeight: 500,
+            fontSize: 14,
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            cursor: "pointer",
+          }}
+        >
+          <Mail size={15} /> Email
         </button>
       </div>
+
       {status === "success" ? (
-        <div className="flex flex-col items-center gap-3 py-4 text-center">
-          <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
-            <Check className="h-6 w-6 text-green-600" />
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "16px 0", textAlign: "center" }}>
+          <div style={{ height: 48, width: 48, borderRadius: "50%", background: "#dcfce7", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Check size={24} color="#16a34a" />
           </div>
-          <p className="text-sm text-muted-foreground">We'll notify you when back in stock!</p>
+          <p style={{ fontSize: 14, color: "#6b7280" }}>We'll notify you when back in stock!</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} style={{ display: "flex", gap: 8 }}>
           {method === "phone" ? (
-            <Input type="tel" placeholder="01XXXXXXXXX" value={phone} onChange={e => setPhone(e.target.value)} required className="rounded-full flex-1" />
+            <input
+              type="tel"
+              placeholder="01XXXXXXXXX"
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              required
+              style={{ flex: 1, borderRadius: 999, border: "1px solid #d1d5db", padding: "10px 16px", fontSize: 14, outline: "none" }}
+            />
           ) : (
-            <Input type="email" placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)} required className="rounded-full flex-1" />
+            <input
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              style={{ flex: 1, borderRadius: 999, border: "1px solid #d1d5db", padding: "10px 16px", fontSize: 14, outline: "none" }}
+            />
           )}
-          <Button type="submit" disabled={status === "loading"} className="rounded-full shrink-0" style={{ background: "var(--accent, #e05c9a)", color: "#fff" }}>
-            {status === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Notify Me"}
-          </Button>
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            style={{ background: "#e05c9a", color: "#ffffff", border: "none", borderRadius: 999, padding: "10px 20px", fontWeight: 700, fontSize: 14, cursor: "pointer", flexShrink: 0 }}
+          >
+            {status === "loading" ? "..." : "Notify Me"}
+          </button>
         </form>
       )}
-      {status === "error" && <p className="text-xs text-destructive">{errorMsg}</p>}
+      {status === "error" && <p style={{ fontSize: 12, color: "#ef4444" }}>{errorMsg}</p>}
     </div>
   );
 }
+
 
 export function StockAlertButton({ productId, productName, sheetMode }: Props) {
   const { user } = useUser();
