@@ -79,13 +79,13 @@ export function OrdersPage() {
 
       <div className="container mx-auto px-4 py-8 max-w-3xl">
         <div className="space-y-4">
-          {orders.map((order, index) => (
-            <Link key={order.id} href={`/orders/${order.id}`}>
+          {orders.map((order, index) => { const rank = orders.length - index; return (
+            <Link key={order.id} href={`/orders/${order.id}?rank=${rank}`}>
               <div className="bg-card border rounded-xl p-5 hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-3 mb-1">
-                      <p className="font-medium">Order #{orders.length - index}</p>
+                      <p className="font-medium">Order #{rank}</p>
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[order.orderStatus] ?? "bg-muted"}`}>
                         {order.orderStatus.charAt(0).toUpperCase() + order.orderStatus.slice(1)}
                       </span>
