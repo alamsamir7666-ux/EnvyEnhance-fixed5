@@ -3,6 +3,7 @@ import { db } from "@workspace/db";
 import { stockAlertsTable, productsTable } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
 import { sendStockAlertEmail } from "../lib/email";
+import { sendWhatsAppStockAlert } from "../lib/whatsapp";
 
 const router = Router();
 
@@ -13,7 +14,12 @@ router.post("/stock-alerts", async (req, res) => {
       res.status(400).json({ error: "Valid product ID is required" });
       return;
     }
-    if (!email || !email.includes("@")) {
+    if (!email) {
+      res.status(400).json({ error: "Email or phone is required" });
+      return;
+    }
+    const isPhone = email.endsWith("@phone.notify");
+    if (!isPhone && !email.includes("@")) {
       res.status(400).json({ error: "Valid email is required" });
       return;
     }
@@ -79,7 +85,14 @@ export async function notifyStockAlerts(productId: number, productName: string) 
       );
 
     for (const alert of alerts) {
-      await sendStockAlertEmail({ to: alert.email, productName });
+      if (alert.email.endsWith("@phone.notify")) {
+        // Phone subscriber - send WhatsApp
+        const phone = alert.email.replace("@phone.notify", "");
+        await sendWhatsAppStockAlert({ phone, productName, productId });
+      } else {
+        // Email subscriber
+        await sendStockAlertEmail({ to: alert.email, productName });
+      }
       await db
         .update(stockAlertsTable)
         .set({ notified: true })
