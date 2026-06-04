@@ -59,7 +59,7 @@ export function OrderDetailPage() {
     setCancelError("");
     try {
       const token = await getToken();
-      const r = await fetch(`/api/orders/${order.id}/cancel`, {
+      const r = await fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/orders/${order.id}/cancel`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify({ reason: cancelReason.trim() }),
