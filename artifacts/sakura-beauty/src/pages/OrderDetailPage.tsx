@@ -83,10 +83,10 @@ export function OrderDetailPage() {
     setReturnLoading(true);
     setReturnError("");
     try {
+      const returnToken = await getToken();
       const r = await fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/returns`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${returnToken}` },
         body: JSON.stringify({ orderId: order.id, reason: returnReason.trim() }),
       });
       const data = await r.json();
