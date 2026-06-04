@@ -83,7 +83,7 @@ export function OrderDetailPage() {
     setReturnLoading(true);
     setReturnError("");
     try {
-      const r = await fetch("/api/returns", {
+      const r = await fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/returns`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
