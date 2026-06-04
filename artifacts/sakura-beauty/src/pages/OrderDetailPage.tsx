@@ -23,6 +23,8 @@ const statusColors: Record<string, string> = {
 export function OrderDetailPage() {
   const params = useParams<{ id: string }>();
   const id = parseInt(params.id ?? "0");
+  const searchStr = useSearch();
+  const orderRank = new URLSearchParams(searchStr).get("rank");
   const { data: order, isLoading } = useGetOrder(id, { query: { enabled: !!id, queryKey: ["order", id] } });
 
   // All hooks must be called unconditionally before any early return
@@ -103,7 +105,7 @@ export function OrderDetailPage() {
           <PageBreadcrumb
             crumbs={[
               { label: "My Orders", href: "/orders", icon: <Package className="h-3 w-3" /> },
-              { label: `Order #${order.id}` },
+              { label: `Order #${orderRank ?? order.id}` },
             ]}
             className="mb-4"
           />
@@ -114,7 +116,7 @@ export function OrderDetailPage() {
           </Link>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="font-serif text-3xl font-medium">Order #{order.id}</h1>
+              <h1 className="font-serif text-3xl font-medium">Order #{orderRank ?? order.id}</h1>
               <p className="text-muted-foreground mt-1 text-sm">{new Date(order.createdAt).toLocaleDateString("en-BD", { year: "numeric", month: "long", day: "numeric" })}</p>
             </div>
             <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${statusColors[order.orderStatus] ?? "bg-muted"}`}>
@@ -265,7 +267,7 @@ export function OrderDetailPage() {
       <Dialog open={cancelOpen} onOpenChange={setCancelOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Cancel Order #{order.id}</DialogTitle>
+            <DialogTitle>Cancel Order #{orderRank ?? order.id}</DialogTitle>
             <DialogDescription>
               This action cannot be undone. Please provide a reason for cancellation.
             </DialogDescription>
