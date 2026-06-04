@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams } from "wouter";
+import { useAuth } from "@clerk/react";
 import { useGetOrder, useListOrders } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,6 +24,7 @@ const statusColors: Record<string, string> = {
 export function OrderDetailPage() {
   const params = useParams<{ id: string }>();
   const id = parseInt(params.id ?? "0");
+  const { getToken } = useAuth();
   const { data: orders } = useListOrders();
   const orderRank = orders ? orders.length - orders.findIndex(o => o.id === id) : null;
   const { data: order, isLoading } = useGetOrder(id, { query: { enabled: !!id, queryKey: ["order", id] } });
@@ -56,10 +58,10 @@ export function OrderDetailPage() {
     setCancelLoading(true);
     setCancelError("");
     try {
+      const token = await getToken();
       const r = await fetch(`/api/orders/${order.id}/cancel`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify({ reason: cancelReason.trim() }),
       });
       const data = await r.json();
