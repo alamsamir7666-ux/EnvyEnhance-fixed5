@@ -23,8 +23,6 @@ const statusColors: Record<string, string> = {
 export function OrderDetailPage() {
   const params = useParams<{ id: string }>();
   const id = parseInt(params.id ?? "0");
-  const searchStr = useSearch();
-  const orderRank = new URLSearchParams(searchStr).get("rank");
   const { data: orders } = useListOrders();
   const orderRank = orders ? orders.length - orders.findIndex(o => o.id === id) : null;
   const { data: order, isLoading } = useGetOrder(id, { query: { enabled: !!id, queryKey: ["order", id] } });
