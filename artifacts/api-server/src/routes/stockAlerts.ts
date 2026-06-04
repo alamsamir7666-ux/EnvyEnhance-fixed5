@@ -85,9 +85,11 @@ export async function notifyStockAlerts(productId: number, productName: string) 
       );
 
     for (const alert of alerts) {
+      console.log("[stock-alert] Processing alert:", alert.email);
       if (alert.email.endsWith("@phone.notify")) {
         // Phone subscriber - send WhatsApp
         const phone = alert.email.replace("@phone.notify", "");
+        console.log("[stock-alert] Sending WhatsApp to:", phone);
         await sendWhatsAppStockAlert({ phone, productName, productId });
       } else {
         // Email subscriber
@@ -100,6 +102,7 @@ export async function notifyStockAlerts(productId: number, productName: string) 
     }
   } catch (err) {
     console.error("[stock-alert] notifyStockAlerts failed:", err);
+    throw err;
   }
 }
 
