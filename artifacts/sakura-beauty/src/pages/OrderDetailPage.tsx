@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useSearch } from "wouter";
+import { useParams } from "wouter";
 import { useGetOrder, useListOrders } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
