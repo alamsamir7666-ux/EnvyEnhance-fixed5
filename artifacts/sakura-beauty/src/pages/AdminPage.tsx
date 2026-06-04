@@ -1375,6 +1375,12 @@ export function AdminPage() {
                                   <p className="text-xs text-pink-500 mt-1">Coupon: {(o as any).couponCode} (−৳{(o as any).discountAmount})</p>
                                 )}
                               </div>
+                              {o.orderStatus === "cancelled" && (o as any).cancellationReason && (
+                                <div className="col-span-full mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
+                                  <p className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">❌ Cancelled by Customer</p>
+                                  <p className="text-xs text-red-700">Reason: {(o as any).cancellationReason}</p>
+                                </div>
+                              )}
                             </div>
                           </td>
                         </tr>
