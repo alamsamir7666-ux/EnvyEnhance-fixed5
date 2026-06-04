@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useSearch } from "wouter";
-import { useGetOrder } from "@workspace/api-client-react";
+import { useGetOrder, useListOrders } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -25,6 +25,8 @@ export function OrderDetailPage() {
   const id = parseInt(params.id ?? "0");
   const searchStr = useSearch();
   const orderRank = new URLSearchParams(searchStr).get("rank");
+  const { data: orders } = useListOrders();
+  const orderRank = orders ? orders.length - orders.findIndex(o => o.id === id) : null;
   const { data: order, isLoading } = useGetOrder(id, { query: { enabled: !!id, queryKey: ["order", id] } });
 
   // All hooks must be called unconditionally before any early return
