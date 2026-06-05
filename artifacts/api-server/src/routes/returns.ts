@@ -38,7 +38,7 @@ router.post("/returns", requireAuth, async (req: any, res) => {
 
     // Verify the order belongs to this user and is delivered
     const [order] = await db
-      .select({ id: ordersTable.id, orderStatus: ordersTable.orderStatus, userId: ordersTable.userId })
+      .select({ id: ordersTable.id, orderStatus: ordersTable.orderStatus, userId: ordersTable.userId, updatedAt: ordersTable.updatedAt })
       .from(ordersTable)
       .where(and(eq(ordersTable.id, Number(orderId)), eq(ordersTable.userId, req.userId)))
       .limit(1);
@@ -49,6 +49,14 @@ router.post("/returns", requireAuth, async (req: any, res) => {
     }
     if (order.orderStatus !== "delivered") {
       res.status(400).json({ error: "Returns can only be requested for delivered orders" });
+      return;
+    }
+
+    // Enforce 7-day return window from delivery date
+    const deliveredAt = new Date(order.updatedAt);
+    const daysSinceDelivery = (Date.now() - deliveredAt.getTime()) / (1000 * 60 * 60 * 24);
+    if (daysSinceDelivery > 7) {
+      res.status(400).json({ error: "Return window has expired. Returns must be requested within 7 days of delivery." });
       return;
     }
 

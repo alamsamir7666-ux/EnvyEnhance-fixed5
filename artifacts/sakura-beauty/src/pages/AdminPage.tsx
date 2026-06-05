@@ -2265,9 +2265,10 @@ function AffiliatesTab() {
       {showForm && (
         <div className="bg-card border rounded-xl p-5 space-y-3">
           <h3 className="font-medium text-sm">New Affiliate</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input placeholder="Name" value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} />
             <Input placeholder="Email" type="email" value={form.email} onChange={e => setForm(f => ({...f, email: e.target.value}))} />
+            <Input placeholder="Affiliate Code (e.g. JOHN2024)" value={form.code ?? ""} onChange={e => setForm(f => ({...f, code: e.target.value.toUpperCase()}))} />
             <Input placeholder="Commission %" type="number" min="1" max="50" value={form.commissionRate} onChange={e => setForm(f => ({...f, commissionRate: e.target.value}))} />
           </div>
           {error && <p className="text-xs text-destructive">{error}</p>}

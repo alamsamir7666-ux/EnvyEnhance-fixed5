@@ -36,8 +36,10 @@ router.post("/admin/affiliates", requireAdmin, async (req: any, res) => {
       res.status(400).json({ error: "Commission rate must be between 1% and 50%" }); return;
     }
 
-    const code = name.toUpperCase().replace(/\s+/g, "").slice(0, 8) +
-      crypto.randomBytes(2).toString("hex").toUpperCase();
+    const code = (req.body.code ?? "").toUpperCase().trim().replace(/\s+/g, "");
+    if (!code || code.length < 3) {
+      res.status(400).json({ error: "Affiliate code is required (min 3 characters)" }); return;
+    }
 
     // Also create a coupon for this affiliate code
     await db.insert(couponsTable).values({
