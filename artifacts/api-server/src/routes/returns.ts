@@ -89,15 +89,33 @@ router.get("/returns/me", requireAuth, async (req: any, res) => {
   }
 });
 
-// Admin: Get all returns
+// Admin: Get all returns (with order details)
 router.get("/admin/returns", requireAdmin, async (_req, res) => {
   try {
-    const returns = await db
-      .select()
+    const rows = await db
+      .select({
+        ret: returnsTable,
+        orderItems: ordersTable.items,
+        orderTotal: ordersTable.totalAmount,
+        orderUpdatedAt: ordersTable.updatedAt,
+        orderStatus: ordersTable.orderStatus,
+        shippingAddress: ordersTable.shippingAddress,
+      })
       .from(returnsTable)
+      .leftJoin(ordersTable, eq(ordersTable.id, returnsTable.orderId))
       .orderBy(desc(returnsTable.createdAt));
-    res.json(returns.map(fmt));
-  } catch {
+
+    const result = rows.map(({ ret, orderItems, orderTotal, orderUpdatedAt, orderStatus, shippingAddress }) => ({
+      ...fmt(ret),
+      orderItems: orderItems ?? [],
+      orderTotal: orderTotal ? Number(orderTotal) : null,
+      orderDeliveredAt: orderUpdatedAt ? orderUpdatedAt.toISOString() : null,
+      orderStatus,
+      customerName: (shippingAddress as any)?.fullName ?? null,
+    }));
+
+    res.json(result);
+  } catch (e) {
     res.status(500).json({ error: "Failed to fetch returns" });
   }
 });
