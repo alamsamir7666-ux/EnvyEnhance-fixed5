@@ -151,6 +151,15 @@ router.put("/admin/returns/:id", requireAdmin, async (req: any, res) => {
       res.status(404).json({ error: "Return not found" });
       return;
     }
+
+    // When refund is completed → flip order status to return_completed
+    if (status === "completed") {
+      await db
+        .update(ordersTable)
+        .set({ orderStatus: "return_completed", updatedAt: new Date() })
+        .where(eq(ordersTable.id, updated.orderId));
+    }
+
     await logAudit({ adminId: req.userId, adminEmail: req.dbUser?.email, action: "return.updated", targetType: "return", targetId: String(id) });
     res.json(fmt(updated));
   } catch {

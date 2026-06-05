@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "wouter";
 import { useAuth } from "@clerk/react";
 import { useGetOrder, useListOrders } from "@workspace/api-client-react";
@@ -13,12 +13,20 @@ import { PageBreadcrumb } from "@/components/ui/PageBreadcrumb";
 const STEPS = ["pending", "confirmed", "processing", "shipped", "delivered"];
 
 const statusColors: Record<string, string> = {
-  pending: "bg-yellow-100 text-yellow-800",
-  confirmed: "bg-blue-100 text-blue-800",
-  processing: "bg-purple-100 text-purple-800",
-  shipped: "bg-indigo-100 text-indigo-800",
-  delivered: "bg-green-100 text-green-800",
-  cancelled: "bg-red-100 text-red-800",
+  pending:          "bg-yellow-100 text-yellow-800",
+  confirmed:        "bg-blue-100 text-blue-800",
+  processing:       "bg-purple-100 text-purple-800",
+  shipped:          "bg-indigo-100 text-indigo-800",
+  delivered:        "bg-green-100 text-green-800",
+  cancelled:        "bg-red-100 text-red-800",
+  return_completed: "bg-teal-100 text-teal-800",
+};
+
+const returnStatusConfig: Record<string, { label: string; color: string; bg: string }> = {
+  requested: { label: "Return Requested — Under Review",     color: "text-amber-700", bg: "bg-amber-50 border-amber-200" },
+  approved:  { label: "Return Approved — Refund Processing", color: "text-blue-700",  bg: "bg-blue-50 border-blue-200"  },
+  rejected:  { label: "Return Rejected",                     color: "text-red-700",   bg: "bg-red-50 border-red-200"    },
+  completed: { label: "Refund Completed",                    color: "text-teal-700",  bg: "bg-teal-50 border-teal-200"  },
 };
 
 export function OrderDetailPage() {
@@ -39,6 +47,24 @@ export function OrderDetailPage() {
   const [returnLoading, setReturnLoading] = useState(false);
   const [returnError, setReturnError] = useState("");
   const [returnSuccess, setReturnSuccess] = useState(false);
+  const [existingReturn, setExistingReturn] = useState<any>(null);
+
+  useEffect(() => {
+    if (!id) return;
+    getToken().then(token =>
+      fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/returns/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(r => r.json())
+        .then((data: any[]) => {
+          if (Array.isArray(data)) {
+            const found = data.find(r => r.orderId === id);
+            if (found) setExistingReturn(found);
+          }
+        })
+        .catch(() => {})
+    );
+  }, [id]);
 
   if (isLoading) {
     return <div className="container mx-auto px-4 py-10"><Skeleton className="h-96 rounded-xl" /></div>;
@@ -92,6 +118,7 @@ export function OrderDetailPage() {
       const data = await r.json();
       if (!r.ok) { setReturnError(data.error ?? "Failed to submit return request."); return; }
       setReturnSuccess(true);
+      setExistingReturn(data);
       setTimeout(() => setReturnOpen(false), 2500);
     } catch {
       setReturnError("Something went wrong. Please try again.");
@@ -122,7 +149,7 @@ export function OrderDetailPage() {
               <p className="text-muted-foreground mt-1 text-sm">{new Date(order.createdAt).toLocaleDateString("en-BD", { year: "numeric", month: "long", day: "numeric" })}</p>
             </div>
             <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${statusColors[order.orderStatus] ?? "bg-muted"}`}>
-              {order.orderStatus.charAt(0).toUpperCase() + order.orderStatus.slice(1)}
+              {order.orderStatus === "return_completed" ? "Refund Completed" : order.orderStatus.charAt(0).toUpperCase() + order.orderStatus.slice(1)}
             </span>
           </div>
         </div>
@@ -252,15 +279,36 @@ export function OrderDetailPage() {
               Cancel Order
             </Button>
           )}
-          {order.orderStatus === "delivered" && (
-            <Button
-              variant="outline"
-              className="rounded-full gap-2"
-              onClick={() => { setReturnOpen(true); setReturnReason(""); setReturnError(""); setReturnSuccess(false); }}
-            >
-              <RotateCcw className="h-4 w-4" />
-              Request Return / Refund
-            </Button>
+          {(order.orderStatus === "delivered" || order.orderStatus === "return_completed") && (
+            existingReturn ? (
+              <div className={`w-full border rounded-xl px-4 py-3.5 space-y-1.5 ${returnStatusConfig[existingReturn.status]?.bg ?? "bg-muted/30 border-border"}`}>
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <RotateCcw className={`h-4 w-4 shrink-0 ${returnStatusConfig[existingReturn.status]?.color ?? ""}`} />
+                    <span className={`text-sm font-semibold ${returnStatusConfig[existingReturn.status]?.color ?? ""}`}>
+                      {returnStatusConfig[existingReturn.status]?.label ?? existingReturn.status}
+                    </span>
+                  </div>
+                  {existingReturn.status === "completed" && existingReturn.refundAmount != null && (
+                    <span className="text-sm font-bold text-teal-700">
+                      ৳{Number(existingReturn.refundAmount).toLocaleString()} refunded
+                    </span>
+                  )}
+                </div>
+                {existingReturn.status === "rejected" && existingReturn.adminNote && (
+                  <p className="text-xs text-red-600">Admin note: {existingReturn.adminNote}</p>
+                )}
+              </div>
+            ) : order.orderStatus === "delivered" ? (
+              <Button
+                variant="outline"
+                className="rounded-full gap-2"
+                onClick={() => { setReturnOpen(true); setReturnReason(""); setReturnError(""); setReturnSuccess(false); }}
+              >
+                <RotateCcw className="h-4 w-4" />
+                Request Return / Refund
+              </Button>
+            ) : null
           )}
         </div>
       </div>

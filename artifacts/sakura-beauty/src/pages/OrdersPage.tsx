@@ -1,18 +1,34 @@
 import { PageBreadcrumb } from "@/components/ui/PageBreadcrumb";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { useListOrders } from "@workspace/api-client-react";
+import { useAuth } from "@clerk/react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Package2, ArrowRight, Copy, Check } from "lucide-react";
 
 const statusColors: Record<string, string> = {
-  pending: "bg-yellow-100 text-yellow-800",
-  confirmed: "bg-blue-100 text-blue-800",
-  processing: "bg-purple-100 text-purple-800",
-  shipped: "bg-indigo-100 text-indigo-800",
-  delivered: "bg-green-100 text-green-800",
-  cancelled: "bg-red-100 text-red-800",
+  pending:          "bg-yellow-100 text-yellow-800",
+  confirmed:        "bg-blue-100 text-blue-800",
+  processing:       "bg-purple-100 text-purple-800",
+  shipped:          "bg-indigo-100 text-indigo-800",
+  delivered:        "bg-green-100 text-green-800",
+  cancelled:        "bg-red-100 text-red-800",
+  return_completed: "bg-teal-100 text-teal-800",
+};
+
+const returnBadgeColors: Record<string, string> = {
+  requested: "bg-amber-100 text-amber-700",
+  approved:  "bg-blue-100 text-blue-700",
+  rejected:  "bg-red-100 text-red-700",
+  completed: "bg-teal-100 text-teal-700",
+};
+
+const returnBadgeLabels: Record<string, string> = {
+  requested: "↩ Return Requested",
+  approved:  "↩ Return Approved",
+  rejected:  "↩ Return Rejected",
+  completed: "↩ Refund Completed",
 };
 
 function CopyTrackingButton({ trackingId }: { trackingId: string }) {
@@ -43,6 +59,25 @@ function CopyTrackingButton({ trackingId }: { trackingId: string }) {
 
 export function OrdersPage() {
   const { data: orders, isLoading } = useListOrders();
+  const { getToken } = useAuth();
+  const [returnsMap, setReturnsMap] = useState<Record<number, any>>({});
+
+  useEffect(() => {
+    getToken().then(token =>
+      fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/returns/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(r => r.json())
+        .then((data: any[]) => {
+          if (Array.isArray(data)) {
+            const map: Record<number, any> = {};
+            data.forEach(r => { map[r.orderId] = r; });
+            setReturnsMap(map);
+          }
+        })
+        .catch(() => {})
+    );
+  }, []);
 
   if (isLoading) {
     return (
@@ -87,8 +122,13 @@ export function OrdersPage() {
                     <div className="flex items-center gap-3 mb-1">
                       <p className="font-medium">Order #{rank}</p>
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[order.orderStatus] ?? "bg-muted"}`}>
-                        {order.orderStatus.charAt(0).toUpperCase() + order.orderStatus.slice(1)}
+                        {order.orderStatus === "return_completed" ? "Refund Completed" : order.orderStatus.charAt(0).toUpperCase() + order.orderStatus.slice(1)}
                       </span>
+                      {returnsMap[order.id] && order.orderStatus !== "return_completed" && (
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${returnBadgeColors[returnsMap[order.id].status] ?? "bg-muted"}`}>
+                          {returnBadgeLabels[returnsMap[order.id].status] ?? "↩ Return"}
+                        </span>
+                      )}
                     </div>
                     <p className="text-xs text-muted-foreground">{new Date(order.createdAt).toLocaleDateString("en-BD", { year: "numeric", month: "long", day: "numeric" })}</p>
                     {(order as any).trackingId && (

@@ -39,7 +39,8 @@ const statusConfig: Record<string, { color: string; icon: React.ElementType }> =
   processing: { color: "bg-violet-100 text-violet-700 border-violet-200", icon: BarChart3 },
   shipped:    { color: "bg-indigo-100 text-indigo-700 border-indigo-200", icon: Truck },
   delivered:  { color: "bg-emerald-100 text-emerald-700 border-emerald-200", icon: CheckCircle2 },
-  cancelled:  { color: "bg-red-100 text-red-700 border-red-200", icon: XCircle },
+  cancelled:       { color: "bg-red-100 text-red-700 border-red-200", icon: XCircle },
+  return_completed: { color: "bg-teal-100 text-teal-700 border-teal-200", icon: RotateCcw },
 };
 
 // ─── Sidebar nav items ───────────────────────────────────────────────────────
@@ -758,7 +759,7 @@ export function AdminPage() {
   const totalRevenue = currentMonthOrders.filter(o => o.orderStatus === "delivered").reduce((s, o) => s + o.totalAmount, 0);
   const totalOrdersThisMonth = currentMonthOrders.length;
   const pendingOrders = orders.filter(o => o.orderStatus === "pending").length;
-  const deliveredOrders = orders.filter(o => o.orderStatus === "delivered").length;
+  const deliveredOrders = orders.filter(o => o.orderStatus === "delivered" || o.orderStatus === "return_completed").length;
 
   // ─── Sidebar ───────────────────────────────────────────────────────────────
   const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
@@ -1311,13 +1312,13 @@ export function AdminPage() {
                         </td>
                         <td className="px-4 py-3.5">
                           <span className={`flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full text-xs font-medium border ${cfg.color}`}>
-                            <StatusIcon className="h-3 w-3" />{o.orderStatus}
+                            <StatusIcon className="h-3 w-3" />{o.orderStatus === "return_completed" ? "Refund Completed" : o.orderStatus}
                           </span>
                         </td>
                         <td className="px-4 py-3.5 text-right font-semibold text-gray-800">৳{o.totalAmount.toLocaleString()}</td>
                         <td className="px-4 py-3.5 text-right" onClick={e => e.stopPropagation()}>
-                          <Select value={o.orderStatus} onValueChange={(v) => handleOrderStatus(o.id, v)} disabled={o.orderStatus === "delivered" || o.orderStatus === "cancelled"}>
-                            <SelectTrigger className={`w-34 text-xs h-8 rounded-lg border-gray-200 ${(o.orderStatus === "delivered" || o.orderStatus === "cancelled") ? "opacity-50 cursor-not-allowed" : ""}`}>
+                          <Select value={o.orderStatus} onValueChange={(v) => handleOrderStatus(o.id, v)} disabled={o.orderStatus === "delivered" || o.orderStatus === "cancelled" || o.orderStatus === "return_completed"}>
+                            <SelectTrigger className={`w-34 text-xs h-8 rounded-lg border-gray-200 ${(o.orderStatus === "delivered" || o.orderStatus === "cancelled" || o.orderStatus === "return_completed") ? "opacity-50 cursor-not-allowed" : ""}`}>
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
