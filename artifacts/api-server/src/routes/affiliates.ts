@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { affiliatesTable, ordersTable, couponsTable } from "@workspace/db";
+import { affiliatesTable, ordersTable, couponsTable, affiliateCashoutsTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
 import { requireAdmin, requireAuth } from "../middlewares/auth";
 import { logAudit } from "../lib/audit";
@@ -113,5 +113,93 @@ router.delete("/admin/affiliates/:id", requireAdmin, async (req: any, res) => {
     res.json({ message: "Affiliate deleted" });
   } catch { res.status(500).json({ error: "Failed to delete affiliate" }); }
 });
+
+// POST /affiliate/cashout — request cashout
+router.post("/affiliate/cashout", requireAuth, async (req: any, res) => {
+  try {
+    const email = req.dbUser?.email;
+    if (!email) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+    const [affiliate] = await db.select().from(affiliatesTable)
+      .where(eq(affiliatesTable.email, email)).limit(1);
+    if (!affiliate) { res.status(404).json({ error: "Not an affiliate" }); return; }
+    if (!affiliate.isActive) { res.status(400).json({ error: "Affiliate account is inactive" }); return; }
+
+    const commission = Number(affiliate.totalCommission);
+    if (commission < 500) {
+      res.status(400).json({ error: `Minimum cashout is ৳500. Your current commission is ৳${commission.toFixed(0)}` });
+      return;
+    }
+
+    // Check no pending cashout exists
+    const [pending] = await db.select().from(affiliateCashoutsTable)
+      .where(eq(affiliateCashoutsTable.affiliateId, affiliate.id))
+      .then(rows => rows.filter(r => r.status === "pending"));
+    if (pending) {
+      res.status(400).json({ error: "You already have a pending cashout request" }); return;
+    }
+
+    const [cashout] = await db.insert(affiliateCashoutsTable).values({
+      affiliateId: affiliate.id,
+      amount: String(commission),
+    }).returning();
+
+    res.status(201).json({ id: cashout.id, amount: Number(cashout.amount), status: cashout.status, createdAt: cashout.createdAt });
+  } catch { res.status(500).json({ error: "Failed to create cashout request" }); }
+});
+
+// GET /affiliate/cashouts — user cashout history
+router.get("/affiliate/cashouts", requireAuth, async (req: any, res) => {
+  try {
+    const email = req.dbUser?.email;
+    const [affiliate] = await db.select().from(affiliatesTable)
+      .where(eq(affiliatesTable.email, email)).limit(1);
+    if (!affiliate) { res.status(404).json({ error: "Not an affiliate" }); return; }
+
+    const cashouts = await db.select().from(affiliateCashoutsTable)
+      .where(eq(affiliateCashoutsTable.affiliateId, affiliate.id))
+      .orderBy(desc(affiliateCashoutsTable.createdAt));
+
+    res.json(cashouts.map(c => ({ id: c.id, amount: Number(c.amount), status: c.status, note: c.note, createdAt: c.createdAt })));
+  } catch { res.status(500).json({ error: "Failed to fetch cashouts" }); }
+});
+
+// GET /admin/cashouts — admin sees all cashouts
+router.get("/admin/cashouts", requireAdmin, async (_req, res) => {
+  try {
+    const cashouts = await db.select({
+      id: affiliateCashoutsTable.id,
+      amount: affiliateCashoutsTable.amount,
+      status: affiliateCashoutsTable.status,
+      note: affiliateCashoutsTable.note,
+      createdAt: affiliateCashoutsTable.createdAt,
+      affiliateName: affiliatesTable.name,
+      affiliateEmail: affiliatesTable.email,
+      affiliateCode: affiliatesTable.code,
+    }).from(affiliateCashoutsTable)
+      .leftJoin(affiliatesTable, eq(affiliateCashoutsTable.affiliateId, affiliatesTable.id))
+      .orderBy(desc(affiliateCashoutsTable.createdAt));
+
+    res.json(cashouts.map(c => ({ ...c, amount: Number(c.amount) })));
+  } catch { res.status(500).json({ error: "Failed to fetch cashouts" }); }
+});
+
+// PATCH /admin/cashouts/:id — approve or reject
+router.patch("/admin/cashouts/:id", requireAdmin, async (req: any, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { status, note } = req.body;
+    if (!["approved", "rejected"].includes(status)) {
+      res.status(400).json({ error: "Status must be approved or rejected" }); return;
+    }
+    const [updated] = await db.update(affiliateCashoutsTable)
+      .set({ status, note: note ?? null, updatedAt: new Date() })
+      .where(eq(affiliateCashoutsTable.id, id))
+      .returning();
+    if (!updated) { res.status(404).json({ error: "Cashout not found" }); return; }
+    res.json({ id: updated.id, status: updated.status, note: updated.note });
+  } catch { res.status(500).json({ error: "Failed to update cashout" }); }
+});
+
 
 export default router;

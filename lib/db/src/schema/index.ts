@@ -23,3 +23,5 @@ export * from "./subscriptions";
 export * from "./giftCards";
 export * from "./emailPreferences";
 export * from "./blogPosts";
+
+export * from "./affiliateCashouts";

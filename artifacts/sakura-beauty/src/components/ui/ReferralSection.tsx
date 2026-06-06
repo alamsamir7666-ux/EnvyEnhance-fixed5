@@ -11,6 +11,38 @@ export function ReferralSection() {
   const [copied, setCopied] = useState(false);
   const [affiliate, setAffiliate] = useState<any>(null);
   const [affiliateLoading, setAffiliateLoading] = useState(true);
+  const [cashouts, setCashouts] = useState<any[]>([]);
+  const [cashoutLoading, setCashoutLoading] = useState(false);
+  const [cashoutError, setCashoutError] = useState("");
+  const [cashoutSuccess, setCashoutSuccess] = useState(false);
+  useEffect(() => {
+    if (!affiliate) return;
+    getToken().then(token =>
+      fetch(`${API}/api/affiliate/cashouts`, { headers: { Authorization: "Bearer " + token } })
+        .then(res => res.ok ? res.json() : [])
+        .then(data => setCashouts(data))
+        .catch(() => {})
+    );
+  }, [affiliate]);
+
+  async function handleCashout() {
+    setCashoutLoading(true);
+    setCashoutError("");
+    setCashoutSuccess(false);
+    try {
+      const token = await getToken();
+      const res = await fetch(`${API}/api/affiliate/cashout`, {
+        method: "POST",
+        headers: { Authorization: "Bearer " + token },
+      });
+      const data = await res.json();
+      if (!res.ok) { setCashoutError(data.error ?? "Failed"); return; }
+      setCashoutSuccess(true);
+      setCashouts(prev => [data, ...prev]);
+    } catch { setCashoutError("Something went wrong"); }
+    finally { setCashoutLoading(false); }
+  }
+
   useEffect(() => {
     getToken().then(token =>
       fetch(`${API}/api/affiliate/me`, { headers: { Authorization: "Bearer " + token } })
@@ -66,6 +98,42 @@ export function ReferralSection() {
           <p className="text-xs text-muted-foreground mt-3 text-center">
             Commission rate: {affiliate.commissionRate}% per sale
           </p>
+
+          {/* Cashout button */}
+          <div className="mt-4">
+            {cashoutError && <p className="text-xs text-destructive text-center mb-2">{cashoutError}</p>}
+            {cashoutSuccess && <p className="text-xs text-green-600 text-center mb-2">Cashout request sent! Admin will process it soon.</p>}
+            <Button
+              className="w-full rounded-full"
+              disabled={cashoutLoading || affiliate.totalCommission < 500 || cashouts.some((c: any) => c.status === "pending")}
+              onClick={handleCashout}
+            >
+              {cashoutLoading ? "Sending..." :
+               cashouts.some((c: any) => c.status === "pending") ? "Cashout Pending..." :
+               affiliate.totalCommission < 500 ? `Need ৳${(500 - affiliate.totalCommission).toFixed(0)} more to cashout` :
+               `Request Cashout (৳${Number(affiliate.totalCommission).toLocaleString()})`}
+            </Button>
+          </div>
+
+          {/* Cashout history */}
+          {cashouts.length > 0 && (
+            <div className="mt-4 space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Cashout History</p>
+              {cashouts.map((co: any) => (
+                <div key={co.id} className="flex items-center justify-between text-sm bg-muted/40 rounded-xl px-3 py-2">
+                  <div>
+                    <p className="font-medium">৳{Number(co.amount).toLocaleString()}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(co.createdAt).toLocaleDateString()}</p>
+                  </div>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                    co.status === "approved" ? "bg-green-100 text-green-700" :
+                    co.status === "rejected" ? "bg-red-100 text-red-600" :
+                    "bg-yellow-100 text-yellow-700"
+                  }`}>{co.status}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
