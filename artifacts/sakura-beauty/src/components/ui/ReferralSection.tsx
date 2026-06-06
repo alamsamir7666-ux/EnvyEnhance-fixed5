@@ -2,18 +2,16 @@ import { useState, useEffect } from "react";
 import { Copy, Check, Users, Gift, TrendingUp, ShoppingBag, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useReferral } from "@/hooks/useReferral";
-import { useApiClient } from "@workspace/api-client-react";
 
 export function ReferralSection() {
   const { data, loading } = useReferral();
   const [copied, setCopied] = useState(false);
   const [affiliate, setAffiliate] = useState<any>(null);
   const [affiliateLoading, setAffiliateLoading] = useState(true);
-  const apiClient = useApiClient();
-
   useEffect(() => {
-    apiClient.get("/affiliate/me")
-      .then(res => setAffiliate(res.data))
+    fetch("/api/affiliate/me", { credentials: "include" })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => setAffiliate(data))
       .catch(() => setAffiliate(null))
       .finally(() => setAffiliateLoading(false));
   }, []);
