@@ -55,11 +55,7 @@ export function ReferralSection() {
               <p className="text-xl font-bold text-amber-600">{affiliate.totalOrders}</p>
               <p className="text-xs text-muted-foreground mt-0.5">Orders</p>
             </div>
-            <div className="rounded-xl bg-muted/50 p-3 text-center">
-              <DollarSign className="h-4 w-4 text-amber-600 mx-auto mb-1" />
-              <p className="text-xl font-bold text-amber-600">৳{affiliate.totalSales.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Total Sales</p>
-            </div>
+
             <div className="rounded-xl bg-muted/50 p-3 text-center">
               <TrendingUp className="h-4 w-4 text-amber-600 mx-auto mb-1" />
               <p className="text-xl font-bold text-amber-600">৳{affiliate.totalCommission.toLocaleString()}</p>
