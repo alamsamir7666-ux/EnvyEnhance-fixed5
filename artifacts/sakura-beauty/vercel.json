@@ -8,10 +8,6 @@
       "dest": "/assets/$1"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "https://envyenhance-api.onrender.com/api/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
