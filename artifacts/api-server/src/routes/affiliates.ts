@@ -18,6 +18,17 @@ function fmt(a: typeof affiliatesTable.$inferSelect) {
   };
 }
 
+router.get("/affiliate/me", async (req: any, res) => {
+  try {
+    const email = req.auth?.email;
+    if (!email) { res.status(401).json({ error: "Unauthorized" }); return; }
+    const [affiliate] = await db.select().from(affiliatesTable)
+      .where(eq(affiliatesTable.email, email)).limit(1);
+    if (!affiliate) { res.status(404).json({ error: "Not an affiliate" }); return; }
+    res.json(fmt(affiliate));
+  } catch { res.status(500).json({ error: "Failed to fetch affiliate" }); }
+});
+
 router.get("/admin/affiliates", requireAdmin, async (_req, res) => {
   try {
     const affiliates = await db.select().from(affiliatesTable).orderBy(desc(affiliatesTable.createdAt));
