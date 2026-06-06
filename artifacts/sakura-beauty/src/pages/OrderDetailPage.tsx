@@ -299,16 +299,28 @@ export function OrderDetailPage() {
                   <p className="text-xs text-red-600">Admin note: {existingReturn.adminNote}</p>
                 )}
               </div>
-            ) : order.orderStatus === "delivered" ? (
-              <Button
-                variant="outline"
-                className="rounded-full gap-2"
-                onClick={() => { setReturnOpen(true); setReturnReason(""); setReturnError(""); setReturnSuccess(false); }}
-              >
-                <RotateCcw className="h-4 w-4" />
-                Request Return / Refund
-              </Button>
-            ) : null
+            ) : order.orderStatus === "delivered" ? (() => {
+              const deliveredAt = new Date((order as any).updatedAt ?? order.createdAt);
+              const expired = (Date.now() - deliveredAt.getTime()) / (1000 * 60 * 60 * 24) > 7;
+              return expired ? (
+                <div className="w-full border border-muted-foreground/20 rounded-xl px-4 py-3 bg-muted/30">
+                  <div className="flex items-center gap-2">
+                    <RotateCcw className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <span className="text-sm text-muted-foreground font-medium">Return window expired</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">Returns must be requested within 7 days of delivery.</p>
+                </div>
+              ) : (
+                <Button
+                  variant="outline"
+                  className="rounded-full gap-2"
+                  onClick={() => { setReturnOpen(true); setReturnReason(""); setReturnError(""); setReturnSuccess(false); }}
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  Request Return / Refund
+                </Button>
+              );
+            })() : null
           )}
         </div>
       </div>
