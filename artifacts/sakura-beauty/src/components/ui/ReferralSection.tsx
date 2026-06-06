@@ -10,9 +10,9 @@ export function ReferralSection() {
   const [affiliateLoading, setAffiliateLoading] = useState(true);
   useEffect(() => {
     fetch("/api/affiliate/me", { credentials: "include" })
-      .then(res => res.ok ? res.json() : null)
-      .then(data => setAffiliate(data))
-      .catch(() => setAffiliate(null))
+      .then(res => { console.log("[affiliate/me] status:", res.status); return res.ok ? res.json() : null; })
+      .then(data => { console.log("[affiliate/me] data:", data); setAffiliate(data); })
+      .catch(e => { console.log("[affiliate/me] error:", e); setAffiliate(null); })
       .finally(() => setAffiliateLoading(false));
   }, []);
 
