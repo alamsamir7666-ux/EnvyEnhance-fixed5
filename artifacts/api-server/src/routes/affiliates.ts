@@ -20,7 +20,7 @@ function fmt(a: typeof affiliatesTable.$inferSelect) {
 
 router.get("/affiliate/me", async (req: any, res) => {
   try {
-    const email = req.auth?.email;
+    const email = (req as any).user?.email;
     if (!email) { res.status(401).json({ error: "Unauthorized" }); return; }
     const [affiliate] = await db.select().from(affiliatesTable)
       .where(eq(affiliatesTable.email, email)).limit(1);
