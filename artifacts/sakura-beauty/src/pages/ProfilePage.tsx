@@ -78,6 +78,7 @@ export function ProfilePage() {
           </div>
         )}
 
+        {profileTab === "overview" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Recent orders */}
           <div>
@@ -140,6 +141,7 @@ export function ProfilePage() {
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
