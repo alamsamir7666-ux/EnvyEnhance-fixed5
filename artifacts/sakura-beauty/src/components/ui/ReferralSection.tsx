@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+const API = import.meta.env.VITE_API_BASE_URL ?? "";
 import { Copy, Check, Users, Gift, TrendingUp, ShoppingBag, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useReferral } from "@/hooks/useReferral";
@@ -9,7 +10,7 @@ export function ReferralSection() {
   const [affiliate, setAffiliate] = useState<any>(null);
   const [affiliateLoading, setAffiliateLoading] = useState(true);
   useEffect(() => {
-    fetch("/api/affiliate/me", { credentials: "include" })
+    fetch(`${API}/api/affiliate/me`, { credentials: "include" })
       .then(res => { console.log("[affiliate/me] status:", res.status); return res.ok ? res.json() : null; })
       .then(data => { console.log("[affiliate/me] data:", data); setAffiliate(data); })
       .catch(e => { console.log("[affiliate/me] error:", e); setAffiliate(null); })
