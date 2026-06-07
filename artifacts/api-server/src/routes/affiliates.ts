@@ -197,6 +197,9 @@ router.patch("/admin/cashouts/:id", requireAdmin, async (req: any, res) => {
       .where(eq(affiliateCashoutsTable.id, id))
       .returning();
     if (!updated) { res.status(404).json({ error: "Cashout not found" }); return; }
+    if (status === "paid") {
+      await db.update(affiliatesTable).set({ totalCommission: "0" }).where(eq(affiliatesTable.id, updated.affiliateId));
+    }
     res.json({ id: updated.id, status: updated.status, note: updated.note });
   } catch { res.status(500).json({ error: "Failed to update cashout" }); }
 });
