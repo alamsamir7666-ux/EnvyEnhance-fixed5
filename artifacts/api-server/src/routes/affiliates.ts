@@ -189,7 +189,7 @@ router.patch("/admin/cashouts/:id", requireAdmin, async (req: any, res) => {
   try {
     const id = parseInt(req.params.id);
     const { status, note } = req.body;
-    if (!["approved", "rejected"].includes(status)) {
+    if (!["approved", "rejected", "paid"].includes(status)) {
       res.status(400).json({ error: "Status must be approved or rejected" }); return;
     }
     const [updated] = await db.update(affiliateCashoutsTable)

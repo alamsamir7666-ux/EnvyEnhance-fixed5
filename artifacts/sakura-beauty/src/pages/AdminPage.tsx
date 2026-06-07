@@ -2452,7 +2452,12 @@ function CashoutsSection() {
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">৳{Number(co.amount).toLocaleString()}</p>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${co.status === "approved" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>{co.status}</span>
+                    <div className="flex flex-col items-end gap-1">
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${co.status === "approved" ? "bg-green-100 text-green-700" : co.status === "paid" ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-600"}`}>{co.status}</span>
+                {co.status === "approved" && (
+                  <button onClick={() => handleAction(co.id, "paid")} className="text-xs px-2 py-0.5 rounded-full bg-blue-600 text-white hover:bg-blue-700">Mark Paid</button>
+                )}
+              </div>
                   </div>
                 </div>
               ))}
