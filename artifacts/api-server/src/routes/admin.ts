@@ -1,7 +1,6 @@
-import { affiliatesTable,
- Router } from "express";
+import { Router } from "express";
 import { db } from "@workspace/db";
-import { ordersTable, usersTable, productsTable } from "@workspace/db";
+import { ordersTable, usersTable, productsTable, affiliatesTable } from "@workspace/db";
 import { eq, desc, sql } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth";
 import { sendOrderStatusUpdate } from "../lib/email";
