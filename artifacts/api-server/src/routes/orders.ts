@@ -179,29 +179,7 @@ router.post("/orders", requireAuth, async (req: any, res) => {
     );
     // ──────────────────────────────────────────────────────────────────────
 
-    // ── Affiliate / influencer commission tracking ─────────────────────────
-    // If a coupon code was used, check if it belongs to an affiliate and update stats
-    if (couponCode) {
-      try {
-        const [affiliate] = await db
-          .select()
-          .from(affiliatesTable)
-          .where(eq(affiliatesTable.code, couponCode.toUpperCase()))
-          .limit(1);
-
-        if (affiliate && affiliate.isActive) {
-          const commissionEarned = (totalAmount * Number(affiliate.commissionRate)) / 100;
-          await db
-            .update(affiliatesTable)
-            .set({
-              totalOrders: affiliate.totalOrders + 1,
-              totalSales: String(Number(affiliate.totalSales) + totalAmount),
-              totalCommission: String(Number(affiliate.totalCommission) + commissionEarned),
-            })
-            .where(eq(affiliatesTable.id, affiliate.id));
-        }
-      } catch (_) {
-        // Non-blocking: affiliate tracking failure should not fail the order
+    // Affiliate commission is credited on delivery (see admin.ts)
       }
     }
     // ──────────────────────────────────────────────────────────────────────

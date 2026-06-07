@@ -1,4 +1,5 @@
-import { Router } from "express";
+import { affiliatesTable,
+ Router } from "express";
 import { db } from "@workspace/db";
 import { ordersTable, usersTable, productsTable } from "@workspace/db";
 import { eq, desc, sql } from "drizzle-orm";
@@ -291,6 +292,27 @@ router.put("/admin/orders/:id/status", requireAdmin, async (req: any, res) => {
           // Non-blocking
         }
       }
+    }
+
+    // ── Affiliate commission on delivery ───────────────────────────────────
+    if (orderStatus === "delivered" && existing.orderStatus !== "delivered") {
+      try {
+        const orderRow = await db.select().from(ordersTable).where(eq(ordersTable.id, id)).limit(1).then(r => r[0]);
+        const couponCode = orderRow?.couponCode;
+        const totalAmount = Number(orderRow?.totalAmount ?? 0);
+        if (couponCode) {
+          const [affiliate] = await db.select().from(affiliatesTable)
+            .where(eq(affiliatesTable.code, couponCode.toUpperCase())).limit(1);
+          if (affiliate && affiliate.isActive) {
+            const commissionEarned = (totalAmount * Number(affiliate.commissionRate)) / 100;
+            await db.update(affiliatesTable).set({
+              totalOrders: affiliate.totalOrders + 1,
+              totalSales: String(Number(affiliate.totalSales) + totalAmount),
+              totalCommission: String(Number(affiliate.totalCommission) + commissionEarned),
+            }).where(eq(affiliatesTable.id, affiliate.id));
+          }
+        }
+      } catch { /* Non-blocking */ }
     }
 
     // Send status update email (non-blocking)
