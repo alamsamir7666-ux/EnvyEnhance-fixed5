@@ -2372,6 +2372,7 @@ function AffiliatesTab() {
           </table>
         </div>
       )}
+    <CashoutsSection />
     </div>
   );
 }
@@ -2459,7 +2460,6 @@ function CashoutsSection() {
           )}
         </div>
       )}
-      <CashoutsSection />
     </div>
   );
 }
