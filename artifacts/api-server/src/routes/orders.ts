@@ -180,8 +180,6 @@ router.post("/orders", requireAuth, async (req: any, res) => {
     // ──────────────────────────────────────────────────────────────────────
 
     // Affiliate commission is credited on delivery (see admin.ts)
-      }
-    }
     // ──────────────────────────────────────────────────────────────────────
 
     // Redeem loyalty points if requested (non-blocking, best-effort)
