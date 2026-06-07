@@ -2385,8 +2385,10 @@ function CashoutsSection() {
   useEffect(() => {
     getToken().then(token =>
       fetch(API + "/api/admin/cashouts", { headers: { Authorization: `Bearer ${token}` } })
-        .then(r => r.json()).then(d => { if (Array.isArray(d)) setCashouts(d); })
-        .catch(() => {}).finally(() => setLoading(false))
+        .then(r => { console.log("[cashouts] status:", r.status); return r.json(); })
+        .then(d => { console.log("[cashouts] data:", d); if (Array.isArray(d)) setCashouts(d); })
+        .catch(e => console.log("[cashouts] error:", e))
+        .finally(() => setLoading(false))
     );
   }, []);
 
