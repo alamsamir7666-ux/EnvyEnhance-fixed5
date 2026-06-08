@@ -3,7 +3,7 @@ import { Link, useLocation, useSearch } from "wouter";
 import { Show, useUser, useClerk } from "@clerk/react";
 import {
   ShoppingBag, User as UserIcon, Heart, Menu, LogOut,
-  Settings, Package, X, Home, Sparkles, Droplets, Wind, Flower2, Sun, Moon, Eye, Star, Share2,
+  Settings, Package, X, Home, Sparkles, Droplets, Wind, Flower2, Sun, Moon, Eye, Star, Share2, Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetCart, getGetCartQueryKey, useListCategories, getListCategoriesQueryKey, useGetMe } from "@workspace/api-client-react";
@@ -41,6 +41,7 @@ export function Navbar() {
   const { signOut } = useClerk();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountExpanded, setAccountExpanded] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const guestCart = useGuestCart();
 
@@ -211,6 +212,17 @@ export function Navbar() {
               <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             </Button>
 
+            {/* Mobile search icon */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="sm:hidden"
+              onClick={() => setSearchOpen(v => !v)}
+              aria-label="Search"
+            >
+              {searchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
+            </Button>
+
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingBag className="h-5 w-5" />
@@ -235,6 +247,11 @@ export function Navbar() {
           </div>
         </div>
       </header>
+
+      {/* Mobile search bar - slides down below navbar */}
+      <div className={`sm:hidden border-b bg-background/95 backdrop-blur transition-all duration-300 overflow-hidden ${searchOpen ? "max-h-20 py-2 px-4" : "max-h-0"}`}>
+        <SearchAutocomplete onClose={() => setSearchOpen(false)} />
+      </div>
 
       {/* Backdrop */}
       <div
