@@ -136,7 +136,8 @@ router.post("/orders", requireAuth, async (req: any, res) => {
       loyaltyDiscount = Math.min(pointsToRedeem * TAKA_PER_POINT, maxLoyaltyDiscount);
     }
 
-    const totalAmount = Math.max(0, subtotal - discountAmount - loyaltyDiscount);
+    const deliveryFee = 120; // Fixed delivery fee
+    const totalAmount = Math.max(0, subtotal - discountAmount - loyaltyDiscount + deliveryFee);
     const trackingId =
       "EE" + crypto.randomBytes(4).toString("hex").toUpperCase();
 
