@@ -296,7 +296,7 @@ export function CheckoutPage() {
                     </p>
                     <p className="text-muted-foreground">
                       1. Send ৳{total.toLocaleString()} to our {paymentMethod === "bkash" ? "bKash" : "Nagad"} number: <strong>01636575741</strong><br />
-                      2. Use "Send Money" option
+                      2. Use "Send Money" option<br />
                       3. Your order will be confirmed automatically after payment
                     </p>
                     <div>
