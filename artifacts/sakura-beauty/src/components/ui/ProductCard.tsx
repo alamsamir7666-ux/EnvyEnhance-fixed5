@@ -98,7 +98,11 @@ function ProductCardInner({
     toggleWishlist(product.id);
   }
 
-  const img = product.images[0] ?? FALLBACK_IMG;
+  const rawImg = product.images[0] ?? FALLBACK_IMG;
+  // Resize Cloudinary images to 400px wide WebP for faster loading
+  const img = rawImg.includes("res.cloudinary.com")
+    ? rawImg.replace("/upload/", "/upload/w_400,h_400,c_fill,f_webp,q_75/")
+    : rawImg;
   const href = backContext
     ? `/products/${product.id}?from=${encodeURIComponent(backContext)}`
     : `/products/${product.id}`;
