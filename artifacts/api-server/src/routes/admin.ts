@@ -189,6 +189,8 @@ router.get("/admin/orders", requireAdmin, async (req: any, res) => {
       userPhone: usersTable.phone,
       giftWrap: ordersTable.giftWrap,
       giftMessage: ordersTable.giftMessage,
+      senderNumber: ordersTable.senderNumber,
+      paidAt: ordersTable.paidAt,
     };
 
     let query = db
