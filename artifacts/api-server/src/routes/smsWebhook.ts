@@ -39,7 +39,7 @@ router.post("/sms-webhook", async (req, res) => {
       .from(ordersTable)
       .where(
         and(
-          eq(ordersTable.paymentStatus, "pending"),
+          eq(ordersTable.paymentStatus, "pending_verification"),
           eq(ordersTable.senderNumber, senderNumber)
         )
       )
