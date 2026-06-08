@@ -66,12 +66,12 @@ router.post("/orders", requireAuth, async (req: any, res) => {
       return;
     }
 
-    // Validate bkash/nagad payment requires transactionId
+    // Validate bkash/nagad payment requires senderNumber
     if (
       (paymentMethod === "bkash" || paymentMethod === "nagad") &&
-      (!transactionId || transactionId.trim() === "")
+      (!senderNumber || senderNumber.trim() === "")
     ) {
-      res.status(400).json({ error: "Transaction ID is required for this payment method" });
+      res.status(400).json({ error: "Please enter your bKash/Nagad sending number" });
       return;
     }
 
