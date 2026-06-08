@@ -35,6 +35,7 @@ export const ordersTable = pgTable("orders", {
   totalAmount: numeric("total_amount", { precision: 10, scale: 2 }).notNull(),
   paymentMethod: text("payment_method").notNull(),
   senderNumber: text("sender_number"),
+  paidAt: timestamp("paid_at"),
   paymentStatus: text("payment_status").notNull().default("pending"),
   orderStatus: text("order_status").notNull().default("pending"),
   transactionId: text("transaction_id"),

@@ -26,6 +26,8 @@ function formatOrder(o: typeof ordersTable.$inferSelect) {
     totalAmount: Number(o.totalAmount),
     paymentMethod: o.paymentMethod,
     paymentStatus: o.paymentStatus,
+    senderNumber: o.senderNumber,
+    paidAt: o.paidAt,
     orderStatus: o.orderStatus,
     transactionId: o.transactionId,
     shippingAddress: o.shippingAddress as any,

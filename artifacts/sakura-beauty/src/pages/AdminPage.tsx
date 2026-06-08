@@ -1369,6 +1369,12 @@ export function AdminPage() {
                                 <p className={`text-xs capitalize ${(o as any).paymentStatus === "paid" ? "text-green-600" : "text-amber-600"}`}>
                                   Status: {(o as any).paymentStatus}
                                 </p>
+                                {(o as any).senderNumber && (
+                                  <p className="text-xs text-gray-500 mt-1">From: <span className="font-mono">{(o as any).senderNumber}</span></p>
+                                )}
+                                {(o as any).paidAt && (
+                                  <p className="text-xs text-gray-500 mt-0.5">Paid: {new Date((o as any).paidAt).toLocaleString()}</p>
+                                )}
                                 {(o as any).transactionId && (
                                   <p className="text-xs text-gray-500 font-mono mt-1">{(o as any).transactionId}</p>
                                 )}

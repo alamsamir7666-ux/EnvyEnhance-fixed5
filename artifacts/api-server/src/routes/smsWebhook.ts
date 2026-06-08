@@ -57,7 +57,7 @@ router.post("/sms-webhook", async (req, res) => {
 
     // Mark as paid
     await db.update(ordersTable)
-      .set({ paymentStatus: "paid", updatedAt: new Date() })
+      .set({ paymentStatus: "paid", paidAt: new Date(), updatedAt: new Date() })
       .where(eq(ordersTable.id, match.id));
 
     console.log("[sms-webhook] Auto-paid order:", match.id);
