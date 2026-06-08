@@ -155,6 +155,7 @@ router.post("/orders", requireAuth, async (req: any, res) => {
         paymentStatus,
         orderStatus: "pending",
         transactionId: transactionId?.trim() ?? null,
+        senderNumber: senderNumber ?? null,
         shippingAddress,
         couponCode: couponCode ?? null,
         discountAmount: String(discountAmount),
