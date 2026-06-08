@@ -25,6 +25,8 @@ function formatOrder(o: typeof ordersTable.$inferSelect) {
     cancellationReason: o.cancellationReason ?? null,
     giftWrap: o.giftWrap ?? "false",
     giftMessage: o.giftMessage ?? null,
+    senderNumber: o.senderNumber ?? null,
+    paidAt: o.paidAt ? o.paidAt.toISOString() : null,
     createdAt: o.createdAt.toISOString(),
     updatedAt: o.updatedAt.toISOString(),
   };
