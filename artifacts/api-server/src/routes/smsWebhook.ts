@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { ordersTable } from "@workspace/db";
+import { ordersTable, usersTable } from "@workspace/db";
 import { eq, and, desc } from "drizzle-orm";
+import { sendOrderStatusUpdate } from "../lib/email";
 
 const router = Router();
 
@@ -61,6 +62,27 @@ router.post("/sms-webhook", async (req, res) => {
       .where(eq(ordersTable.id, match.id));
 
     console.log("[sms-webhook] Auto-paid order:", match.id);
+
+    // Send payment confirmation email
+    try {
+      const [userRow] = await db
+        .select({ email: usersTable.email, firstName: usersTable.firstName, lastName: usersTable.lastName })
+        .from(usersTable)
+        .where(eq(usersTable.clerkId, match.userId))
+        .limit(1);
+
+      if (userRow?.email && !userRow.email.endsWith("@clerk.user")) {
+        const name = [userRow.firstName, userRow.lastName].filter(Boolean).join(" ") || "Customer";
+        await sendOrderStatusUpdate({
+          to: userRow.email,
+          name,
+          orderId: match.id,
+          trackingId: match.trackingId,
+          newStatus: "paid",
+        }).catch(() => {});
+      }
+    } catch { /* Non-blocking */ }
+
     res.json({ ok: true, orderId: match.id });
   } catch (err) {
     console.error("[sms-webhook] error:", err);
