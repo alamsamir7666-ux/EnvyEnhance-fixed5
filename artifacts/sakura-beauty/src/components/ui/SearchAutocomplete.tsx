@@ -62,8 +62,8 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
         setOpen(false);
       }
     }
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
   }, []);
 
   function handleSubmit(e: React.FormEvent) {
@@ -139,7 +139,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
                   {results.categories.map((cat) => (
                     <button
                       key={cat.slug}
-                      onClick={() => goToCategory(cat.slug)}
+                      onMouseDown={() => goToCategory(cat.slug)}
                       className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 transition-colors text-left"
                     >
                       <div className="h-7 w-7 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
@@ -166,7 +166,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
                     return (
                       <button
                         key={product.id}
-                        onClick={() => goToProduct(product.id)}
+                        onMouseDown={() => goToProduct(product.id)}
                         className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 transition-colors text-left"
                       >
                         <div className="h-10 w-10 rounded-xl bg-muted overflow-hidden shrink-0">
@@ -199,7 +199,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
               {/* View all results footer */}
               <div className="border-t mt-1">
                 <button
-                  onClick={() => {
+                  onMouseDown={() => {
                     if (!query.trim()) return;
                     navigate(`/products?q=${encodeURIComponent(query.trim())}`);
                     setOpen(false);
