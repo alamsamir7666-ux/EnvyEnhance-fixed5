@@ -249,7 +249,7 @@ export function Navbar() {
       </header>
 
       {/* Mobile search bar - slides down below navbar */}
-      <div className={`sm:hidden border-b bg-background/95 backdrop-blur transition-all duration-300 overflow-hidden ${searchOpen ? "max-h-20 py-2 px-4" : "max-h-0"}`}>
+      <div className={`sm:hidden border-b bg-background/95 backdrop-blur transition-all duration-300 ${searchOpen ? "py-2 px-4" : "max-h-0 overflow-hidden"}`}>
         <SearchAutocomplete onClose={() => setSearchOpen(false)} />
       </div>
 
