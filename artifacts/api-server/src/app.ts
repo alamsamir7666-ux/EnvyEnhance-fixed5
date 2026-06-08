@@ -96,7 +96,6 @@ app.use(
 );
 
 // ─── Rate Limiting ───────────────────────────────────────────────────────────
-app.use("/api", smsWebhookRouter);
 app.use("/api", apiLimiter);
 app.use("/api/newsletter", newsletterLimiter);
 app.use("/api/stock-alerts", stockAlertLimiter);
