@@ -2,16 +2,16 @@ import express, { type Express, type Request, type Response, type NextFunction }
 import cors from "cors";
 import pinoHttp from "pino-http";
 import cookieParser from "cookie-parser";
-import { clerkMiddleware } from "@clerk/express";
-import { publishableKeyFromHost } from "@clerk/shared/keys";
-import {
+import { smsWebhookRouter, clerkMiddleware } from "@clerk/express";
+import { smsWebhookRouter, publishableKeyFromHost } from "@clerk/shared/keys";
+import { smsWebhookRouter,
   CLERK_PROXY_PATH,
   clerkProxyMiddleware,
   getClerkProxyHost,
 } from "./middlewares/clerkProxyMiddleware";
 import router from "./routes";
-import { logger } from "./lib/logger";
-import { apiLimiter, checkoutLimiter, newsletterLimiter, stockAlertLimiter } from "./middlewares/rateLimiter";
+import { smsWebhookRouter, logger } from "./lib/logger";
+import { smsWebhookRouter, apiLimiter, checkoutLimiter, newsletterLimiter, stockAlertLimiter } from "./middlewares/rateLimiter";
 
 const app: Express = express();
 
@@ -95,12 +95,14 @@ app.use(
 );
 
 // ─── Rate Limiting ───────────────────────────────────────────────────────────
+app.use("/api", smsWebhookRouter);
 app.use("/api", apiLimiter);
 app.use("/api/newsletter", newsletterLimiter);
 app.use("/api/stock-alerts", stockAlertLimiter);
 app.use("/api/orders", checkoutLimiter);
 
 // ─── API routes ───────────────────────────────────────────────────────────────
+app.use("/api", smsWebhookRouter);
 app.use("/api", router);
 
 // ─── 404 handler ─────────────────────────────────────────────────────────────

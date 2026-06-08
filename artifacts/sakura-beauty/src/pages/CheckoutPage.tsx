@@ -85,8 +85,8 @@ export function CheckoutPage() {
       return;
     }
     // Require transaction ID for digital payments
-    if ((paymentMethod === "bkash" || paymentMethod === "nagad") && !transactionId.trim()) {
-      setSubmitError("Transaction ID is required for this payment method.");
+    if ((paymentMethod === "bkash" || paymentMethod === "nagad") && !bkashNumber.trim()) {
+      setSubmitError("Please enter your sending number.");
       return;
     }
     createOrder.mutate({
@@ -197,7 +197,7 @@ export function CheckoutPage() {
                   </div>
                   <div>
                     <Label htmlFor="phone">Phone *</Label>
-                    <Input id="phone" value={address.phone} onChange={e => setAddress(a => ({ ...a, phone: e.target.value }))} required className="mt-1.5" placeholder="01XXXXXXXXX" />
+                    <Input id="phone" value={address.phone} onChange={e => setAddress(a => ({ ...a, phone: e.target.value }))} required className="mt-1.5" placeholder="01636575741X" />
                   </div>
                   <div>
                     <Label htmlFor="postalCode">Postal Code</Label>
@@ -295,17 +295,15 @@ export function CheckoutPage() {
                       {paymentMethod === "bkash" ? "bKash" : "Nagad"} Payment Instructions
                     </p>
                     <p className="text-muted-foreground">
-                      1. Send ৳{total.toLocaleString()} to our {paymentMethod === "bkash" ? "bKash" : "Nagad"} number: <strong>01XXXXXXXX</strong><br />
-                      2. Use "Send Money" option<br />
-                      3. Enter the transaction ID below
+                      1. Send ৳{total.toLocaleString()} to our {paymentMethod === "bkash" ? "bKash" : "Nagad"} number: <strong>01636575741</strong><br />
+                      2. Use "Send Money" option
+                      3. Your order will be confirmed automatically after payment
                     </p>
                     <div>
                       <Label>{paymentMethod === "bkash" ? "bKash" : "Nagad"} Number</Label>
                       <Input className="mt-1.5" value={bkashNumber} onChange={e => setBkashNumber(e.target.value)} placeholder="Your sending number" />
                     </div>
                     <div>
-                      <Label>Transaction ID *</Label>
-                      <Input className="mt-1.5" value={transactionId} onChange={e => setTransactionId(e.target.value)} placeholder="e.g. 8N6YKP5Q..." />
                     </div>
                   </div>
                 )}
