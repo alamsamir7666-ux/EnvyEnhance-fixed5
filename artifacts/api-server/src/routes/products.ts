@@ -141,7 +141,7 @@ router.post("/products/upload-image", requireAuth, requireAdmin, uploadMiddlewar
     }
     const urls = await Promise.all(files.map(file => new Promise<string>((resolve, reject) => {
       const stream = cloudinaryV2.uploader.upload_stream(
-        { folder: "envyenhance/products", quality: "auto", fetch_format: "auto" },
+        { folder: "envyenhance/products", quality: 75, fetch_format: "auto", format: "webp" },
         (err, result) => {
           if (err || !result) { console.error("Cloudinary error:", err); return reject(err ?? new Error("Upload failed")); }
           resolve(result.secure_url);
