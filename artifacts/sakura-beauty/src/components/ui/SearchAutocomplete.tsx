@@ -45,7 +45,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
       return;
     }
     setLoading(true);
-    fetch(`/api/search/autocomplete?q=${encodeURIComponent(debouncedQuery)}`, { credentials: "include" })
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/search/autocomplete?q=${encodeURIComponent(debouncedQuery)}`, { credentials: "include" })
       .then((r) => r.json())
       .then((data: SearchResults) => {
         setResults(data);
