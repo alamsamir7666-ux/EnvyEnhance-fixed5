@@ -321,6 +321,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                     const fd = new FormData();
                     files.forEach((f: File) => fd.append("images", f));
                     if (form.name) fd.append("productName", String(form.name));
+                    if (form.name) fd.append("productName", String(form.name));
                     try {
                       const token = await getToken();
                       if (!token) { alert("Not logged in"); return; }
