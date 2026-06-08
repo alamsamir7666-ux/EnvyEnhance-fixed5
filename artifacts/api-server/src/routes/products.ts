@@ -139,9 +139,17 @@ router.post("/products/upload-image", requireAuth, requireAdmin, uploadMiddlewar
     if (!files || files.length === 0) {
       res.status(400).json({ error: "No files uploaded" }); return;
     }
-    const urls = await Promise.all(files.map(file => new Promise<string>((resolve, reject) => {
+    const productName = (req.body.productName as string | undefined) ?? "";
+    const slug = productName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 60);
+
+    const urls = await Promise.all(files.map((file, idx) => new Promise<string>((resolve, reject) => {
+      const publicId = slug ? `${slug}-${idx + 1}-${Date.now()}` : undefined;
       const stream = cloudinaryV2.uploader.upload_stream(
-        { folder: "envyenhance/products", quality: 75, fetch_format: "auto", format: "webp" },
+        { folder: "envyenhance/products", quality: 75, fetch_format: "auto", format: "webp", ...(publicId ? { public_id: publicId } : {}) },
         (err, result) => {
           if (err || !result) { console.error("Cloudinary error:", err); return reject(err ?? new Error("Upload failed")); }
           resolve(result.secure_url);

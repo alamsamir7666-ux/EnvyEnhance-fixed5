@@ -320,6 +320,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                     if (currentCount + files.length > 4) { alert("Maximum 4 images allowed per product"); return; }
                     const fd = new FormData();
                     files.forEach((f: File) => fd.append("images", f));
+                    if (form.name) fd.append("productName", String(form.name));
                     try {
                       const token = await getToken();
                       if (!token) { alert("Not logged in"); return; }
