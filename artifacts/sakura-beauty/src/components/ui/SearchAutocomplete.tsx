@@ -123,7 +123,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute top-full mt-2 left-0 right-0 bg-card border border-border rounded-2xl shadow-lg z-50 overflow-hidden">
+        <div onMouseDown={e => e.preventDefault()} onTouchStart={e => e.stopPropagation()} className="absolute top-full mt-2 left-0 right-0 bg-card border border-border rounded-2xl shadow-lg z-50 overflow-hidden">
           {!hasResults ? (
             <div className="px-5 py-6 text-center text-sm text-muted-foreground">
               No results for "<strong>{query}</strong>"
@@ -139,7 +139,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
                   {results.categories.map((cat) => (
                     <button
                       key={cat.slug}
-                      onMouseDown={() => goToCategory(cat.slug)}
+                      onClick={() => goToCategory(cat.slug)}
                       className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 transition-colors text-left"
                     >
                       <div className="h-7 w-7 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
@@ -166,7 +166,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
                     return (
                       <button
                         key={product.id}
-                        onMouseDown={() => goToProduct(product.id)}
+                        onClick={() => goToProduct(product.id)}
                         className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 transition-colors text-left"
                       >
                         <div className="h-10 w-10 rounded-xl bg-muted overflow-hidden shrink-0">
@@ -199,7 +199,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
               {/* View all results footer */}
               <div className="border-t mt-1">
                 <button
-                  onMouseDown={() => {
+                  onClick={() => {
                     if (!query.trim()) return;
                     navigate(`/products?q=${encodeURIComponent(query.trim())}`);
                     setOpen(false);
