@@ -29,7 +29,6 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
       .finally(() => setLoading(false));
   }, [debouncedQuery]);
 
-  // Close on outside tap/click
   useEffect(() => {
     function handler(e: Event) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -45,11 +44,11 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
   }, []);
 
   function go(path: string) {
-    navigate(path);
+    setOpen(false);
     setQuery("");
     setResults(null);
-    setOpen(false);
     onClose?.();
+    setTimeout(() => navigate(path), 10);
   }
 
   const hasResults = results && (results.products.length > 0 || results.categories.length > 0);
@@ -76,55 +75,66 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
       </form>
 
       {open && (
-        <div className="absolute top-full mt-2 left-0 right-0 bg-card border border-border rounded-2xl shadow-lg z-50 overflow-hidden">
+        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 8, backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 16, boxShadow: '0 8px 32px rgba(0,0,0,0.12)', zIndex: 9999, overflow: 'hidden', maxHeight: '60vh', display: 'flex', flexDirection: 'column' }}>
           {!hasResults ? (
-            <div className="px-5 py-6 text-center text-sm text-muted-foreground">No results for "<strong>{query}</strong>"</div>
+            <div style={{ padding: '24px 20px', textAlign: 'center', fontSize: 14, color: '#6b7280' }}>
+              No results for "<strong>{query}</strong>"
+            </div>
           ) : (
-            <div className="py-2 max-h-[420px] overflow-y-auto">
+            <div style={{ overflowY: 'auto', flex: 1 }}>
               {results.categories.length > 0 && (
                 <div>
-                  <p className="px-4 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">Categories</p>
+                  <p style={{ padding: '8px 16px', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#9ca3af' }}>Categories</p>
                   {results.categories.map(cat => (
-                    <div key={cat.slug} onClick={() => go(`/products?category=${cat.slug}`)}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 transition-colors cursor-pointer">
-                      <div className="h-7 w-7 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
-                        <Tag className="h-3.5 w-3.5 text-accent" />
+                    <div key={cat.slug}
+                      onClick={() => go(`/products?category=${cat.slug}`)}
+                      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 16px', cursor: 'pointer', backgroundColor: 'transparent' }}
+                      onTouchEnd={(e) => { e.preventDefault(); go(`/products?category=${cat.slug}`); }}
+                    >
+                      <div style={{ height: 28, width: 28, borderRadius: '50%', backgroundColor: '#fce7f3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Tag size={14} color="#e05c9a" />
                       </div>
-                      <span className="text-sm">{cat.name}</span>
-                      <span className="text-xs text-muted-foreground ml-auto">Category →</span>
+                      <span style={{ fontSize: 14, color: '#111827' }}>{cat.name}</span>
+                      <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>Category →</span>
                     </div>
                   ))}
                 </div>
               )}
               {results.products.length > 0 && (
                 <div>
-                  {results.categories.length > 0 && <div className="mx-4 my-1 border-t" />}
-                  <p className="px-4 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">Products</p>
+                  {results.categories.length > 0 && <div style={{ height: 1, backgroundColor: '#f3f4f6', margin: '4px 16px' }} />}
+                  <p style={{ padding: '8px 16px', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#9ca3af' }}>Products</p>
                   {results.products.map(product => {
                     const displayPrice = product.discountPrice ?? product.price;
                     return (
-                      <div key={product.id} onClick={() => go(`/products/${product.id}`)}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 transition-colors cursor-pointer">
-                        <div className="h-10 w-10 rounded-xl bg-muted overflow-hidden shrink-0">
-                          {product.image ? <img src={product.image} alt={product.name} className="h-full w-full object-cover" /> : <div className="h-full w-full bg-muted" />}
+                      <div key={product.id}
+                        onClick={() => go(`/products/${product.id}`)}
+                        onTouchEnd={(e) => { e.preventDefault(); go(`/products/${product.id}`); }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 16px', cursor: 'pointer' }}
+                      >
+                        <div style={{ height: 44, width: 44, borderRadius: 10, overflow: 'hidden', backgroundColor: '#f3f4f6', flexShrink: 0 }}>
+                          {product.image ? <img src={product.image} alt={product.name} style={{ height: '100%', width: '100%', objectFit: 'cover' }} /> : <div style={{ height: '100%', width: '100%', backgroundColor: '#f3f4f6' }} />}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">{product.name}</p>
-                          <p className="text-xs text-muted-foreground capitalize">{product.category}</p>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ fontSize: 14, fontWeight: 500, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{product.name}</p>
+                          <p style={{ fontSize: 12, color: '#9ca3af', textTransform: 'capitalize' }}>{product.category}</p>
                         </div>
-                        <div className="text-right shrink-0">
-                          <p className="text-sm font-semibold">৳{displayPrice.toLocaleString()}</p>
-                          {product.discountPrice && <p className="text-xs text-muted-foreground line-through">৳{product.price.toLocaleString()}</p>}
+                        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                          <p style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>৳{displayPrice.toLocaleString()}</p>
+                          {product.discountPrice && <p style={{ fontSize: 12, color: '#9ca3af', textDecoration: 'line-through' }}>৳{product.price.toLocaleString()}</p>}
                         </div>
                       </div>
                     );
                   })}
                 </div>
               )}
-              <div className="border-t mt-1">
-                <div onClick={() => go(`/products?q=${encodeURIComponent(query.trim())}`)}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm text-accent hover:bg-accent/5 transition-colors font-medium cursor-pointer">
-                  <Search className="h-3.5 w-3.5" />
+              <div style={{ borderTop: '1px solid #f3f4f6' }}>
+                <div
+                  onClick={() => go(`/products?q=${encodeURIComponent(query.trim())}`)}
+                  onTouchEnd={(e) => { e.preventDefault(); go(`/products?q=${encodeURIComponent(query.trim())}`); }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 16px', fontSize: 14, color: '#e05c9a', cursor: 'pointer', fontWeight: 500 }}
+                >
+                  <Search size={14} />
                   See all results for "{query}"
                 </div>
               </div>
