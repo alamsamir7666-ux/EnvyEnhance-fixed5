@@ -55,15 +55,19 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
       .finally(() => setLoading(false));
   }, [debouncedQuery]);
 
-  // Close on outside click
+  // Close on outside click - use timeout to let click handlers fire first
   useEffect(() => {
-    function handler(e: MouseEvent) {
+    function handler(e: MouseEvent | TouchEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
+        setTimeout(() => setOpen(false), 150);
       }
     }
-    document.addEventListener("click", handler);
-    return () => document.removeEventListener("click", handler);
+    document.addEventListener("touchend", handler as any);
+    document.addEventListener("mouseup", handler as any);
+    return () => {
+      document.removeEventListener("touchend", handler as any);
+      document.removeEventListener("mouseup", handler as any);
+    };
   }, []);
 
   function handleSubmit(e: React.FormEvent) {
