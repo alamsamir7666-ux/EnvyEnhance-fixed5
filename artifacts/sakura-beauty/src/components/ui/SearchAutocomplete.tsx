@@ -93,7 +93,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => query.length >= 2 && setOpen(true)}
-            onBlur={() => setTimeout(() => setOpen(false), 300)}
+            onBlur={() => setTimeout(() => setOpen(false), 500)}
             placeholder="Search products, ingredients…"
             autoComplete="off"
             className="w-full h-10 pl-10 pr-10 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
