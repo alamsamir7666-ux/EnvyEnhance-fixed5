@@ -56,6 +56,24 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
     };
   }, []);
 
+  const touchStart = useRef<{x: number, y: number} | null>(null);
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }
+
+  function handleTouchEnd(e: React.TouchEvent, path: string) {
+    if (!touchStart.current) return;
+    const dx = Math.abs(e.changedTouches[0].clientX - touchStart.current.x);
+    const dy = Math.abs(e.changedTouches[0].clientY - touchStart.current.y);
+    // Only navigate if finger moved less than 10px (tap, not scroll)
+    if (dx < 10 && dy < 10) {
+      e.preventDefault();
+      go(path);
+    }
+    touchStart.current = null;
+  }
+
   function go(path: string) {
     setOpen(false);
     setQuery("");
@@ -96,7 +114,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
               <p style={{ padding: '8px 16px 4px', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#9ca3af' }}>Categories</p>
               {results.categories.map(cat => (
                 <div key={cat.slug}
-                  onTouchEnd={e => { e.preventDefault(); go(`/products?category=${cat.slug}`); }}
+                  onTouchStart={handleTouchStart} onTouchEnd={e => handleTouchEnd(e, `/products?category=${cat.slug}`)}
                   onClick={() => go(`/products?category=${cat.slug}`)}
                   style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 16px', cursor: 'pointer' }}
                 >
@@ -117,7 +135,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
                 const displayPrice = product.discountPrice ?? product.price;
                 return (
                   <div key={product.id}
-                    onTouchEnd={e => { e.preventDefault(); go(`/products/${product.id}`); }}
+                    onTouchStart={handleTouchStart} onTouchEnd={e => handleTouchEnd(e, `/products/${product.id}`)}
                     onClick={() => go(`/products/${product.id}`)}
                     style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 16px', cursor: 'pointer' }}
                   >
@@ -141,7 +159,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
           )}
           <div style={{ borderTop: '1px solid #f3f4f6' }}>
             <div
-              onTouchEnd={e => { e.preventDefault(); go(`/products?q=${encodeURIComponent(query.trim())}`); }}
+              onTouchStart={handleTouchStart} onTouchEnd={e => handleTouchEnd(e, `/products?q=${encodeURIComponent(query.trim())}`)}
               onClick={() => go(`/products?q=${encodeURIComponent(query.trim())}`)}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 16px', fontSize: 14, color: '#e05c9a', cursor: 'pointer', fontWeight: 500 }}
             >
