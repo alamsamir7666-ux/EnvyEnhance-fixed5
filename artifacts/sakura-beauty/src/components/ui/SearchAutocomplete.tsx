@@ -55,20 +55,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
       .finally(() => setLoading(false));
   }, [debouncedQuery]);
 
-  // Close on outside click - use timeout to let click handlers fire first
-  useEffect(() => {
-    function handler(e: MouseEvent | TouchEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setTimeout(() => setOpen(false), 150);
-      }
-    }
-    document.addEventListener("touchend", handler as any);
-    document.addEventListener("mouseup", handler as any);
-    return () => {
-      document.removeEventListener("touchend", handler as any);
-      document.removeEventListener("mouseup", handler as any);
-    };
-  }, []);
+  // Outside click handled by input blur
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -106,6 +93,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => query.length >= 2 && setOpen(true)}
+            onBlur={() => setTimeout(() => setOpen(false), 300)}
             placeholder="Search products, ingredients…"
             autoComplete="off"
             className="w-full h-10 pl-10 pr-10 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
