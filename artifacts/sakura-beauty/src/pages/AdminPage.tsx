@@ -537,6 +537,11 @@ export function AdminPage() {
   const [userSearch, setUserSearch] = useState("");
   const [reviewSearch, setReviewSearch] = useState("");
   const [couponSearch, setCouponSearch] = useState("");
+  const [archivedOrders, setArchivedOrders] = useState<any[]>([]);
+  const [archivedPage, setArchivedPage] = useState(1);
+  const [archivedHasMore, setArchivedHasMore] = useState(false);
+  const [archivedTotal, setArchivedTotal] = useState(0);
+  const [archivedLoading, setArchivedLoading] = useState(false);
   const [seedingCategories, setSeedingCategories] = useState(false);
 
   // Coupons state
@@ -664,7 +669,7 @@ export function AdminPage() {
   const filteredOrders = useMemo(
     () => orders.filter(o => {
       const isArchived = o.orderStatus === "delivered" && Date.now() - new Date(o.updatedAt).getTime() > TWO_DAYS;
-      if (isArchived) return false;
+      if (isArchived) return false;  // still exclude from main orders list
       return !orderSearch ||
         String(o.id).includes(orderSearch) ||
         o.orderStatus.toLowerCase().includes(orderSearch.toLowerCase()) ||
@@ -796,9 +801,9 @@ export function AdminPage() {
                 {pendingOrders}
               </span>
             )}
-            {id === "archived" && archivedOrders.length > 0 && (
+            {id === "archived" && archivedTotal > 0 && (
               <span className="ml-auto bg-gray-100 text-gray-500 text-xs font-semibold px-2 py-0.5 rounded-full">
-                {archivedOrders.length}
+                {archivedTotal}
               </span>
             )}
           </button>

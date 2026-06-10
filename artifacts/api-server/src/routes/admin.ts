@@ -156,6 +156,71 @@ router.get("/admin/dashboard", requireAdmin, async (_req, res) => {
   }
 });
 
+
+router.get("/admin/orders/archived", requireAdmin, async (req: any, res) => {
+  try {
+    const { page = "1" } = req.query as Record<string, string>;
+    const pageNum = Math.max(1, parseInt(page));
+    const limit = 15;
+    const offset = (pageNum - 1) * limit;
+    const TWO_DAYS_AGO = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+
+    const baseSelect = {
+      id: ordersTable.id,
+      trackingId: ordersTable.trackingId,
+      userId: ordersTable.userId,
+      items: ordersTable.items,
+      totalAmount: ordersTable.totalAmount,
+      paymentMethod: ordersTable.paymentMethod,
+      paymentStatus: ordersTable.paymentStatus,
+      orderStatus: ordersTable.orderStatus,
+      transactionId: ordersTable.transactionId,
+      shippingAddress: ordersTable.shippingAddress,
+      couponCode: ordersTable.couponCode,
+      discountAmount: ordersTable.discountAmount,
+      cancellationReason: ordersTable.cancellationReason,
+      createdAt: ordersTable.createdAt,
+      updatedAt: ordersTable.updatedAt,
+      userEmail: usersTable.email,
+      userFirstName: usersTable.firstName,
+      userLastName: usersTable.lastName,
+      userPhone: usersTable.phone,
+      giftWrap: ordersTable.giftWrap,
+      giftMessage: ordersTable.giftMessage,
+      senderNumber: ordersTable.senderNumber,
+      paidAt: ordersTable.paidAt,
+    };
+
+    const [orders, [{ total }]] = await Promise.all([
+      db.select(baseSelect)
+        .from(ordersTable)
+        .leftJoin(usersTable, eq(ordersTable.userId, usersTable.clerkId))
+        .where(and(
+          eq(ordersTable.orderStatus, "delivered"),
+          sql`${ordersTable.updatedAt} < ${TWO_DAYS_AGO.toISOString()}`
+        ))
+        .orderBy(desc(ordersTable.updatedAt))
+        .limit(limit)
+        .offset(offset) as Promise<OrderWithUser[]>,
+      db.select({ total: sql<string>`COUNT(*)` })
+        .from(ordersTable)
+        .where(and(
+          eq(ordersTable.orderStatus, "delivered"),
+          sql`${ordersTable.updatedAt} < ${TWO_DAYS_AGO.toISOString()}`
+        )),
+    ]);
+
+    res.json({
+      orders: orders.map(formatOrderWithUser),
+      total: Number(total),
+      page: pageNum,
+      hasMore: offset + limit < Number(total),
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch archived orders" });
+  }
+});
+
 router.get("/admin/orders", requireAdmin, async (req: any, res) => {
   try {
     const { status, page = "1" } = req.query as Record<string, string>;
