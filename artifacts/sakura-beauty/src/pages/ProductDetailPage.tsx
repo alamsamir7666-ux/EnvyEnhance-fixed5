@@ -111,6 +111,7 @@ export function ProductDetailPage() {
       averageRating: product.averageRating,
       reviewCount: product.reviewCount,
       isFeatured: product.isFeatured,
+      stock: product.stock,
     });
   }, [product?.id]);
 

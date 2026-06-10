@@ -11,6 +11,7 @@ export type RecentlyViewedProduct = {
   averageRating: number;
   reviewCount: number;
   isFeatured: boolean;
+  stock?: number;
 };
 
 const STORAGE_KEY = "sakura_recently_viewed";
