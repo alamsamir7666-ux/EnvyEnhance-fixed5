@@ -542,6 +542,7 @@ export function AdminPage() {
   const [archivedHasMore, setArchivedHasMore] = useState(false);
   const [archivedTotal, setArchivedTotal] = useState(0);
   const [archivedLoading, setArchivedLoading] = useState(false);
+  const [archivedError, setArchivedError] = useState<string|null>(null);
   const [seedingCategories, setSeedingCategories] = useState(false);
 
   // Coupons state
@@ -663,11 +664,15 @@ export function AdminPage() {
     try {
       const res = await fetch(`${API}/api/admin/orders/archived?page=${page}`, { credentials: "include" });
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
       setArchivedOrders(prev => append ? [...prev, ...data.orders] : data.orders);
       setArchivedHasMore(data.hasMore);
       setArchivedTotal(data.total);
       setArchivedPage(page);
-    } catch {}
+      setArchivedError(null);
+    } catch (e: any) {
+      setArchivedError(e.message ?? "Failed to load");
+    }
     setArchivedLoading(false);
   };
 
@@ -1629,7 +1634,9 @@ export function AdminPage() {
       <div className="mb-4">
         <p className="text-sm text-gray-500">Orders that were marked as <strong>delivered</strong> more than 2 days ago. Automatically moved here from the main Orders view.</p>
       </div>
-      {ordersLoading ? (
+      {archivedError ? (
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center text-red-600 text-sm">{archivedError}</div>
+      ) : archivedLoading && archivedOrders.length === 0 ? (
         <div className="space-y-3">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-14 rounded-xl" />)}</div>
       ) : archivedOrders.length === 0 ? (
         <div className="bg-white rounded-2xl border p-14 text-center">
