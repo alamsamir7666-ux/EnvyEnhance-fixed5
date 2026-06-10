@@ -662,7 +662,8 @@ export function AdminPage() {
   const fetchArchivedOrders = async (page: number, append = false) => {
     setArchivedLoading(true);
     try {
-      const res = await fetch(`${API}/api/admin/orders/archived?page=${page}`, { credentials: "include" });
+      const token = await getToken();
+      const res = await fetch(`${API}/api/admin/orders/archived?page=${page}`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
       setArchivedOrders(prev => append ? [...prev, ...data.orders] : data.orders);
