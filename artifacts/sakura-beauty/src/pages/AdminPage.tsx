@@ -542,8 +542,6 @@ export function AdminPage() {
   const [archivedHasMore, setArchivedHasMore] = useState(false);
   const [archivedTotal, setArchivedTotal] = useState(0);
   const [archivedLoading, setArchivedLoading] = useState(false);
-  const [archivedTotal, setArchivedTotal] = useState(0);
-  const [archivedLoading, setArchivedLoading] = useState(false);
   const [seedingCategories, setSeedingCategories] = useState(false);
 
   // Coupons state
@@ -1148,17 +1146,7 @@ export function AdminPage() {
               </tbody>
             </table>
           </div>
-          {archivedHasMore && (
-            <div className="p-4 border-t text-center">
-              <button
-                onClick={() => fetchArchivedOrders(archivedPage + 1, true)}
-                disabled={archivedLoading}
-                className="px-6 py-2 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                {archivedLoading ? "Loading..." : `Load More (${archivedTotal - archivedOrders.length} remaining)`}
-              </button>
-            </div>
-          )}
+
         </div>
       )}
     </div>
@@ -1251,17 +1239,7 @@ export function AdminPage() {
               </tbody>
             </table>
           </div>
-          {archivedHasMore && (
-            <div className="p-4 border-t text-center">
-              <button
-                onClick={() => fetchArchivedOrders(archivedPage + 1, true)}
-                disabled={archivedLoading}
-                className="px-6 py-2 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                {archivedLoading ? "Loading..." : `Load More (${archivedTotal - archivedOrders.length} remaining)`}
-              </button>
-            </div>
-          )}
+
         </div>
       )}
     </div>
@@ -1441,17 +1419,7 @@ export function AdminPage() {
               </tbody>
             </table>
           </div>
-          {archivedHasMore && (
-            <div className="p-4 border-t text-center">
-              <button
-                onClick={() => fetchArchivedOrders(archivedPage + 1, true)}
-                disabled={archivedLoading}
-                className="px-6 py-2 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                {archivedLoading ? "Loading..." : `Load More (${archivedTotal - archivedOrders.length} remaining)`}
-              </button>
-            </div>
-          )}
+
         </div>
       )}
     </div>
@@ -1649,17 +1617,7 @@ export function AdminPage() {
               </tbody>
             </table>
           </div>
-          {archivedHasMore && (
-            <div className="p-4 border-t text-center">
-              <button
-                onClick={() => fetchArchivedOrders(archivedPage + 1, true)}
-                disabled={archivedLoading}
-                className="px-6 py-2 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                {archivedLoading ? "Loading..." : `Load More (${archivedTotal - archivedOrders.length} remaining)`}
-              </button>
-            </div>
-          )}
+
         </div>
       )}
     </div>
@@ -1744,17 +1702,7 @@ export function AdminPage() {
               </tbody>
             </table>
           </div>
-          {archivedHasMore && (
-            <div className="p-4 border-t text-center">
-              <button
-                onClick={() => fetchArchivedOrders(archivedPage + 1, true)}
-                disabled={archivedLoading}
-                className="px-6 py-2 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                {archivedLoading ? "Loading..." : `Load More (${archivedTotal - archivedOrders.length} remaining)`}
-              </button>
-            </div>
-          )}
+
         </div>
       )}
     </div>
@@ -1966,17 +1914,7 @@ export function AdminPage() {
               </tbody>
             </table>
           </div>
-          {archivedHasMore && (
-            <div className="p-4 border-t text-center">
-              <button
-                onClick={() => fetchArchivedOrders(archivedPage + 1, true)}
-                disabled={archivedLoading}
-                className="px-6 py-2 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                {archivedLoading ? "Loading..." : `Load More (${archivedTotal - archivedOrders.length} remaining)`}
-              </button>
-            </div>
-          )}
+
         </div>
       )}
     </div>
