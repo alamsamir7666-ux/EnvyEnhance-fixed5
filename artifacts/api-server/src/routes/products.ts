@@ -139,7 +139,8 @@ router.post("/products/upload-image", requireAuth, requireAdmin, uploadMiddlewar
     if (!files || files.length === 0) {
       res.status(400).json({ error: "No files uploaded" }); return;
     }
-    const productName = (req.body.productName as string | undefined) ?? "";
+    const rawName = req.body.productName;
+    const productName = Array.isArray(rawName) ? String(rawName[0] ?? "") : String(rawName ?? "");
     const slug = productName
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
