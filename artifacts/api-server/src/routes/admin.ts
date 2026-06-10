@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { ordersTable, usersTable, productsTable, affiliatesTable } from "@workspace/db";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, and, lt } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth";
 import { sendOrderStatusUpdate } from "../lib/email";
 import { logAudit } from "../lib/audit";
@@ -197,7 +197,7 @@ router.get("/admin/orders/archived", requireAdmin, async (req: any, res) => {
         .leftJoin(usersTable, eq(ordersTable.userId, usersTable.clerkId))
         .where(and(
           eq(ordersTable.orderStatus, "delivered"),
-          sql`${ordersTable.updatedAt} < ${TWO_DAYS_AGO.toISOString()}`
+          lt(ordersTable.updatedAt, TWO_DAYS_AGO)
         ))
         .orderBy(desc(ordersTable.updatedAt))
         .limit(limit)
@@ -206,7 +206,7 @@ router.get("/admin/orders/archived", requireAdmin, async (req: any, res) => {
         .from(ordersTable)
         .where(and(
           eq(ordersTable.orderStatus, "delivered"),
-          sql`${ordersTable.updatedAt} < ${TWO_DAYS_AGO.toISOString()}`
+          lt(ordersTable.updatedAt, TWO_DAYS_AGO)
         )),
     ]);
 
