@@ -65,7 +65,6 @@ const navItems = [
 
 // ─── Product form ────────────────────────────────────────────────────────────
 function ProductModal({ product, categories, onClose }: { product?: any; categories: any[]; onClose: () => void }) {
-  const { getToken } = useAuth();
   const qc = useQueryClient();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
@@ -519,6 +518,8 @@ export function AdminPage() {
   const [ordersTotal, setOrdersTotal] = useState(0);
   const [dashStats, setDashStats] = useState<{totalSales:number,totalOrders:number,pendingOrders:number,deliveredOrders:number}>({totalSales:0,totalOrders:0,pendingOrders:0,deliveredOrders:0});
 
+  const { getToken } = useAuth();
+
   const fetchOrders = async (page: number, append = false) => {
     setOrdersLoading(true);
     try {
@@ -548,7 +549,6 @@ export function AdminPage() {
   }, []);
   const { data: users } = useListAllUsers({ query: { queryKey: getListAllUsersQueryKey() } });
   const { data: me } = useGetMe();
-  const { getToken } = useAuth();
   const { data: categories = [] } = useListCategories({ query: { staleTime: 30_000, queryKey: getListCategoriesQueryKey() } });
   const { data: allReviews = [], isLoading: reviewsLoading } = useListAllReviews();
 
@@ -2092,7 +2092,6 @@ export function AdminPage() {
 
 // ─── Returns Tab ─────────────────────────────────────────────────────────────
 function ReturnsTab() {
-  const { getToken } = useAuth();
   const [returns, setReturns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
@@ -2272,7 +2271,6 @@ function ReturnsTab() {
 
 // ─── Affiliates Tab ───────────────────────────────────────────────────────────
 function AffiliatesTab() {
-  const { getToken } = useAuth();
   const [affiliates, setAffiliates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -2487,7 +2485,6 @@ function AffiliatesTab() {
 
 // ─── Cashouts Tab (inside Affiliates) ────────────────────────────────────────
 function CashoutsSection() {
-  const { getToken } = useAuth();
   const [cashouts, setCashouts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -2579,7 +2576,6 @@ function CashoutsSection() {
 
 // ─── Blog Tab ────────────────────────────────────────────────────────────────
 function BlogTab() {
-  const { getToken } = useAuth();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQ, setSearchQ] = useState("");
@@ -2796,7 +2792,6 @@ function BlogTab() {
 
 // ─── Audit Logs Tab ───────────────────────────────────────────────────────────
 function AuditLogsTab() {
-  const { getToken } = useAuth();
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
