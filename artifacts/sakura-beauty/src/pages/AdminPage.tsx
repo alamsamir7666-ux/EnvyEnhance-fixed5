@@ -523,8 +523,10 @@ export function AdminPage() {
       const token = await getToken();
       const res = await fetch(`${API}/api/admin/orders?page=${page}`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
-      setOrders(prev => append ? [...prev, ...data.orders] : data.orders);
-      setOrdersHasMore(data.hasMore ?? (data.orders?.length === 20));
+      const list = Array.isArray(data) ? data : (data.orders ?? []);
+      const hasMore = Array.isArray(data) ? data.length === 20 : (data.hasMore ?? data.length === 20);
+      setOrders(prev => append ? [...prev, ...list] : list);
+      setOrdersHasMore(hasMore);
       setOrdersPage(page);
     } catch {}
     setOrdersLoading(false);
@@ -772,7 +774,7 @@ export function AdminPage() {
       return;
     }
     updateOrderStatus.mutate({ id: orderId, data: { orderStatus: status } }, {
-      onSuccess: () => qc.invalidateQueries({ queryKey: getListAllOrdersQueryKey() }),
+      onSuccess: () => fetchOrders(1),
     });
   }
 
@@ -780,7 +782,7 @@ export function AdminPage() {
     if (!cancelModal) return;
     updateOrderStatus.mutate(
       { id: cancelModal.orderId, data: { orderStatus: "cancelled", cancellationReason: cancelModal.reason.trim() || null } },
-      { onSuccess: () => { qc.invalidateQueries({ queryKey: getListAllOrdersQueryKey() }); setCancelModal(null); } }
+      { onSuccess: () => { fetchOrders(1); setCancelModal(null); } }
     );
   }
 
