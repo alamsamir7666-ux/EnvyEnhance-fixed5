@@ -528,8 +528,8 @@ export function AdminPage() {
       const data = await res.json();
       const list = Array.isArray(data) ? data : (data.orders ?? []);
       setOrders(prev => append ? [...prev, ...list] : list);
-      setOrdersHasMore(list.length === 20);
-      setOrdersTotal(prev => append ? prev : 0);
+      setOrdersHasMore(data.hasMore ?? list.length === 20);
+      if (!append) setOrdersTotal(data.total ?? list.length);
       setOrdersPage(page);
     } catch (e: any) { console.error("fetchOrders error:", e?.message, e); }
     setOrdersLoading(false);
