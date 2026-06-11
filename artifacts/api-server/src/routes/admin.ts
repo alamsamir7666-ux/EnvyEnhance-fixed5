@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { ordersTable, usersTable, productsTable, affiliatesTable } from "@workspace/db";
-import { eq, desc, sql, and, lt, or } from "drizzle-orm";
+import { eq, desc, sql, and, lt, or, not, inArray } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth";
 import { sendOrderStatusUpdate } from "../lib/email";
 import { logAudit } from "../lib/audit";
@@ -298,19 +298,35 @@ router.get("/admin/orders", requireAdmin, async (req: any, res) => {
       paidAt: ordersTable.paidAt,
     };
 
-    let query = db
-      .select(baseSelect)
-      .from(ordersTable)
-      .leftJoin(usersTable, eq(ordersTable.userId, usersTable.clerkId))
-      .orderBy(desc(ordersTable.createdAt))
-      .limit(limitNum)
-      .offset(offset);
+    const TWO_DAYS_AGO = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+    const notArchived = not(and(
+      inArray(ordersTable.orderStatus, ["delivered", "cancelled"]),
+      lt(ordersTable.updatedAt, TWO_DAYS_AGO)
+    )!);
 
-    const orders = status
-      ? ((await query.where(eq(ordersTable.orderStatus, status))) as OrderWithUser[])
-      : ((await query) as OrderWithUser[]);
+    const whereClause = status
+      ? and(eq(ordersTable.orderStatus, status), notArchived)
+      : notArchived;
 
-    res.json(orders.map(formatOrderWithUser));
+    const [orders, [{ total }]] = await Promise.all([
+      db.select(baseSelect)
+        .from(ordersTable)
+        .leftJoin(usersTable, eq(ordersTable.userId, usersTable.clerkId))
+        .where(whereClause)
+        .orderBy(desc(ordersTable.createdAt))
+        .limit(limitNum)
+        .offset(offset) as Promise<OrderWithUser[]>,
+      db.select({ total: sql<string>`COUNT(*)` })
+        .from(ordersTable)
+        .where(whereClause),
+    ]);
+
+    const totalNum = Number(total);
+    res.json({
+      orders: orders.map(formatOrderWithUser),
+      total: totalNum,
+      hasMore: offset + limitNum < totalNum,
+    });
   } catch (err: any) {
     console.error("orders endpoint error:", err?.message, err?.stack);
     res.status(500).json({ error: err?.message ?? "Failed to fetch orders" });
