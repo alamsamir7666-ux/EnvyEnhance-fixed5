@@ -512,7 +512,25 @@ export function AdminPage() {
   const closeCdg = () => setCdg(d=>({...d,open:false}));
   const qc = useQueryClient();
   const { data: productsData, isLoading: productsLoading } = useListProducts({ limit: 200 });
-  const { data: orders = [], isLoading: ordersLoading } = useListAllOrders({}, { query: { queryKey: getListAllOrdersQueryKey() } });
+  const [orders, setOrders] = useState<any[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersPage, setOrdersPage] = useState(1);
+  const [ordersHasMore, setOrdersHasMore] = useState(false);
+
+  const fetchOrders = async (page: number, append = false) => {
+    setOrdersLoading(true);
+    try {
+      const token = await getToken();
+      const res = await fetch(`${API}/api/admin/orders?page=${page}`, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      setOrders(prev => append ? [...prev, ...data.orders] : data.orders);
+      setOrdersHasMore(data.hasMore ?? (data.orders?.length === 20));
+      setOrdersPage(page);
+    } catch {}
+    setOrdersLoading(false);
+  };
+
+  useEffect(() => { fetchOrders(1); }, []);
   const { data: users } = useListAllUsers({ query: { queryKey: getListAllUsersQueryKey() } });
   const { data: me } = useGetMe();
   const { getToken } = useAuth();
