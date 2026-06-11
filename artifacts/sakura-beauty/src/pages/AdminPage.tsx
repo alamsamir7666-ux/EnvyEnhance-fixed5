@@ -526,11 +526,10 @@ export function AdminPage() {
       const token = await getToken();
       const res = await fetch(`${API}/api/admin/orders?page=${page}`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
-      console.log("orders API response:", JSON.stringify(data).slice(0,200));
-      const list = data.orders ?? [];
+      const list = Array.isArray(data) ? data : (data.orders ?? []);
       setOrders(prev => append ? [...prev, ...list] : list);
-      setOrdersHasMore(data.hasMore ?? false);
-      setOrdersTotal(data.total ?? 0);
+      setOrdersHasMore(list.length === 20);
+      setOrdersTotal(prev => append ? prev : 0);
       setOrdersPage(page);
     } catch (e: any) { console.error("fetchOrders error:", e?.message, e); }
     setOrdersLoading(false);
