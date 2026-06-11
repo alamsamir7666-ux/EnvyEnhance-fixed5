@@ -517,6 +517,7 @@ export function AdminPage() {
   const [ordersPage, setOrdersPage] = useState(1);
   const [ordersHasMore, setOrdersHasMore] = useState(false);
   const [ordersTotal, setOrdersTotal] = useState(0);
+  const [dashStats, setDashStats] = useState<{totalSales:number,totalOrders:number,pendingOrders:number,deliveredOrders:number}>({totalSales:0,totalOrders:0,pendingOrders:0,deliveredOrders:0});
 
   const fetchOrders = async (page: number, append = false) => {
     setOrdersLoading(true);
@@ -810,10 +811,10 @@ export function AdminPage() {
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const currentMonthOrders = orders.filter(o => new Date(o.createdAt) >= startOfMonth);
-  const totalRevenue = currentMonthOrders.filter(o => o.orderStatus === "delivered").reduce((s, o) => s + o.totalAmount, 0);
-  const totalOrdersThisMonth = currentMonthOrders.length;
-  const pendingOrders = orders.filter(o => o.orderStatus === "pending").length;
-  const deliveredOrders = orders.filter(o => o.orderStatus === "delivered" || o.orderStatus === "return_completed").length;
+  const totalRevenue = dashStats.totalSales;
+  const totalOrdersThisMonth = dashStats.totalOrders;
+  const pendingOrders = dashStats.pendingOrders;
+  const deliveredOrders = dashStats.deliveredOrders;
 
   // ─── Sidebar ───────────────────────────────────────────────────────────────
   const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
