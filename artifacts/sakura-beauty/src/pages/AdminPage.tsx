@@ -516,6 +516,7 @@ export function AdminPage() {
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [ordersPage, setOrdersPage] = useState(1);
   const [ordersHasMore, setOrdersHasMore] = useState(false);
+  const [ordersTotal, setOrdersTotal] = useState(0);
 
   const fetchOrders = async (page: number, append = false) => {
     setOrdersLoading(true);
@@ -523,10 +524,10 @@ export function AdminPage() {
       const token = await getToken();
       const res = await fetch(`${API}/api/admin/orders?page=${page}`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
-      const list = Array.isArray(data) ? data : (data.orders ?? []);
-      const hasMore = Array.isArray(data) ? data.length === 20 : (data.hasMore ?? data.length === 20);
+      const list = data.orders ?? [];
       setOrders(prev => append ? [...prev, ...list] : list);
-      setOrdersHasMore(hasMore);
+      setOrdersHasMore(data.hasMore ?? false);
+      setOrdersTotal(data.total ?? 0);
       setOrdersPage(page);
     } catch {}
     setOrdersLoading(false);
@@ -842,9 +843,9 @@ export function AdminPage() {
           >
             <Icon className="h-[18px] w-[18px] shrink-0" />
             {label}
-            {id === "orders" && activeOrdersCount > 0 && (
+            {id === "orders" && ordersTotal > 0 && (
               <span className="ml-auto bg-pink-100 text-pink-600 text-xs font-semibold px-2 py-0.5 rounded-full">
-                {activeOrdersCount}
+                {ordersTotal}
               </span>
             )}
             {id === "archived" && archivedTotal > 0 && (

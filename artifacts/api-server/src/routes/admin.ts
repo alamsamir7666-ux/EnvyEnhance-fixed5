@@ -298,21 +298,35 @@ router.get("/admin/orders", requireAdmin, async (req: any, res) => {
       paidAt: ordersTable.paidAt,
     };
 
-    let query = db
-      .select(baseSelect)
-      .from(ordersTable)
-      .leftJoin(usersTable, eq(ordersTable.userId, usersTable.clerkId))
-      .orderBy(desc(ordersTable.createdAt))
-      .limit(limitNum)
-      .offset(offset);
+    const TWO_DAYS_AGO = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+    const notArchived = sql`NOT (
+      (order_status = 'delivered' OR order_status = 'cancelled')
+      AND updated_at < ${TWO_DAYS_AGO.toISOString()}
+    )`;
 
-    const orders = status
-      ? ((await query.where(
-          eq(ordersTable.orderStatus, status),
-        )) as OrderWithUser[])
-      : ((await query) as OrderWithUser[]);
+    const whereClause = status
+      ? and(eq(ordersTable.orderStatus, status), notArchived)
+      : notArchived;
 
-    res.json(orders.map(formatOrderWithUser));
+    const [orders, [{ total }]] = await Promise.all([
+      db.select(baseSelect)
+        .from(ordersTable)
+        .leftJoin(usersTable, eq(ordersTable.userId, usersTable.clerkId))
+        .where(whereClause)
+        .orderBy(desc(ordersTable.createdAt))
+        .limit(limitNum)
+        .offset(offset) as Promise<OrderWithUser[]>,
+      db.select({ total: sql<string>`COUNT(*)` })
+        .from(ordersTable)
+        .where(whereClause),
+    ]);
+
+    const totalNum = Number(total);
+    res.json({
+      orders: orders.map(formatOrderWithUser),
+      total: totalNum,
+      hasMore: offset + limitNum < totalNum,
+    });
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch orders" });
   }
