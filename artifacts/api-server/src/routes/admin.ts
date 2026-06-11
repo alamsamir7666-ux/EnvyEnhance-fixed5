@@ -331,8 +331,9 @@ router.get("/admin/orders", requireAdmin, async (req: any, res) => {
       total: totalNum,
       hasMore: offset + limitNum < totalNum,
     });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch orders" });
+  } catch (err: any) {
+    console.error("orders endpoint error:", err?.message, err?.stack);
+    res.status(500).json({ error: err?.message ?? "Failed to fetch orders" });
   }
 });
 
