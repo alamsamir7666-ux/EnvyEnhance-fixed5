@@ -1454,7 +1454,17 @@ export function AdminPage() {
               </tbody>
             </table>
           </div>
-
+          {ordersHasMore && !orderSearch && (
+            <div className="p-4 border-t text-center">
+              <button
+                onClick={() => fetchOrders(ordersPage + 1, true)}
+                disabled={ordersLoading}
+                className="px-6 py-2 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                {ordersLoading ? "Loading..." : `Load More (${activeOrdersCount - orders.length} remaining)`}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
