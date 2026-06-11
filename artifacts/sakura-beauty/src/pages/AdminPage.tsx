@@ -543,6 +543,7 @@ export function AdminPage() {
   const [archivedTotal, setArchivedTotal] = useState(0);
   const [archivedLoading, setArchivedLoading] = useState(false);
   const [archivedError, setArchivedError] = useState<string|null>(null);
+  const [activeOrdersCount, setActiveOrdersCount] = useState(0);
   const [seedingCategories, setSeedingCategories] = useState(false);
 
   // Coupons state
@@ -679,6 +680,16 @@ export function AdminPage() {
 
   useEffect(() => {
     fetchArchivedOrders(1);
+    // Fetch real order counts for badges
+    getToken().then(token =>
+      fetch(`${API}/api/admin/orders/stats`, { headers: { Authorization: `Bearer ${token}` } })
+        .then(r => r.json())
+        .then(data => {
+          setActiveOrdersCount(data.activeOrders);
+          setArchivedTotal(data.archivedOrders);
+        })
+        .catch(() => {})
+    );
   }, []);
 
   const filteredOrders = useMemo(
@@ -811,9 +822,9 @@ export function AdminPage() {
           >
             <Icon className="h-[18px] w-[18px] shrink-0" />
             {label}
-            {id === "orders" && pendingOrders > 0 && (
+            {id === "orders" && activeOrdersCount > 0 && (
               <span className="ml-auto bg-pink-100 text-pink-600 text-xs font-semibold px-2 py-0.5 rounded-full">
-                {pendingOrders}
+                {activeOrdersCount}
               </span>
             )}
             {id === "archived" && archivedTotal > 0 && (
