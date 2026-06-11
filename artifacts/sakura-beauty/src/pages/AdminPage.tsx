@@ -1633,7 +1633,7 @@ export function AdminPage() {
   const ArchivedOrdersTab = () => (
     <div>
       <div className="mb-4">
-        <p className="text-sm text-gray-500">Orders that were marked as <strong>delivered</strong> more than 2 days ago. Automatically moved here from the main Orders view.</p>
+        <p className="text-sm text-gray-500">Orders marked as <strong>delivered</strong> or <strong>cancelled</strong> more than 2 days ago are automatically moved here.</p>
       </div>
       {archivedError ? (
         <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center text-red-600 text-sm">{archivedError}</div>
@@ -1654,7 +1654,7 @@ export function AdminPage() {
                   <th className="px-4 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Order</th>
                   <th className="px-4 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
                   <th className="px-4 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Products</th>
-                  <th className="px-4 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Delivered</th>
+                  <th className="px-4 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status / Date</th>
                   <th className="px-4 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Payment</th>
                   <th className="px-4 py-3.5 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Total</th>
                 </tr>
@@ -1692,8 +1692,18 @@ export function AdminPage() {
                           )}
                         </div>
                       </td>
-                      <td className="px-4 py-3.5 text-gray-500 text-xs">
-                        {new Date(o.updatedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                      <td className="px-4 py-3.5 text-xs">
+                        <div>
+                          {(o as any).orderStatus === "cancelled" ? (
+                            <span className="inline-block bg-red-100 text-red-600 text-xs font-medium px-2 py-0.5 rounded-lg mb-1">Cancelled</span>
+                          ) : (
+                            <span className="inline-block bg-green-100 text-green-600 text-xs font-medium px-2 py-0.5 rounded-lg mb-1">Delivered</span>
+                          )}
+                          <p className="text-gray-400">{new Date(o.updatedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</p>
+                          {(o as any).orderStatus === "cancelled" && (o as any).cancellationReason && (
+                            <p className="text-red-400 text-xs mt-0.5 max-w-[120px] truncate" title={(o as any).cancellationReason}>↳ {(o as any).cancellationReason}</p>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-3.5">
                         <div>
