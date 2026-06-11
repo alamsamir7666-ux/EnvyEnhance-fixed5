@@ -727,8 +727,6 @@ export function AdminPage() {
 
   const filteredOrders = useMemo(
     () => orders.filter(o => {
-      const isArchived = (o.orderStatus === "delivered" || o.orderStatus === "cancelled") && Date.now() - new Date(o.updatedAt).getTime() > TWO_DAYS;
-      if (isArchived) return false;  // still exclude from main orders list
       return !orderSearch ||
         String(o.id).includes(orderSearch) ||
         o.orderStatus.toLowerCase().includes(orderSearch.toLowerCase()) ||
