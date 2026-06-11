@@ -299,33 +299,36 @@ router.get("/admin/orders", requireAdmin, async (req: any, res) => {
     };
 
     const TWO_DAYS_AGO = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
-    const getWhereClause = () => status
-      ? and(
-          eq(ordersTable.orderStatus, status),
-          sql`NOT (
-            (order_status = 'delivered' OR order_status = 'cancelled')
-            AND updated_at < ${TWO_DAYS_AGO.toISOString()}
-          )`
-        )
-      : sql`NOT (
-          (order_status = 'delivered' OR order_status = 'cancelled')
-          AND updated_at < ${TWO_DAYS_AGO.toISOString()}
-        )`;
+    const TWO_DAYS_ISO = TWO_DAYS_AGO.toISOString();
 
-    const [orders, [{ total }]] = await Promise.all([
+    const [orders, countResult] = await Promise.all([
       db.select(baseSelect)
         .from(ordersTable)
         .leftJoin(usersTable, eq(ordersTable.userId, usersTable.clerkId))
-        .where(getWhereClause())
+        .where(
+          status
+            ? and(
+                eq(ordersTable.orderStatus, status),
+                sql`NOT (order_status IN ('delivered','cancelled') AND updated_at < ${TWO_DAYS_ISO})`
+              )
+            : sql`NOT (order_status IN ('delivered','cancelled') AND updated_at < ${TWO_DAYS_ISO})`
+        )
         .orderBy(desc(ordersTable.createdAt))
         .limit(limitNum)
         .offset(offset) as Promise<OrderWithUser[]>,
       db.select({ total: sql<string>`COUNT(*)` })
         .from(ordersTable)
-        .where(getWhereClause()),
+        .where(
+          status
+            ? and(
+                eq(ordersTable.orderStatus, status),
+                sql`NOT (order_status IN ('delivered','cancelled') AND updated_at < ${TWO_DAYS_ISO})`
+              )
+            : sql`NOT (order_status IN ('delivered','cancelled') AND updated_at < ${TWO_DAYS_ISO})`
+        ),
     ]);
 
-    const totalNum = Number(total);
+    const totalNum = Number(countResult[0].total);
     res.json({
       orders: orders.map(formatOrderWithUser),
       total: totalNum,
