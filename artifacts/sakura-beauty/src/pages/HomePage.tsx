@@ -196,7 +196,15 @@ export function HomePage() {
               <br />
               <em className="text-accent not-italic">purpose.</em>
             </h1>
-
+            <div className="mt-8">
+              <a
+                href="/products"
+                className="inline-flex items-center gap-2 bg-foreground text-background px-8 py-3.5 rounded-full text-sm font-medium tracking-wide hover:bg-accent transition-colors duration-200"
+              >
+                Shop All
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
           </div>
         </div>
         <div className="absolute right-0 top-0 h-full w-1/2 hidden lg:block">
