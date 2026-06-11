@@ -299,26 +299,30 @@ router.get("/admin/orders", requireAdmin, async (req: any, res) => {
     };
 
     const TWO_DAYS_AGO = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
-    const notArchived = sql`NOT (
-      (order_status = 'delivered' OR order_status = 'cancelled')
-      AND updated_at < ${TWO_DAYS_AGO.toISOString()}
-    )`;
-
-    const whereClause = status
-      ? and(eq(ordersTable.orderStatus, status), notArchived)
-      : notArchived;
+    const getWhereClause = () => status
+      ? and(
+          eq(ordersTable.orderStatus, status),
+          sql`NOT (
+            (order_status = 'delivered' OR order_status = 'cancelled')
+            AND updated_at < ${TWO_DAYS_AGO.toISOString()}
+          )`
+        )
+      : sql`NOT (
+          (order_status = 'delivered' OR order_status = 'cancelled')
+          AND updated_at < ${TWO_DAYS_AGO.toISOString()}
+        )`;
 
     const [orders, [{ total }]] = await Promise.all([
       db.select(baseSelect)
         .from(ordersTable)
         .leftJoin(usersTable, eq(ordersTable.userId, usersTable.clerkId))
-        .where(whereClause)
+        .where(getWhereClause())
         .orderBy(desc(ordersTable.createdAt))
         .limit(limitNum)
         .offset(offset) as Promise<OrderWithUser[]>,
       db.select({ total: sql<string>`COUNT(*)` })
         .from(ordersTable)
-        .where(whereClause),
+        .where(getWhereClause()),
     ]);
 
     const totalNum = Number(total);
