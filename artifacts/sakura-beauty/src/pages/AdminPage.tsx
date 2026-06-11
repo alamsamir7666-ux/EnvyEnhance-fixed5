@@ -534,7 +534,18 @@ export function AdminPage() {
     setOrdersLoading(false);
   };
 
-  useEffect(() => { fetchOrders(1); }, []);
+  useEffect(() => {
+    fetchOrders(1);
+    getToken().then(token =>
+      fetch(`${API}/api/admin/dashboard`, { headers: { Authorization: `Bearer ${token}` } })
+        .then(r => r.json())
+        .then(data => {
+          setDashStats({ totalSales: data.totalSales ?? 0, totalOrders: data.totalOrders ?? 0, pendingOrders: data.pendingOrders ?? 0, deliveredOrders: (data.totalOrders - data.pendingOrders) ?? 0 });
+          setOrdersTotal(data.totalOrders ?? 0);
+        })
+        .catch(() => {})
+    );
+  }, []);
   const { data: users } = useListAllUsers({ query: { queryKey: getListAllUsersQueryKey() } });
   const { data: me } = useGetMe();
   const { getToken } = useAuth();
