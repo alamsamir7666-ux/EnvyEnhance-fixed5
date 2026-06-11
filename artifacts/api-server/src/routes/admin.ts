@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { ordersTable, usersTable, productsTable, affiliatesTable } from "@workspace/db";
-import { eq, desc, sql, and, lt } from "drizzle-orm";
+import { eq, desc, sql, and, lt, or } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth";
 import { sendOrderStatusUpdate } from "../lib/email";
 import { logAudit } from "../lib/audit";
@@ -196,7 +196,10 @@ router.get("/admin/orders/archived", requireAdmin, async (req: any, res) => {
         .from(ordersTable)
         .leftJoin(usersTable, eq(ordersTable.userId, usersTable.clerkId))
         .where(and(
-          eq(ordersTable.orderStatus, "delivered"),
+          or(
+            eq(ordersTable.orderStatus, "delivered"),
+            eq(ordersTable.orderStatus, "cancelled")
+          ),
           lt(ordersTable.updatedAt, TWO_DAYS_AGO)
         ))
         .orderBy(desc(ordersTable.updatedAt))
@@ -205,7 +208,10 @@ router.get("/admin/orders/archived", requireAdmin, async (req: any, res) => {
       db.select({ total: sql<string>`COUNT(*)` })
         .from(ordersTable)
         .where(and(
-          eq(ordersTable.orderStatus, "delivered"),
+          or(
+            eq(ordersTable.orderStatus, "delivered"),
+            eq(ordersTable.orderStatus, "cancelled")
+          ),
           lt(ordersTable.updatedAt, TWO_DAYS_AGO)
         )),
     ]);
