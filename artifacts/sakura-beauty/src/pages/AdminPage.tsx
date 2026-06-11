@@ -66,6 +66,7 @@ const navItems = [
 // ─── Product form ────────────────────────────────────────────────────────────
 function ProductModal({ product, categories, onClose }: { product?: any; categories: any[]; onClose: () => void }) {
   const qc = useQueryClient();
+  const { getToken } = useAuth();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
 
@@ -382,6 +383,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
 // ─── Category form ────────────────────────────────────────────────────────────
 function CategoryModal({ category, onClose }: { category?: any; onClose: () => void }) {
   const qc = useQueryClient();
+  const { getToken } = useAuth();
   const createCategory = useCreateCategory();
   const updateCategory = useUpdateCategory();
 
@@ -510,6 +512,7 @@ export function AdminPage() {
   const askConfirm = (title:string,message:string,cb:()=>void,danger=true) => setCdg({open:true,title,message,onConfirm:cb,danger});
   const closeCdg = () => setCdg(d=>({...d,open:false}));
   const qc = useQueryClient();
+  const { getToken } = useAuth();
   const { data: productsData, isLoading: productsLoading } = useListProducts({ limit: 200 });
   const [orders, setOrders] = useState<any[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
@@ -517,8 +520,6 @@ export function AdminPage() {
   const [ordersHasMore, setOrdersHasMore] = useState(false);
   const [ordersTotal, setOrdersTotal] = useState(0);
   const [dashStats, setDashStats] = useState<{totalSales:number,totalOrders:number,pendingOrders:number,deliveredOrders:number}>({totalSales:0,totalOrders:0,pendingOrders:0,deliveredOrders:0});
-
-  const { getToken } = useAuth();
 
   const fetchOrders = async (page: number, append = false) => {
     setOrdersLoading(true);
