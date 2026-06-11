@@ -117,7 +117,7 @@ function CollectionSlider() {
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {categories.map((cat) => {
-            const img = categoryImages[cat.slug] ?? categoryImages.moisturizers;
+            const img = (cat as any).image || categoryImages[cat.slug] ?? categoryImages.moisturizers;
             const bg = categoryBgs[cat.slug] ?? "#f8e8e8";
             return (
               <Link key={cat.slug} href={`/products?category=${cat.slug}`}>

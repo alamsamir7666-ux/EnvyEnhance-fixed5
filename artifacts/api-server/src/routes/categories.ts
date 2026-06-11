@@ -12,6 +12,7 @@ function toCategory(c: typeof categoriesTable.$inferSelect) {
     name: c.name,
     slug: c.slug,
     icon: c.icon,
+    image: c.image,
     displayOrder: c.displayOrder,
     createdAt: c.createdAt.toISOString(),
     updatedAt: c.updatedAt.toISOString(),
@@ -27,22 +28,23 @@ router.get("/categories", async (_req, res) => {
 });
 
 router.post("/categories", requireAdmin, async (req: any, res) => {
-  const { name, slug, icon, displayOrder } = req.body;
+  const { name, slug, icon, image, displayOrder } = req.body;
   const generatedSlug = slug || name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
   const [c] = await db
     .insert(categoriesTable)
-    .values({ name, slug: generatedSlug, icon: icon || null, displayOrder: displayOrder ?? 0 })
+    .values({ name, slug: generatedSlug, icon: icon || null, image: image || null, displayOrder: displayOrder ?? 0 })
     .returning();
   res.status(201).json(toCategory(c));
 });
 
 router.put("/categories/:id", requireAdmin, async (req: any, res) => {
   const id = parseInt(req.params.id);
-  const { name, slug, icon, displayOrder } = req.body;
+  const { name, slug, icon, image, displayOrder } = req.body;
   const updates: Record<string, unknown> = { updatedAt: new Date() };
   if (name !== undefined) updates.name = name;
   if (slug !== undefined) updates.slug = slug;
   if (icon !== undefined) updates.icon = icon;
+  if (image !== undefined) updates.image = image;
   if (displayOrder !== undefined) updates.displayOrder = displayOrder;
 
   const [c] = await db

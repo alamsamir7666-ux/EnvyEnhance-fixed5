@@ -391,6 +391,7 @@ function CategoryModal({ category, onClose }: { category?: any; onClose: () => v
     name: category?.name ?? "",
     slug: category?.slug ?? "",
     icon: category?.icon ?? "",
+    image: category?.image ?? "",
     displayOrder: category?.displayOrder ?? 0,
   });
 
@@ -400,6 +401,7 @@ function CategoryModal({ category, onClose }: { category?: any; onClose: () => v
       name: form.name,
       slug: form.slug || form.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""),
       icon: form.icon || null,
+      image: form.image || null,
       displayOrder: Number(form.displayOrder),
     };
     if (category) {
@@ -458,6 +460,33 @@ function CategoryModal({ category, onClose }: { category?: any; onClose: () => v
               className="mt-1.5 rounded-xl"
               placeholder="🌸"
             />
+          </div>
+          <div>
+            <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Collection Image (optional)</Label>
+            <div className="mt-1.5 flex gap-2 items-center">
+              <Input
+                value={form.image}
+                onChange={e => setForm(f => ({ ...f, image: e.target.value }))}
+                className="rounded-xl flex-1"
+                placeholder="Paste image URL or upload"
+              />
+              <label className="cursor-pointer shrink-0 px-3 py-2 rounded-xl border border-gray-200 text-sm hover:bg-gray-50 transition-colors">
+                Upload
+                <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const fd = new FormData();
+                  fd.append("images", file);
+                  try {
+                    const token = await getToken();
+                    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products/upload-image`, { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: fd });
+                    const data = await res.json();
+                    if (data.urls?.[0]) setForm(f => ({ ...f, image: data.urls[0] }));
+                  } catch { alert("Upload failed"); }
+                }} />
+              </label>
+            </div>
+            {form.image && <img src={form.image} alt="preview" className="mt-2 h-24 w-full object-cover rounded-xl" />}
           </div>
           <div>
             <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Display Order</Label>
