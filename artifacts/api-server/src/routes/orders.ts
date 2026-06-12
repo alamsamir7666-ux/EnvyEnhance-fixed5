@@ -9,7 +9,7 @@ import {
   addressesTable,
   affiliatesTable,
 } from "@workspace/db";
-import { eq, desc, and, sql } from "drizzle-orm";
+import { eq, desc, and, sql, inArray } from "drizzle-orm"; 
 import { requireAuth } from "../middlewares/auth";
 import { sendOrderConfirmation } from "../lib/email";
 import crypto from "crypto";
@@ -51,6 +51,103 @@ router.get("/orders", requireAuth, async (req: any, res) => {
     res.json(orders.map(formatOrder));
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch orders" });
+  }
+});
+
+
+router.post("/orders/guest", async (req: any, res) => {
+  try {
+    const { paymentMethod, transactionId, senderNumber, shippingAddress, items, couponCode, giftWrap, giftMessage } = req.body;
+
+    if (!paymentMethod) {
+      res.status(400).json({ error: "Payment method is required" });
+      return;
+    }
+    if (!shippingAddress?.fullName || !shippingAddress?.phone || !shippingAddress?.street || !shippingAddress?.city) {
+      res.status(400).json({ error: "Incomplete shipping address" });
+      return;
+    }
+    if ((paymentMethod === "bkash" || paymentMethod === "nagad") && (!senderNumber || senderNumber.trim() === "")) {
+      res.status(400).json({ error: "Please enter your bKash/Nagad sending number" });
+      return;
+    }
+    if (!Array.isArray(items) || items.length === 0) {
+      res.status(400).json({ error: "Cart is empty" });
+      return;
+    }
+
+    // Fetch products to validate stock + get authoritative prices
+    const productIds = items.map((i: any) => i.productId);
+    const products = await db.select().from(productsTable).where(inArray(productsTable.id, productIds));
+    const productMap = new Map(products.map(p => [p.id, p]));
+
+    for (const i of items) {
+      const product = productMap.get(i.productId);
+      if (!product) { res.status(400).json({ error: "Product not found" }); return; }
+      if (product.stock < i.quantity) {
+        res.status(400).json({ error: `Insufficient stock for "${product.name}". Only ${product.stock} left.` });
+        return;
+      }
+    }
+
+    let subtotal = 0;
+    const orderItems = items.map((i: any) => {
+      const product = productMap.get(i.productId)!;
+      const price = product.discountPrice != null ? Number(product.discountPrice) : Number(product.price);
+      subtotal += price * i.quantity;
+      return {
+        productId: product.id,
+        productName: product.name,
+        productImage: ((product.images as string[])[0]) ?? "",
+        quantity: i.quantity,
+        price,
+      };
+    });
+
+    let discountAmount = 0;
+    if (couponCode) {
+      const [coupon] = await db.select().from(couponsTable).where(eq(couponsTable.code, couponCode.toUpperCase())).limit(1);
+      if (coupon && coupon.isActive) {
+        discountAmount = coupon.discountType === "percentage"
+          ? Math.floor((subtotal * Number(coupon.discountValue)) / 100)
+          : Math.min(Number(coupon.discountValue), subtotal);
+      }
+    }
+
+    const deliveryFee = subtotal > 2000 ? 0 : 120;
+    const totalAmount = Math.max(0, subtotal - discountAmount + deliveryFee);
+    const trackingId = "EE" + crypto.randomBytes(4).toString("hex").toUpperCase();
+    const paymentStatus = paymentMethod === "cod" ? "pending" : "pending_verification";
+    const guestUserId = "guest_" + crypto.randomBytes(8).toString("hex");
+
+    const [order] = await db.insert(ordersTable).values({
+      trackingId,
+      userId: guestUserId,
+      items: orderItems,
+      totalAmount: String(totalAmount),
+      paymentMethod,
+      paymentStatus,
+      orderStatus: "pending",
+      transactionId: transactionId?.trim() ?? null,
+      senderNumber: senderNumber ?? null,
+      shippingAddress,
+      couponCode: couponCode ?? null,
+      discountAmount: String(discountAmount),
+      giftWrap: giftWrap ? "true" : "false",
+      giftMessage: giftMessage ?? null,
+    }).returning();
+
+    await Promise.all(
+      items.map((i: any) => {
+        const product = productMap.get(i.productId)!;
+        return db.update(productsTable).set({ stock: Math.max(0, product.stock - i.quantity) }).where(eq(productsTable.id, product.id));
+      })
+    );
+
+    res.status(201).json({ id: order.id, trackingId: order.trackingId });
+  } catch (err: any) {
+    console.error("guest order error:", err?.message);
+    res.status(500).json({ error: "Failed to place order" });
   }
 });
 

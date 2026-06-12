@@ -379,9 +379,7 @@ function ClerkProviderWithRoutes() {
                 <Route path="/products" component={ProductsPage} />
                 <Route path="/products/:id" component={ProductDetailPage} />
                 <Route path="/cart" component={CartPage} />
-                <Route path="/checkout">
-                  {() => <ProtectedRoute component={CheckoutPage} />}
-                </Route>
+                <Route path="/checkout" component={CheckoutPage} />
                 <Route path="/orders">
                   {() => <ProtectedRoute component={OrdersPage} />}
                 </Route>
@@ -407,6 +405,7 @@ function ClerkProviderWithRoutes() {
                 </Route>
                 <Route path="/compare" component={ComparePage} />
                 <Route path="/track" component={TrackOrderPage} />
+                <Route path="/track/:trackingId" component={TrackOrderPage} />
                 <Route path="/addresses" component={AddressesPage} />
                 <Route path="/blog" component={BlogPage} />
                 <Route path="/blog/:slug" component={BlogArticlePage} />

@@ -10,13 +10,19 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CheckCircle2, Tag, MapPin, ChevronDown, ShoppingBag, CreditCard } from "lucide-react";
 import { Link } from "wouter";
+import { useUser } from "@clerk/react";
+import { useGuestCart, clearGuestCart } from "@/hooks/useGuestCart";
 
 type PaymentMethod = "bkash" | "nagad" | "cod";
 
 export function CheckoutPage() {
   const [, setLocation] = useLocation();
   const qc = useQueryClient();
-  const { data: cart, isLoading } = useGetCart();
+  const { user, isLoaded: userLoaded } = useUser();
+  const isGuest = userLoaded && !user;
+  const guestCart = useGuestCart();
+  const { data: cart, isLoading: cartLoading } = useGetCart({ query: { enabled: !isGuest, queryKey: getGetCartQueryKey() } });
+  const isLoading = !userLoaded || (!isGuest && cartLoading);
   const { data: savedAddresses = [] } = useListAddresses({ query: { retry: false, queryKey: getListAddressesQueryKey() } });
   const createOrder = useCreateOrder();
   const validateCoupon = useValidateCoupon();
@@ -38,8 +44,16 @@ export function CheckoutPage() {
   const { data: loyaltyData } = useLoyalty();
   const [transactionId, setTransactionId] = useState("");
 
-  const items = cart?.items ?? [];
-  const subtotal = cart?.subtotal ?? 0;
+  const items = isGuest
+    ? guestCart.items.map(i => ({
+        productId: i.productId,
+        quantity: i.quantity,
+        product: { id: i.productId, name: i.name, slug: "", price: i.price, discountPrice: i.discountPrice, images: [i.image] },
+      }))
+    : (cart?.items ?? []);
+  const subtotal = isGuest
+    ? guestCart.items.reduce((s, i) => s + (i.discountPrice ?? i.price) * i.quantity, 0)
+    : (cart?.subtotal ?? 0);
   const maxPointsDiscount = Math.min(loyaltyData?.takaValue ?? 0, subtotal * 0.2); // max 20% of order
   const shipping = subtotal > 2000 ? 0 : 120;
   const giftWrapCost = giftWrap ? 50 : 0;
@@ -89,19 +103,46 @@ export function CheckoutPage() {
       setSubmitError("Please enter your sending number.");
       return;
     }
+    const shippingAddress = {
+      fullName: address.fullName,
+      phone: address.phone,
+      street: address.street,
+      city: address.city,
+      district: address.district,
+      postalCode: address.postalCode || null,
+    };
+
+    if (isGuest) {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/orders/guest`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          shippingAddress,
+          paymentMethod,
+          transactionId: transactionId || null,
+          senderNumber: bkashNumber || null,
+          couponCode: couponApplied ? couponCode : null,
+          giftWrap,
+          giftMessage: giftWrap ? giftMessage : null,
+          items: guestCart.items.map(i => ({ productId: i.productId, quantity: i.quantity })),
+        }),
+      })
+        .then(async (res) => {
+          const data = await res.json();
+          if (!res.ok) { setSubmitError(data.error ?? "Failed to place order."); return; }
+          clearGuestCart();
+          setLocation(`/track/${data.trackingId}`);
+        })
+        .catch(() => setSubmitError("Failed to place order. Please try again."));
+      return;
+    }
+
     createOrder.mutate({
       data: {
-        shippingAddress: {
-          fullName: address.fullName,
-          phone: address.phone,
-          street: address.street,
-          city: address.city,
-          district: address.district,
-          postalCode: address.postalCode || null,
-        },
+        shippingAddress,
         paymentMethod,
         transactionId: transactionId || null,
-          senderNumber: bkashNumber || null,
+        senderNumber: bkashNumber || null,
         couponCode: couponApplied ? couponCode : null,
         loyaltyPointsToRedeem: usePoints && maxPointsDiscount > 0 ? Math.ceil(maxPointsDiscount / 1) : 0,
         giftWrap,

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "wouter";
 import { useTrackOrder, getTrackOrderQueryKey } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,8 +10,16 @@ const STEPS = ["pending", "confirmed", "processing", "shipped", "delivered"];
 const stepIcons = [Circle, CheckCircle2, Package, Truck, Home];
 
 export function TrackOrderPage() {
-  const [code, setCode] = useState("");
-  const [submitted, setSubmitted] = useState("");
+  const params = useParams<{ trackingId?: string }>();
+  const [code, setCode] = useState(params.trackingId ?? "");
+  const [submitted, setSubmitted] = useState(params.trackingId ?? "");
+
+  useEffect(() => {
+    if (params.trackingId) {
+      setCode(params.trackingId);
+      setSubmitted(params.trackingId);
+    }
+  }, [params.trackingId]);
 
   const { data: order, isLoading, isError } = useTrackOrder(submitted, {
     query: { enabled: !!submitted, retry: false, queryKey: getTrackOrderQueryKey(submitted) },
