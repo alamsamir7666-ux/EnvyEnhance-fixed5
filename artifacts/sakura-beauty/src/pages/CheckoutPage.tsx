@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CheckCircle2, Tag, MapPin, ChevronDown, ShoppingBag, CreditCard } from "lucide-react";
 import { Link } from "wouter";
 import { useUser } from "@clerk/react";
-import { useGuestCart, clearGuestCart } from "@/hooks/useGuestCart";
+import { useGuestCart } from "@/hooks/useGuestCart";
 
 type PaymentMethod = "bkash" | "nagad" | "cod";
 
@@ -130,7 +130,7 @@ export function CheckoutPage() {
         .then(async (res) => {
           const data = await res.json();
           if (!res.ok) { setSubmitError(data.error ?? "Failed to place order."); return; }
-          clearGuestCart();
+          guestCart.clearCart();
           setLocation(`/track/${data.trackingId}`);
         })
         .catch(() => setSubmitError("Failed to place order. Please try again."));
