@@ -15,7 +15,7 @@ function clamp(v: number, min: number, max: number) {
 
 export function FloatingCartIcon() {
   const { user } = useUser();
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const { data: cart } = useGetCart({
     query: { enabled: !!user, queryKey: getGetCartQueryKey() },
   });
@@ -60,7 +60,9 @@ export function FloatingCartIcon() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  const [location] = useLocation();
   if (count === 0) return null;
+  if (location === '/cart' || location === '/checkout') return null;
 
   function onPointerDown(e: React.PointerEvent) {
     isDragging.current = true;
