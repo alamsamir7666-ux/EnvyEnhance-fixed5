@@ -122,11 +122,14 @@ function GuestCartPage() {
                   <span>৳{total.toLocaleString()}</span>
                 </div>
               </div>
-              <Button className="w-full rounded-full" size="lg" onClick={() => setLocation("/sign-in")}>
-                <LogIn className="mr-2 h-4 w-4" />
-                Sign in to Checkout
+              <Button className="w-full rounded-full" size="lg" onClick={() => setLocation("/checkout")}>
+                Checkout
               </Button>
-              <p className="text-xs text-muted-foreground text-center mt-2">Your bag will be saved after signing in</p>
+              <Button variant="outline" className="w-full rounded-full mt-2" size="lg" onClick={() => setLocation("/sign-in")}>
+                <LogIn className="mr-2 h-4 w-4" />
+                Sign in
+              </Button>
+              <p className="text-xs text-muted-foreground text-center mt-2">Sign in to save your bag and earn rewards</p>
               <Link href="/products">
                 <Button variant="ghost" className="w-full mt-2 text-sm text-muted-foreground">
                   Continue Shopping
