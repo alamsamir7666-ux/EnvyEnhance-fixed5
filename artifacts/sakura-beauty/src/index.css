@@ -308,3 +308,17 @@
     transform: translateY(0);
   }
 }
+
+/* Remove Clerk card box */
+.cl-card {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+.cl-cardBox {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
