@@ -271,6 +271,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
             <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847777/IMG_20260527_075552_pu9gio.jpg" alt="EnvyEnhance" className="h-8 w-auto max-w-[130px] object-contain dark:hidden" />
             <img src="https://res.cloudinary.com/dcfbtdp6r/image/upload/w_300,f_webp,q_auto/v1779847835/IMG_20260527_075602_fwmh3f.jpg" alt="EnvyEnhance" className="h-8 w-auto max-w-[130px] object-contain hidden dark:block" />
+            <span className="font-serif text-lg font-medium tracking-wide">EnvyEnhance</span>
           </Link>
           <div className="flex items-center gap-1.5">
             <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-muted/50" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} aria-label="Toggle dark mode">
