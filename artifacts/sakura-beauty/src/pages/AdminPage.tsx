@@ -486,7 +486,19 @@ function CategoryModal({ category, onClose }: { category?: any; onClose: () => v
                 }} />
               </label>
             </div>
-            {form.image && <img src={form.image} alt="preview" className="mt-2 h-24 w-full object-cover rounded-xl" />}
+            {form.image && (
+              <div className="relative mt-2">
+                <img src={form.image} alt="preview" className="h-24 w-full object-cover rounded-xl" />
+                <button
+                  type="button"
+                  onClick={() => setForm(f => ({ ...f, image: "" }))}
+                  className="absolute top-1.5 right-1.5 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 transition-colors"
+                  title="Remove image"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            )}
           </div>
           <div>
             <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Display Order</Label>
