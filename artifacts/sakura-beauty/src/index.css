@@ -308,16 +308,3 @@
     transform: translateY(0);
   }
 }
-
-/* Remove Clerk card box */
-.cl-cardBox,
-.cl-card,
-[data-clerk-component] .cl-card,
-[class*="cl-card"],
-[class*="cl-cardBox"] {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
-}

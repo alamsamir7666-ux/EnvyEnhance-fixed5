@@ -90,9 +90,9 @@ const clerkAppearance = {
     borderRadius: "0.5rem",
   },
   elements: {
-    rootBox: "w-full flex justify-center min-h-[500px] items-start pt-4",
-    cardBox: "!shadow-none !border-0 !bg-transparent !rounded-none w-full max-w-[440px] mx-auto",
-    card: "!shadow-none !border-0 !bg-transparent !p-0 !rounded-none",
+    rootBox: "w-full flex justify-center",
+    cardBox: "bg-card rounded-xl w-[440px] max-w-full overflow-hidden border border-border shadow-lg",
+    card: "!shadow-none !border-0 !bg-transparent",
     footer: "!shadow-none !border-0 !bg-transparent",
     headerTitle: "font-serif text-2xl font-medium",
     headerSubtitle: "text-muted-foreground",
@@ -113,7 +113,7 @@ const clerkAppearance = {
     alert: "bg-destructive/10 border-destructive/20 text-destructive",
     otpCodeFieldInput: "border-input bg-background",
     formFieldRow: "mb-4",
-    main: "px-6 py-4",
+    main: "p-8",
   },
 };
 
