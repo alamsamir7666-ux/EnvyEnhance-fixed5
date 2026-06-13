@@ -194,18 +194,10 @@ export function ProductsPage() {
     <>
     <div className="min-h-screen bg-background">
 
-      {/* ── Page header hidden ── */}
-      <div className="hidden">
+      {/* ── Page header ── breadcrumb only */}
+      <div className="bg-muted/30 border-b py-3">
         <div className="container mx-auto px-4">
-          <PageBreadcrumb crumbs={breadcrumbs} className="mb-3" />
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-            <div>
-              <p className="text-xs uppercase tracking-[0.15em] text-accent mb-1 font-medium">
-                {activeCategory ? (activeCategoryObj?.name ?? activeCategory) : "All products"}
-              </p>
-              <h1 className="font-serif text-3xl font-medium">{displayTitle}</h1>
-            </div>
-          </div>
+          <PageBreadcrumb crumbs={breadcrumbs} />
         </div>
       </div>
 
