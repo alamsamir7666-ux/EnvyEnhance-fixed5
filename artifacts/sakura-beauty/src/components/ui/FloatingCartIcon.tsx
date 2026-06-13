@@ -47,7 +47,6 @@ export function FloatingCartIcon() {
     });
   }, []);
 
-  // Recalculate on resize/orientation change
   useEffect(() => {
     const onResize = () => {
       setPos(prev => {
@@ -60,7 +59,6 @@ export function FloatingCartIcon() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  const [location] = useLocation();
   if (count === 0) return null;
   if (location.startsWith('/cart') || location.startsWith('/checkout')) return null;
 
