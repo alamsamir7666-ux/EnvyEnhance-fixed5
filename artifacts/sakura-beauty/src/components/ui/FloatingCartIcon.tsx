@@ -60,7 +60,7 @@ export function FloatingCartIcon() {
   }, []);
 
   if (count === 0) return null;
-  if (location.startsWith('/cart') || location.startsWith('/checkout')) return null;
+  if (location.startsWith('/cart') || location.startsWith('/checkout') || location.startsWith('/orders')) return null;
 
   function onPointerDown(e: React.PointerEvent) {
     isDragging.current = true;
