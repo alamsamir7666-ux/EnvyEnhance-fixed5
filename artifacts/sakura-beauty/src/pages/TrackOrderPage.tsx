@@ -141,9 +141,33 @@ export function TrackOrderPage() {
                   ))}
                 </div>
                 {order.totalAmount != null && (
-                  <div className="border-t mt-4 pt-3 flex justify-between text-sm font-semibold">
-                    <span>Total</span>
-                    <span>৳{Number(order.totalAmount).toLocaleString()}</span>
+                  <div className="border-t mt-4 pt-3 space-y-1.5">
+                    {order.subtotal != null && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Subtotal</span>
+                        <span>৳{Number(order.subtotal).toLocaleString()}</span>
+                      </div>
+                    )}
+                    {order.discountAmount > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Discount</span>
+                        <span className="text-green-600">-৳{Number(order.discountAmount).toLocaleString()}</span>
+                      </div>
+                    )}
+                    {order.subtotal != null && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Delivery</span>
+                        <span>
+                          {(Number(order.totalAmount) - Number(order.subtotal) + Number(order.discountAmount ?? 0)) === 0
+                            ? <span className="text-green-600">Free</span>
+                            : `৳${(Number(order.totalAmount) - Number(order.subtotal) + Number(order.discountAmount ?? 0)).toLocaleString()}`}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-sm font-semibold border-t pt-1.5 mt-1.5">
+                      <span>Total</span>
+                      <span>৳{Number(order.totalAmount).toLocaleString()}</span>
+                    </div>
                   </div>
                 )}
               </div>

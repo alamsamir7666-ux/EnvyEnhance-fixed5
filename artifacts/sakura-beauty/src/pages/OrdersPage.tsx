@@ -63,12 +63,13 @@ export function OrdersPage() {
   const { data: orders, isLoading: ordersLoading } = useListOrders({ query: { enabled: !isGuest } } as any);
   const isLoading = !isLoaded || (!isGuest && ordersLoading);
   const { getToken } = useAuth();
-  const [guestTrackingIds, setGuestTrackingIds] = useState<string[]>([]);
+  const [guestTrackingIds, setGuestTrackingIds] = useState<any[]>([]);
 
   useEffect(() => {
     if (!isGuest) return;
     try {
-      setGuestTrackingIds(JSON.parse(localStorage.getItem("sakura_guest_orders") ?? "[]"));
+      const raw = JSON.parse(localStorage.getItem("sakura_guest_orders") ?? "[]");
+      setGuestTrackingIds(raw.map((o: any) => typeof o === "string" ? { trackingId: o } : o));
     } catch { setGuestTrackingIds([]); }
   }, [isGuest]);
   const [returnsMap, setReturnsMap] = useState<Record<number, any>>({});
@@ -123,14 +124,40 @@ export function OrdersPage() {
           </div>
         </div>
         <div className="container mx-auto px-4 py-8 max-w-3xl space-y-3">
-          {guestTrackingIds.map((tid) => (
-            <Link key={tid} href={`/track/${tid}`}>
-              <div className="border rounded-xl p-4 flex items-center justify-between hover:bg-muted/30 transition-colors cursor-pointer">
-                <div>
-                  <p className="font-mono font-semibold">{tid}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Tap to view status</p>
+          {guestTrackingIds.map((o) => (
+            <Link key={o.trackingId} href={`/track/${o.trackingId}`}>
+              <div className="border rounded-xl p-4 hover:bg-muted/30 transition-colors cursor-pointer">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <p className="font-mono font-semibold text-sm">{o.trackingId}</p>
+                    {o.createdAt && (
+                      <p className="text-xs text-muted-foreground mt-0.5">{new Date(o.createdAt).toLocaleDateString("en-BD", { year: "numeric", month: "long", day: "numeric" })}</p>
+                    )}
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                {o.items && o.items.length > 0 && (
+                  <div className="space-y-1.5 mb-2">
+                    {o.items.slice(0, 3).map((item: any, i: number) => (
+                      <div key={i} className="flex items-center gap-2">
+                        {item.productImage && (
+                          <img src={item.productImage} alt={item.productName} className="h-8 w-8 rounded-md object-cover border shrink-0" />
+                        )}
+                        <p className="text-xs text-muted-foreground truncate flex-1">{item.productName} × {item.quantity}</p>
+                        <p className="text-xs font-medium shrink-0">৳{(item.price * item.quantity).toLocaleString()}</p>
+                      </div>
+                    ))}
+                    {o.items.length > 3 && (
+                      <p className="text-xs text-muted-foreground">+{o.items.length - 3} more item{o.items.length - 3 !== 1 ? "s" : ""}</p>
+                    )}
+                  </div>
+                )}
+                {o.total != null && (
+                  <div className="border-t pt-2 flex justify-between text-sm font-semibold">
+                    <span>Total</span>
+                    <span>৳{Number(o.total).toLocaleString()}</span>
+                  </div>
+                )}
               </div>
             </Link>
           ))}

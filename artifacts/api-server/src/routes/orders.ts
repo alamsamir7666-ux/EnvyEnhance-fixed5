@@ -412,6 +412,8 @@ router.get("/orders/track/:trackingId", async (req, res) => {
       updatedAt: order.updatedAt.toISOString(),
       items: order.items,
       totalAmount: Number(order.totalAmount),
+      discountAmount: Number(order.discountAmount ?? 0),
+      subtotal: (order.items as any[]).reduce((s, i) => s + Number(i.price) * i.quantity, 0),
       timeline,
     });
   } catch (err) {

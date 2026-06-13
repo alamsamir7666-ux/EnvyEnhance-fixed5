@@ -134,7 +134,18 @@ export function CheckoutPage() {
           try {
             const key = "sakura_guest_orders";
             const existing = JSON.parse(localStorage.getItem(key) ?? "[]");
-            localStorage.setItem(key, JSON.stringify([data.trackingId, ...existing.filter((t: string) => t !== data.trackingId)]));
+            const summary = {
+              trackingId: data.trackingId,
+              createdAt: new Date().toISOString(),
+              total,
+              items: guestCart.items.map(i => ({
+                productName: i.name,
+                productImage: i.image,
+                quantity: i.quantity,
+                price: i.discountPrice ?? i.price,
+              })),
+            };
+            localStorage.setItem(key, JSON.stringify([summary, ...existing.filter((o: any) => (o.trackingId ?? o) !== data.trackingId)]));
           } catch {}
           setLocation(`/track/${data.trackingId}`);
         })
