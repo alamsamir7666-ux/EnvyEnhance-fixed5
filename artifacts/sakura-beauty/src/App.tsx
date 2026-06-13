@@ -7,6 +7,7 @@ import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { GuestCartProvider } from "@/contexts/GuestCartContext";
+import { GuestWishlistProvider } from "@/contexts/GuestWishlistContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { PageProvider, usePageContext } from "@/contexts/PageContext";
 
@@ -366,6 +367,7 @@ function ClerkProviderWithRoutes() {
       <QueryClientProvider client={queryClient}>
         <TokenSync />
         <GuestCartProvider>
+        <GuestWishlistProvider>
           <WishlistProvider>
           <PageProvider>
             <ClerkQueryClientCacheInvalidator />
@@ -380,13 +382,9 @@ function ClerkProviderWithRoutes() {
                 <Route path="/products/:id" component={ProductDetailPage} />
                 <Route path="/cart" component={CartPage} />
                 <Route path="/checkout" component={CheckoutPage} />
-                <Route path="/orders">
-                  {() => <ProtectedRoute component={OrdersPage} />}
-                </Route>
+                <Route path="/orders" component={OrdersPage} />
                 <Route path="/orders/:id" component={OrderDetailPage} />
-                <Route path="/wishlist">
-                  {() => <ProtectedRoute component={WishlistPage} />}
-                </Route>
+                <Route path="/wishlist" component={WishlistPage} />
                 <Route path="/profile">
                   {() => <ProtectedRoute component={ProfilePage} />}
                 </Route>
@@ -434,6 +432,7 @@ function ClerkProviderWithRoutes() {
             <Toaster />
           </PageProvider>
           </WishlistProvider>
+        </GuestWishlistProvider>
         </GuestCartProvider>
       </QueryClientProvider>
     </ClerkProvider>

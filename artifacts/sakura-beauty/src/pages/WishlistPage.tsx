@@ -2,24 +2,67 @@ import { PageBreadcrumb } from "@/components/ui/PageBreadcrumb";
 import { Link } from "wouter";
 import { useGetWishlist, useRemoveFromWishlist, useAddToCart, getGetWishlistQueryKey, getGetCartQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUser } from "@clerk/react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Heart, ShoppingBag, Trash2 } from "lucide-react";
+import { useGuestWishlist } from "@/hooks/useGuestWishlist";
+import { useGuestCart } from "@/hooks/useGuestCart";
 
 export function WishlistPage() {
   const qc = useQueryClient();
-  const { data: wishlist, isLoading } = useGetWishlist();
+  const { user, isLoaded } = useUser();
+  const isGuest = isLoaded && !user;
+  const guestWishlist = useGuestWishlist();
+  const guestCart = useGuestCart();
+
+  const { data: wishlistData, isLoading: wishlistLoading } = useGetWishlist({
+    query: { enabled: !isGuest, queryKey: getGetWishlistQueryKey() },
+  });
   const removeFromWishlist = useRemoveFromWishlist();
   const addToCart = useAddToCart();
 
+  const isLoading = !isLoaded || (!isGuest && wishlistLoading);
+
+  const items = isGuest
+    ? guestWishlist.items.map((g) => ({
+        id: g.productId,
+        productId: g.productId,
+        product: {
+          id: g.productId,
+          name: g.name,
+          slug: g.slug,
+          category: "",
+          price: g.price,
+          discountPrice: g.discountPrice,
+          images: [g.image],
+        },
+      }))
+    : (wishlistData ?? []);
+
   function handleRemove(productId: number) {
+    if (isGuest) {
+      guestWishlist.removeItem(productId);
+      return;
+    }
     removeFromWishlist.mutate({ productId }, {
       onSuccess: () => qc.invalidateQueries({ queryKey: getGetWishlistQueryKey() }),
     });
   }
 
-  function handleAddToCart(productId: number) {
-    addToCart.mutate({ data: { productId, quantity: 1 } }, {
+  function handleAddToCart(item: any) {
+    if (isGuest) {
+      guestCart.addItem({
+        productId: item.product.id,
+        quantity: 1,
+        name: item.product.name,
+        price: item.product.price,
+        discountPrice: item.product.discountPrice ?? null,
+        image: item.product.images?.[0] ?? "",
+      });
+      return;
+    }
+    addToCart.mutate({ data: { productId: item.productId, quantity: 1 } }, {
       onSuccess: () => qc.invalidateQueries({ queryKey: getGetCartQueryKey() }),
     });
   }
@@ -34,7 +77,7 @@ export function WishlistPage() {
     );
   }
 
-  if (!wishlist || wishlist.length === 0) {
+  if (!items || items.length === 0) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
         <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center mb-6">
@@ -53,13 +96,13 @@ export function WishlistPage() {
         <div className="container mx-auto px-4">
           <PageBreadcrumb crumbs={[{ label: "Wishlist", icon: <Heart className="h-3 w-3" /> }]} className="mb-3" />
           <h1 className="font-serif text-4xl font-medium">Wishlist</h1>
-          <p className="text-muted-foreground mt-1 text-sm">{wishlist.length} saved item{wishlist.length !== 1 ? "s" : ""}</p>
+          <p className="text-muted-foreground mt-1 text-sm">{items.length} saved item{items.length !== 1 ? "s" : ""}</p>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {wishlist.map((item) => {
+          {items.map((item: any) => {
             const product = item.product;
             const img = product.images?.[0] ?? "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80&fm=webp";
             const price = product.discountPrice ?? product.price;
@@ -77,7 +120,7 @@ export function WishlistPage() {
                   </div>
                 </Link>
                 <div className="p-3">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{product.category}</p>
+                  {product.category && <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{product.category}</p>}
                   <Link href={`/products/${item.productId}`}>
                     <p className="font-medium text-sm leading-snug mb-2 line-clamp-2 cursor-pointer hover:text-accent">{product.name}</p>
                   </Link>
@@ -90,7 +133,7 @@ export function WishlistPage() {
                   <Button
                     size="sm"
                     className="w-full text-xs"
-                    onClick={() => handleAddToCart(item.productId)}
+                    onClick={() => handleAddToCart(item)}
                   >
                     <ShoppingBag className="h-3.5 w-3.5 mr-1.5" />
                     Add to Bag

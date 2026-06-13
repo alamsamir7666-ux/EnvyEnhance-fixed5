@@ -95,7 +95,14 @@ function ProductCardInner({
 
   function handleWishlist(e: React.MouseEvent) {
     e.preventDefault();
-    toggleWishlist(product.id);
+    toggleWishlist({
+      productId: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: product.price,
+      discountPrice: product.discountPrice ?? null,
+      image: product.images?.[0] ?? "",
+    });
   }
 
   const rawImg = product.images[0] ?? FALLBACK_IMG;

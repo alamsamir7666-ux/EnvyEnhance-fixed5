@@ -131,6 +131,11 @@ export function CheckoutPage() {
           const data = await res.json();
           if (!res.ok) { setSubmitError(data.error ?? "Failed to place order."); return; }
           guestCart.clearCart();
+          try {
+            const key = "sakura_guest_orders";
+            const existing = JSON.parse(localStorage.getItem(key) ?? "[]");
+            localStorage.setItem(key, JSON.stringify([data.trackingId, ...existing.filter((t: string) => t !== data.trackingId)]));
+          } catch {}
           setLocation(`/track/${data.trackingId}`);
         })
         .catch(() => setSubmitError("Failed to place order. Please try again."));

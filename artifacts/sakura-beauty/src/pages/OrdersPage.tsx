@@ -2,7 +2,7 @@ import { PageBreadcrumb } from "@/components/ui/PageBreadcrumb";
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { useListOrders } from "@workspace/api-client-react";
-import { useAuth } from "@clerk/react";
+import { useAuth, useUser } from "@clerk/react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Package2, ArrowRight, Copy, Check } from "lucide-react";
@@ -58,11 +58,23 @@ function CopyTrackingButton({ trackingId }: { trackingId: string }) {
 }
 
 export function OrdersPage() {
-  const { data: orders, isLoading } = useListOrders();
+  const { user, isLoaded } = useUser();
+  const isGuest = isLoaded && !user;
+  const { data: orders, isLoading: ordersLoading } = useListOrders({ query: { enabled: !isGuest } } as any);
+  const isLoading = !isLoaded || (!isGuest && ordersLoading);
   const { getToken } = useAuth();
+  const [guestTrackingIds, setGuestTrackingIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!isGuest) return;
+    try {
+      setGuestTrackingIds(JSON.parse(localStorage.getItem("sakura_guest_orders") ?? "[]"));
+    } catch { setGuestTrackingIds([]); }
+  }, [isGuest]);
   const [returnsMap, setReturnsMap] = useState<Record<number, any>>({});
 
   useEffect(() => {
+    if (isGuest) return;
     getToken().then(token =>
       fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/returns/me`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -78,6 +90,54 @@ export function OrdersPage() {
         .catch(() => {})
     );
   }, []);
+
+  if (isGuest) {
+    if (isLoading) {
+      return (
+        <div className="container mx-auto px-4 py-10">
+          <div className="space-y-4">
+            {Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-20 rounded-xl" />)}
+          </div>
+        </div>
+      );
+    }
+    if (guestTrackingIds.length === 0) {
+      return (
+        <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+          <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center mb-6">
+            <Package2 className="h-9 w-9 text-muted-foreground" />
+          </div>
+          <h2 className="font-serif text-2xl font-medium mb-2">No orders yet</h2>
+          <p className="text-muted-foreground text-sm mb-6">Orders you place as a guest will appear here on this device.</p>
+          <Link href="/products"><Button className="rounded-full px-8">Start Shopping</Button></Link>
+        </div>
+      );
+    }
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="bg-muted/30 border-b py-10">
+          <div className="container mx-auto px-4">
+            <PageBreadcrumb crumbs={[{ label: "My Orders", icon: <Package2 className="h-3 w-3" /> }]} className="mb-3" />
+            <h1 className="font-serif text-4xl font-medium">My Orders</h1>
+            <p className="text-muted-foreground mt-1 text-sm">{guestTrackingIds.length} order{guestTrackingIds.length !== 1 ? "s" : ""} on this device</p>
+          </div>
+        </div>
+        <div className="container mx-auto px-4 py-8 max-w-3xl space-y-3">
+          {guestTrackingIds.map((tid) => (
+            <Link key={tid} href={`/track/${tid}`}>
+              <div className="border rounded-xl p-4 flex items-center justify-between hover:bg-muted/30 transition-colors cursor-pointer">
+                <div>
+                  <p className="font-mono font-semibold">{tid}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Tap to view status</p>
+                </div>
+                <ArrowRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

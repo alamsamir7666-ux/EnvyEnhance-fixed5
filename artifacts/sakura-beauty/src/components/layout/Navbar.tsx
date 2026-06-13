@@ -319,6 +319,8 @@ export function Navbar() {
           <div className="py-1"><p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground px-5 py-2.5">More</p>
 
           <Link href="/track" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/track" ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Package className="h-[21px] w-[21px] shrink-0" />Track Order</Link>
+          <Link href="/orders" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/orders" ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Package className="h-[21px] w-[21px] shrink-0" />My Orders</Link>
+          <Link href="/wishlist" onClick={() => setMobileOpen(false)} className={`flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors ${location === "/wishlist" ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}><Heart className="h-[21px] w-[21px] shrink-0" />Wishlist</Link>
           </div>
         </nav>
 
