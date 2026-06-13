@@ -194,8 +194,8 @@ export function ProductsPage() {
     <>
     <div className="min-h-screen bg-background">
 
-      {/* ── Page header ───────────────────────────────────────── */}
-      <div className="bg-muted/30 border-b py-8">
+      {/* ── Page header hidden ── */}
+      <div className="hidden">
         <div className="container mx-auto px-4">
           <PageBreadcrumb crumbs={breadcrumbs} className="mb-3" />
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
