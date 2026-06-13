@@ -410,6 +410,8 @@ router.get("/orders/track/:trackingId", async (req, res) => {
       paymentMethod: order.paymentMethod,
       createdAt: order.createdAt.toISOString(),
       updatedAt: order.updatedAt.toISOString(),
+      items: order.items,
+      totalAmount: Number(order.totalAmount),
       timeline,
     });
   } catch (err) {

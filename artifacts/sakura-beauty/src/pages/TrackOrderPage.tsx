@@ -123,6 +123,32 @@ export function TrackOrderPage() {
               </div>
             )}
 
+            {order.items && order.items.length > 0 && (
+              <div className="bg-card border rounded-xl p-5">
+                <h3 className="font-medium text-sm mb-4">Items Ordered</h3>
+                <div className="space-y-3">
+                  {order.items.map((item: any, i: number) => (
+                    <div key={i} className="flex items-center gap-3">
+                      {item.productImage && (
+                        <img src={item.productImage} alt={item.productName} className="h-12 w-12 rounded-lg object-cover border shrink-0" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{item.productName}</p>
+                        <p className="text-xs text-muted-foreground">Qty: {item.quantity} × ৳{Number(item.price).toLocaleString()}</p>
+                      </div>
+                      <p className="text-sm font-semibold shrink-0">৳{(item.price * item.quantity).toLocaleString()}</p>
+                    </div>
+                  ))}
+                </div>
+                {order.totalAmount != null && (
+                  <div className="border-t mt-4 pt-3 flex justify-between text-sm font-semibold">
+                    <span>Total</span>
+                    <span>৳{Number(order.totalAmount).toLocaleString()}</span>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="bg-card border rounded-xl p-5">
               <h3 className="font-medium text-sm mb-3">Payment</h3>
               <div className="flex justify-between text-sm">
