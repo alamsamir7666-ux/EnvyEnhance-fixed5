@@ -31,11 +31,30 @@ const returnStatusConfig: Record<string, { label: string; color: string; bg: str
 
 export function OrderDetailPage() {
   const params = useParams<{ id: string }>();
-  const id = parseInt(params.id ?? "0");
+  const rawId = params.id ?? "0";
+  const isGuest = !/^\d+$/.test(rawId);
+  const id = isGuest ? 0 : parseInt(rawId);
   const { getToken } = useAuth();
-  const { data: orders } = useListOrders();
+  const { data: orders } = useListOrders({ query: { enabled: !isGuest } } as any);
   const orderRank = orders ? orders.length - orders.findIndex(o => o.id === id) : null;
-  const { data: order, isLoading } = useGetOrder(id, { query: { enabled: !!id, queryKey: ["order", id] } });
+  const { data: authOrder, isLoading: authLoading } = useGetOrder(id, { query: { enabled: !!id && !isGuest, queryKey: ["order", id] } });
+
+  const [guestOrder, setGuestOrder] = useState<any>(null);
+  const [guestLoading, setGuestLoading] = useState(isGuest);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+
+  useEffect(() => {
+    if (!isGuest) return;
+    setGuestLoading(true);
+    fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/orders/track/${rawId}`)
+      .then(r => r.json())
+      .then(data => setGuestOrder(data))
+      .catch(() => setGuestOrder(null))
+      .finally(() => setGuestLoading(false));
+  }, [isGuest, rawId]);
+
+  const order = isGuest ? guestOrder : authOrder;
+  const isLoading = isGuest ? guestLoading : authLoading;
 
   // All hooks must be called unconditionally before any early return
   const [cancelOpen, setCancelOpen] = useState(false);
@@ -50,7 +69,7 @@ export function OrderDetailPage() {
   const [existingReturn, setExistingReturn] = useState<any>(null);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || isGuest) return;
     getToken().then(token =>
       fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/returns/me`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -134,7 +153,7 @@ export function OrderDetailPage() {
           <PageBreadcrumb
             crumbs={[
               { label: "My Orders", href: "/orders", icon: <Package className="h-3 w-3" /> },
-              { label: `Order #${orderRank ?? order.id}` },
+              { label: isGuest ? `Order ${order.trackingId}` : `Order #${orderRank ?? order.id}` },
             ]}
             className="mb-4"
           />
@@ -145,7 +164,7 @@ export function OrderDetailPage() {
           </Link>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="font-serif text-3xl font-medium">Order #{orderRank ?? order.id}</h1>
+              <h1 className="font-serif text-3xl font-medium">{isGuest ? `Order ${order.trackingId}` : `Order #${orderRank ?? order.id}`}</h1>
               <p className="text-muted-foreground mt-1 text-sm">{new Date(order.createdAt).toLocaleDateString("en-BD", { year: "numeric", month: "long", day: "numeric" })}</p>
             </div>
             <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${statusColors[order.orderStatus] ?? "bg-muted"}`}>
@@ -214,7 +233,7 @@ export function OrderDetailPage() {
         <div className="bg-card border rounded-xl p-6">
           <h2 className="font-medium mb-4">Items Ordered</h2>
           <div className="divide-y">
-            {(order.items ?? []).map((item) => {
+            {(order.items ?? []).map((item: any) => {
               const img = item.productImage ?? "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=200&q=80&fm=webp";
               return (
                 <div key={item.productId} className="flex gap-4 py-4 first:pt-0 last:pb-0">
@@ -268,12 +287,21 @@ export function OrderDetailPage() {
 
       {/* Action Buttons */}
       <div className="container mx-auto px-4 pb-10 max-w-3xl">
+        {showLoginPrompt && (
+          <div className="mb-3 bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-xl px-4 py-3">
+            Please <Link href="/sign-in" className="font-semibold underline">sign in</Link> or{" "}
+            <Link href="/sign-up" className="font-semibold underline">sign up</Link> to cancel orders or request a return/refund.
+          </div>
+        )}
         <div className="flex flex-wrap gap-3">
           {order.orderStatus === "pending" && (
             <Button
               variant="outline"
               className="rounded-full gap-2 text-destructive border-destructive hover:bg-destructive/10"
-              onClick={() => { setCancelOpen(true); setCancelReason(""); setCancelError(""); }}
+              onClick={() => {
+                if (isGuest) { setShowLoginPrompt(true); return; }
+                setCancelOpen(true); setCancelReason(""); setCancelError("");
+              }}
             >
               <XCircle className="h-4 w-4" />
               Cancel Order
@@ -314,7 +342,10 @@ export function OrderDetailPage() {
                 <Button
                   variant="outline"
                   className="rounded-full gap-2"
-                  onClick={() => { setReturnOpen(true); setReturnReason(""); setReturnError(""); setReturnSuccess(false); }}
+                  onClick={() => {
+                    if (isGuest) { setShowLoginPrompt(true); return; }
+                    setReturnOpen(true); setReturnReason(""); setReturnError(""); setReturnSuccess(false);
+                  }}
                 >
                   <RotateCcw className="h-4 w-4" />
                   Request Return / Refund

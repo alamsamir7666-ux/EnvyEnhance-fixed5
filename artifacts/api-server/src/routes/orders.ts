@@ -404,15 +404,7 @@ router.get("/orders/track/:trackingId", async (req, res) => {
     }));
 
     res.json({
-      trackingId: order.trackingId,
-      orderStatus: order.orderStatus,
-      paymentStatus: order.paymentStatus,
-      paymentMethod: order.paymentMethod,
-      createdAt: order.createdAt.toISOString(),
-      updatedAt: order.updatedAt.toISOString(),
-      items: order.items,
-      totalAmount: Number(order.totalAmount),
-      discountAmount: Number(order.discountAmount ?? 0),
+      ...formatOrder(order),
       subtotal: (order.items as any[]).reduce((s, i) => s + Number(i.price) * i.quantity, 0),
       timeline,
     });

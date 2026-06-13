@@ -147,7 +147,7 @@ export function CheckoutPage() {
             };
             localStorage.setItem(key, JSON.stringify([summary, ...existing.filter((o: any) => (o.trackingId ?? o) !== data.trackingId)]));
           } catch {}
-          setLocation(`/track/${data.trackingId}`);
+          setLocation(`/orders/${data.trackingId}`);
         })
         .catch(() => setSubmitError("Failed to place order. Please try again."));
       return;

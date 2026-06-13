@@ -125,7 +125,7 @@ export function OrdersPage() {
         </div>
         <div className="container mx-auto px-4 py-8 max-w-3xl space-y-3">
           {guestTrackingIds.map((o) => (
-            <Link key={o.trackingId} href={`/track/${o.trackingId}`}>
+            <Link key={o.trackingId} href={`/orders/${o.trackingId}`}>
               <div className="border rounded-xl p-4 hover:bg-muted/30 transition-colors cursor-pointer">
                 <div className="flex items-center justify-between mb-2">
                   <div>
