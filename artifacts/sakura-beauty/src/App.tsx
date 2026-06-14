@@ -7,6 +7,8 @@ import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { GuestCartProvider } from "@/contexts/GuestCartContext";
+import { useGuestWishlist } from "@/hooks/useGuestWishlist";
+import { useAddToWishlist } from "@workspace/api-client-react";
 import { GuestWishlistProvider } from "@/contexts/GuestWishlistContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { PageProvider, usePageContext } from "@/contexts/PageContext";
@@ -372,6 +374,7 @@ function ClerkProviderWithRoutes() {
           <PageProvider>
             <ClerkQueryClientCacheInvalidator />
             <ProfileSync />
+            <WishlistMergeSync />
             <ScrollManager />
             <AppLayout>
               <Suspense fallback={<div className="min-h-[60vh]" />}>
@@ -454,3 +457,25 @@ function App() {
 }
 
 export default App;
+
+function WishlistMergeSync() {
+  const { user, isLoaded } = useUser();
+  const guestWishlist = useGuestWishlist();
+  const addToWishlist = useAddToWishlist();
+  const merged = useRef(false);
+
+  useEffect(() => {
+    if (!isLoaded || !user || merged.current) return;
+    if (guestWishlist.items.length === 0) return;
+    merged.current = true;
+    Promise.all(
+      guestWishlist.items.map((item) =>
+        addToWishlist.mutateAsync({ productId: item.productId }).catch(() => {})
+      )
+    ).then(() => {
+      guestWishlist.clearWishlist();
+    });
+  }, [isLoaded, user]);
+
+  return null;
+}
