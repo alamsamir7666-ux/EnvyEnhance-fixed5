@@ -138,6 +138,10 @@ export function CheckoutPage() {
               trackingId: data.trackingId,
               createdAt: new Date().toISOString(),
               total,
+              subtotal,
+              discount,
+              shipping,
+              couponCode: couponApplied ? couponCode : null,
               items: guestCart.items.map(i => ({
                 productName: i.name,
                 productImage: i.image,

@@ -264,7 +264,29 @@ export function OrderDetailPage() {
                 <span className="text-muted-foreground">Status</span>
                 <span className="capitalize text-green-600">{order.paymentStatus}</span>
               </div>
-              <div className="flex justify-between font-semibold">
+              <div className="border-t pt-2 mt-1 space-y-1.5">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span>৳{(order.items ?? []).reduce((s: number, i: any) => s + Number(i.price) * i.quantity, 0).toLocaleString()}</span>
+                </div>
+                {order.discountAmount > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Discount{order.couponCode ? ` (${order.couponCode})` : ""}</span>
+                    <span className="text-green-600">-৳{Number(order.discountAmount).toLocaleString()}</span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Delivery</span>
+                  <span>
+                    {(() => {
+                      const subtotal = (order.items ?? []).reduce((s: number, i: any) => s + Number(i.price) * i.quantity, 0);
+                      const delivery = Number(order.totalAmount) - subtotal + Number(order.discountAmount ?? 0);
+                      return delivery <= 0 ? <span className="text-green-600">Free</span> : `৳${delivery.toLocaleString()}`;
+                    })()}
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-between font-semibold border-t pt-2 mt-1">
                 <span>Total</span>
                 <span>৳{order.totalAmount.toLocaleString()}</span>
               </div>

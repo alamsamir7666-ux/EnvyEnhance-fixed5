@@ -153,9 +153,29 @@ export function OrdersPage() {
                   </div>
                 )}
                 {o.total != null && (
-                  <div className="border-t pt-2 flex justify-between text-sm font-semibold">
-                    <span>Total</span>
-                    <span>৳{Number(o.total).toLocaleString()}</span>
+                  <div className="border-t pt-2 space-y-1">
+                    {o.subtotal != null && (
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>Subtotal</span>
+                        <span>৳{Number(o.subtotal).toLocaleString()}</span>
+                      </div>
+                    )}
+                    {o.discount > 0 && (
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">Discount{o.couponCode ? ` (${o.couponCode})` : ""}</span>
+                        <span className="text-green-600">-৳{Number(o.discount).toLocaleString()}</span>
+                      </div>
+                    )}
+                    {o.shipping != null && (
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>Delivery</span>
+                        <span>{o.shipping === 0 ? <span className="text-green-600">Free</span> : `৳${Number(o.shipping).toLocaleString()}`}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-sm font-semibold pt-1">
+                      <span>Total</span>
+                      <span>৳{Number(o.total).toLocaleString()}</span>
+                    </div>
                   </div>
                 )}
               </div>
