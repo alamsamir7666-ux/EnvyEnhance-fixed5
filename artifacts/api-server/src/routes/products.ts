@@ -399,6 +399,7 @@ router.put("/products/:id", requireAdmin, async (req: any, res) => {
     if (texture !== undefined) updates.texture = texture ?? null;
     if (images !== undefined) updates.images = images;
     if (isFeatured !== undefined) updates.isFeatured = isFeatured;
+    if (req.body.productStatus !== undefined) updates.productStatus = req.body.productStatus;
     if (homepageSection !== undefined)
       updates.homepageSection = homepageSection || null;
     updates.updatedAt = new Date();
