@@ -50,6 +50,7 @@ function toProduct(
     isFeatured: p.isFeatured,
     homepageSection: p.homepageSection,
     createdAt: p.createdAt.toISOString(),
+    productStatus: (p as any).productStatus ?? "in_stock",
   };
 }
 
