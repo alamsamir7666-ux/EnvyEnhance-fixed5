@@ -218,7 +218,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
             </div>
             <div>
               <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Stock *</Label>
-              <Input type="number" value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} required className="mt-1.5 rounded-xl" placeholder="50" />
+              <Input type="number" value={(form as any).productStatus === "pre_order" ? "0" : form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} required className="mt-1.5 rounded-xl" placeholder="50" disabled={(form as any).productStatus === "pre_order"} style={{ opacity: (form as any).productStatus === "pre_order" ? 0.5 : 1 }} />
             </div>
             <div>
               <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Product Status</Label>
