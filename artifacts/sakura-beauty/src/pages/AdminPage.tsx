@@ -79,6 +79,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
     price: product?.price ?? "",
     discountPrice: product?.discountPrice ?? "",
     stock: product?.stock ?? "",
+    productStatus: product?.productStatus ?? "in_stock",
     images: product?.images?.join(", ") ?? "",
     videoUrl: (product as any)?.videoUrl ?? "",
     ingredients: product?.ingredients ?? "",
