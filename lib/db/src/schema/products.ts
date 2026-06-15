@@ -30,6 +30,7 @@ export const productsTable = pgTable("products", {
   homepageSection: text("homepage_section"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   videoUrl: text("video_url"),
+  productStatus: text("product_status").notNull().default("in_stock"),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 

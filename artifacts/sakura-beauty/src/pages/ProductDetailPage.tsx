@@ -321,10 +321,14 @@ export function ProductDetailPage() {
             </div>
 
             <div className="flex items-center gap-2 mb-4">
-              {product.stock === 0 ? (
+              {(product as any).productStatus === "out_of_stock" || product.stock === 0 && (product as any).productStatus !== "pre_order" ? (
                 <button onClick={() => setShowStockSheet(true)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
                   🔔 Out of stock — Notify me
                 </button>
+              ) : (product as any).productStatus === "pre_order" ? (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-sm font-medium">
+                  🚢 Pre-order available — Ships in 20-23 days
+                </span>
               ) : product.stock <= 3 ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-600 text-sm font-semibold animate-pulse">
                   <AlertTriangle className="h-3.5 w-3.5" /> Only {product.stock} left!
@@ -350,14 +354,26 @@ export function ProductDetailPage() {
                   <Plus className="h-4 w-4" />
                 </button>
               </div>
-              <Button
-                className={`flex-1 rounded-full transition-all duration-200 ${justAdded ? "bg-green-600 hover:bg-green-600" : ""}`}
-                size="lg"
-                onClick={handleAddToCart}
-                disabled={product.stock === 0 || addToCart.isPending}
-              >
-                {justAdded ? (<><Check className="h-4 w-4 mr-2" /> Added to Bag</>) : (<><ShoppingBag className="h-4 w-4 mr-2" /> Add to Bag</>)}
-              </Button>
+              {(product as any).productStatus === "pre_order" ? (
+                <Link href={`/pre-order-checkout?productId=${product.id}&name=${encodeURIComponent(product.name)}&image=${encodeURIComponent((product.images as string[])[0] ?? "")}&price=${product.discountPrice ?? product.price}&shipmentDate=${encodeURIComponent(localStorage.getItem("nextShipmentDate") ?? "")}`} className="flex-1">
+                  <Button
+                    className="w-full rounded-full"
+                    size="lg"
+                    style={{ background: "#3b82f6", color: "#fff" }}
+                  >
+                    <ShoppingBag className="h-4 w-4 mr-2" /> Pre-Order — 5% Off
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  className={`flex-1 rounded-full transition-all duration-200 ${justAdded ? "bg-green-600 hover:bg-green-600" : ""}`}
+                  size="lg"
+                  onClick={handleAddToCart}
+                  disabled={product.stock === 0 || addToCart.isPending}
+                >
+                  {justAdded ? (<><Check className="h-4 w-4 mr-2" /> Added to Bag</>) : (<><ShoppingBag className="h-4 w-4 mr-2" /> Add to Bag</>)}
+                </Button>
+              )}
               <Button variant="outline" size="icon" className="rounded-full h-12 w-12" onClick={handleWishlist}>
                 <Heart className={`h-5 w-5 ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`} />
               </Button>

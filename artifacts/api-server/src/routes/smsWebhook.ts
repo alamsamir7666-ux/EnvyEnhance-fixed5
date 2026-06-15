@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { ordersTable, usersTable } from "@workspace/db";
+import { ordersTable, usersTable, preOrdersTable } from "@workspace/db";
 import { eq, and, desc } from "drizzle-orm";
 import { sendOrderStatusUpdate } from "../lib/email";
 
@@ -51,8 +51,22 @@ router.post("/sms-webhook", async (req, res) => {
     const match = orders.find(o => Math.abs(Number(o.totalAmount) - amount) <= 1);
 
     if (!match) {
-      console.log("[sms-webhook] No matching order found");
-      res.json({ ok: false, reason: "no_match" });
+      // Check pre-orders
+    const preOrders = await db
+      .select()
+      .from(preOrdersTable)
+      .where(and(eq(preOrdersTable.paymentStatus, "pending_verification"), eq(preOrdersTable.senderNumber, senderNumber)))
+      .orderBy(desc(preOrdersTable.createdAt))
+      .limit(5);
+    const preMatch = preOrders.find(o => Math.abs(Number(o.deliveryCharge) - amount) <= 1);
+    if (preMatch) {
+      await db.update(preOrdersTable).set({ paymentStatus: "paid", updatedAt: new Date() }).where(eq(preOrdersTable.id, preMatch.id));
+      console.log("[sms-webhook] Auto-paid pre-order:", preMatch.id);
+      res.json({ ok: true, preOrderId: preMatch.id });
+      return;
+    }
+    console.log("[sms-webhook] No matching order found");
+    res.json({ ok: false, reason: "no_match" });
       return;
     }
 

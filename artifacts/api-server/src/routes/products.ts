@@ -10,6 +10,7 @@ import {
 import { eq, ilike, gte, lte, and, desc, sql, inArray } from "drizzle-orm";
 import { requireAdmin, requireAuth } from "../middlewares/auth";
 import { notifyStockAlerts } from "./stockAlerts";
+import { notifyPreOrderCustomers } from "./preOrders";
 
 cloudinaryV2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -422,6 +423,9 @@ router.put("/products/:id", requireAdmin, async (req: any, res) => {
     // Notify stock alert subscribers if product was restocked (0 → > 0)
     if (stock !== undefined && Number(stock) > 0 && before && before.stock === 0) {
       notifyStockAlerts(p.id, p.name).catch(() => {});
+    }
+    if (req.body.productStatus === "in_stock" && before && (before as any).productStatus === "pre_order") {
+      notifyPreOrderCustomers(p.id, p.name).catch(() => {});
     }
     const [stats] = await db
       .select({

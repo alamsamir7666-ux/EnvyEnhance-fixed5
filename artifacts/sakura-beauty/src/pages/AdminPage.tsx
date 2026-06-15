@@ -60,6 +60,7 @@ const navItems = [
   { id: "auditlogs",  label: "Audit Logs",       icon: Activity },
   { id: "qa",         label: "Q&A",              icon: HelpCircle },
   { id: "bulkimport", label: "Bulk Import",      icon: Upload },
+  { id: "preorders",  label: "Pre-Orders",        icon: Package2 },
   { id: "settings",   label: "Settings",         icon: Settings },
 ];
 
@@ -129,6 +130,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
       stock: parseInt(String(form.stock)),
       images: String(form.images).split(",").map((s) => s.trim()).filter(Boolean),
       videoUrl: (form as any).videoUrl ?? "",
+      productStatus: (form as any).productStatus ?? "in_stock",
     };
     const invalidateAll = () => {
       qc.invalidateQueries({ queryKey: getListProductsQueryKey() });
@@ -217,6 +219,18 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
             <div>
               <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Stock *</Label>
               <Input type="number" value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} required className="mt-1.5 rounded-xl" placeholder="50" />
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Product Status</Label>
+              <select
+                value={(form as any).productStatus ?? "in_stock"}
+                onChange={e => setForm(f => ({ ...f, productStatus: e.target.value } as any))}
+                className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm"
+              >
+                <option value="in_stock">🟢 In Stock</option>
+                <option value="pre_order">🔵 Pre-Order</option>
+                <option value="out_of_stock">🔴 Out of Stock</option>
+              </select>
             </div>
           </div>
 
@@ -2106,6 +2120,75 @@ export function AdminPage() {
   };
 
   // ─── Settings Tab ──────────────────────────────────────────────────────────
+
+  // ─── Pre-Orders Tab ──────────────────────────────────────────────────────────
+  const [preOrders, setPreOrders] = useState<any[]>([]);
+  const [preOrdersLoading, setPreOrdersLoading] = useState(false);
+
+  useEffect(() => {
+    if (activeTab !== "preorders") return;
+    setPreOrdersLoading(true);
+    getToken().then(token =>
+      fetch(API + "/api/pre-orders", { headers: { Authorization: `Bearer ${token}` } })
+        .then(r => r.json())
+        .then(d => { if (Array.isArray(d)) setPreOrders(d); })
+        .catch(() => {})
+        .finally(() => setPreOrdersLoading(false))
+    );
+  }, [activeTab]);
+
+  function PreOrdersTab() {
+    if (preOrdersLoading) return <div className="text-center py-10 text-gray-400">Loading...</div>;
+    if (preOrders.length === 0) return <div className="text-center py-10 text-gray-400">No pre-orders yet.</div>;
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="font-serif text-xl font-medium">Pre-Orders ({preOrders.length})</h2>
+        </div>
+        {preOrders.map((o: any) => (
+          <div key={o.id} className="bg-white border rounded-2xl p-5 space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex gap-3">
+                {o.productImage && <img src={o.productImage} className="w-12 h-12 rounded-xl object-cover shrink-0" />}
+                <div>
+                  <p className="font-medium text-sm">{o.productName}</p>
+                  <p className="text-xs text-gray-500 font-mono mt-0.5">{o.trackingId}</p>
+                </div>
+              </div>
+              <div className="text-right shrink-0">
+                <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                  o.status === "shipped" ? "bg-green-100 text-green-700" :
+                  o.status === "confirmed" ? "bg-blue-100 text-blue-700" :
+                  "bg-amber-100 text-amber-700"
+                }`}>{o.status}</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+              <div><span className="text-gray-400">Customer:</span> {o.shippingAddress?.fullName}</div>
+              <div><span className="text-gray-400">Phone:</span> {o.shippingAddress?.phone}</div>
+              <div><span className="text-gray-400">City:</span> {o.shippingAddress?.city}</div>
+              <div><span className="text-gray-400">WhatsApp:</span> {o.whatsappPhone ?? "—"}</div>
+              <div><span className="text-gray-400">Delivery paid:</span> ৳{o.deliveryCharge}</div>
+              <div><span className="text-gray-400">Product price:</span> ৳{o.discountedPrice}</div>
+              <div><span className="text-gray-400">Payment:</span> {o.paymentMethod}</div>
+              <div><span className={`font-semibold ${o.paymentStatus === "paid" ? "text-green-600" : "text-amber-600"}`}>{o.paymentStatus}</span></div>
+            </div>
+            <p className="text-xs text-gray-400">{new Date(o.createdAt).toLocaleString()}</p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const [shipmentDate, setShipmentDate] = useState(() => localStorage.getItem("nextShipmentDate") ?? "");
+  const [shipmentSaved, setShipmentSaved] = useState(false);
+
+  function saveShipmentDate() {
+    localStorage.setItem("nextShipmentDate", shipmentDate);
+    setShipmentSaved(true);
+    setTimeout(() => setShipmentSaved(false), 2000);
+  }
+
   const SettingsTab = () => (
     <div className="max-w-2xl space-y-5">
       {[
@@ -2124,6 +2207,33 @@ export function AdminPage() {
           </div>
         </div>
       ))}
+
+      {/* Next Shipment Date */}
+      <div className="bg-white border rounded-2xl p-5">
+        <p className="font-medium text-gray-800 mb-1">Next Shipment Date</p>
+        <p className="text-xs text-gray-400 mb-3">Set when the next batch arrives from Japan. This controls the estimated delivery date shown to pre-order customers.</p>
+        <div className="flex gap-3">
+          <input
+            type="date"
+            value={shipmentDate}
+            onChange={e => setShipmentDate(e.target.value)}
+            className="flex-1 rounded-xl border border-input bg-background px-3 py-2 text-sm"
+          />
+          <button
+            onClick={saveShipmentDate}
+            className="px-4 py-2 rounded-xl text-sm font-semibold text-white"
+            style={{ background: "#e05c9a" }}
+          >
+            {shipmentSaved ? "Saved ✓" : "Save"}
+          </button>
+        </div>
+        {shipmentDate && (
+          <p className="text-xs text-green-600 mt-2">
+            Current: {new Date(shipmentDate).toLocaleDateString("en-BD", { day: "numeric", month: "long", year: "numeric" })}
+          </p>
+        )}
+      </div>
+
       <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-sm text-amber-700">
         Settings editing is managed via environment variables and seed scripts in this demo.
       </div>
@@ -3108,6 +3218,7 @@ function BulkImportTab() {
     reviews:    <ReviewsTab />,
     coupons:    <CouponsTab />,
     monthly:    <MonthlyHistoryTab />,
+    preorders:  <PreOrdersTab />,
     settings:   <SettingsTab />,
     returns:    <ReturnsTab />,
     affiliates: <AffiliatesTab />,
