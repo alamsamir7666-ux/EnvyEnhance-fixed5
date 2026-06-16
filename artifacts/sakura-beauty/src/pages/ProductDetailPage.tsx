@@ -358,7 +358,7 @@ export function ProductDetailPage() {
                 <Link href={`/pre-order-checkout?productId=${product.id}&name=${encodeURIComponent(product.name)}&image=${encodeURIComponent((product.images as string[])[0] ?? "")}&price=${product.discountPrice ?? product.price}&qty=${qty}&shipmentDate=${encodeURIComponent(localStorage.getItem("nextShipmentDate") ?? "")}`} className="flex-1">
                   <Button
                     className="w-full rounded-full"
-                    size="lg"
+                    size="default"
                     style={{ background: "#3b82f6", color: "#fff" }}
                   >
                     <ShoppingBag className="h-4 w-4 mr-2" /> Pre-Order Now
