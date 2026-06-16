@@ -76,7 +76,7 @@ export function ProductQA({ productId }: { productId: number }) {
                 <div>
                   <p className="text-sm font-medium">{qa.question}</p>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {qa.userName} ?{" "}
+                    {qa.userName} ·{" "}
                     {new Date(qa.createdAt).toLocaleDateString("en-BD", {
                       month: "short",
                       day: "numeric",
@@ -90,7 +90,7 @@ export function ProductQA({ productId }: { productId: number }) {
                   <div>
                     <p className="text-sm text-muted-foreground">{qa.answer}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      EnvyEnhance Team ?{" "}
+                      EnvyEnhance Team ·{" "}
                       {qa.answeredAt
                         ? new Date(qa.answeredAt).toLocaleDateString("en-BD", {
                             month: "short",

@@ -96,7 +96,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
 
   function addMainIngredient() {
     if (!newIngName.trim()) return;
-    setForm(f => ({ ...f, mainIngredients: [...f.mainIngredients, { name: newIngName.trim(), icon: newIngIcon.trim() || "?" }] }));
+    setForm(f => ({ ...f, mainIngredients: [...f.mainIngredients, { name: newIngName.trim(), icon: newIngIcon.trim() || "📱" }] }));
     setNewIngName("");
     setNewIngIcon("");
   }
@@ -108,7 +108,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
   function updateMainIngredient(idx: number, field: "name" | "icon", value: string) {
     setForm(f => ({
       ...f,
-      mainIngredients: f.mainIngredients.map((ing, i) => i === idx ? { ...ing, [field]: value } : ing),
+      mainIngredients: f.mainIngredients.map((ing, i) => i === idx 🔍 { ...ing, [field]: value } : ing),
     }));
   }
 
@@ -228,9 +228,9 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                 onChange={e => setForm(f => ({ ...f, productStatus: e.target.value } as any))}
                 className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm"
               >
-                <option value="in_stock">? In Stock</option>
-                <option value="pre_order">? Pre-Order</option>
-                <option value="out_of_stock">? Out of Stock</option>
+                <option value="in_stock">🟢 In Stock</option>
+                <option value="pre_order">🔵 Pre-Order</option>
+                <option value="out_of_stock">🔴 Out of Stock</option>
               </select>
             </div>
           </div>
@@ -260,7 +260,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                     value={ing.icon}
                     onChange={e => updateMainIngredient(idx, "icon", e.target.value)}
                     className="w-16 rounded-xl text-center text-lg"
-                    placeholder="?"
+                    placeholder="📱"
                   />
                   <Input
                     value={ing.name}
@@ -282,7 +282,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                   value={newIngIcon}
                   onChange={e => setNewIngIcon(e.target.value)}
                   className="w-16 rounded-xl text-center text-lg"
-                  placeholder="?"
+                  placeholder="📱"
                 />
                 <Input
                   value={newIngName}
@@ -355,7 +355,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                 />
                 <Button type="button" variant="outline" className="rounded-xl flex-1"
                   onClick={() => document.getElementById("product-image-upload")?.click()}>
-                  ? Upload Images from Device
+                  📁 Upload Images from Device
                 </Button>
               </div>
               {form.images && (
@@ -473,7 +473,7 @@ function CategoryModal({ category, onClose }: { category?: any; onClose: () => v
               value={form.icon}
               onChange={e => setForm(f => ({ ...f, icon: e.target.value }))}
               className="mt-1.5 rounded-xl"
-              placeholder="?"
+              placeholder="📱"
             />
           </div>
           <div>
@@ -1069,7 +1069,7 @@ export function AdminPage() {
             </div>
             <div className="divide-y">
               {orders.slice(0, 5).map((o) => {
-                const cfg = statusConfig[o.orderStatus] ?? { color: "bg-gray-100 text-gray-600", icon: AlertCircle };
+                const cfg = statusConfig[o.orderStatus] ?🔍 { color: "bg-gray-100 text-gray-600", icon: AlertCircle };
                 const StatusIcon = cfg.icon;
                 return (
                   <div key={o.id} className="flex items-center gap-4 px-5 py-3">
@@ -1349,7 +1349,7 @@ export function AdminPage() {
     </div>
   );
 
-  // ??? Orders Tab ????????????????????????????????????????????????????????????
+  // ??📦 Orders Tab ????????????????????????????????????????????????????????????
   const OrdersTab = () => (
     <div>
       <div className="flex items-center justify-between mb-4 gap-3">
@@ -1398,7 +1398,7 @@ export function AdminPage() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {filteredOrders.map((o) => {
-                  const cfg = statusConfig[o.orderStatus] ?? { color: "bg-gray-100 text-gray-600 border-gray-200", icon: AlertCircle };
+                  const cfg = statusConfig[o.orderStatus] ?🔍 { color: "bg-gray-100 text-gray-600 border-gray-200", icon: AlertCircle };
                   const StatusIcon = cfg.icon;
                   const isExpanded = expandedOrderId === o.id;
                   const addr = (o as any).shippingAddress as { fullName?: string; street?: string; line1?: string; city?: string; district?: string; phone?: string } | null;
@@ -1463,7 +1463,7 @@ export function AdminPage() {
                                   <p className="font-medium text-gray-800">{addr.fullName}</p>
                                   <p className="text-gray-500 text-xs">{addr.street ?? addr.line1}</p>
                                   <p className="text-gray-500 text-xs">{addr.city}{addr.district ? `, ${addr.district}` : ""}</p>
-                                  {addr.phone && <p className="text-gray-500 text-xs mt-0.5">? {addr.phone}</p>}
+                                  {addr.phone && <p className="text-gray-500 text-xs mt-0.5">📞 {addr.phone}</p>}
                                 </div>
                               )}
                               <div>
@@ -1471,7 +1471,7 @@ export function AdminPage() {
                                 <div className="space-y-1">
                                   {((o as any).items ?? []).slice(0, 4).map((item: any) => (
                                     <p key={item.productId} className="text-xs text-gray-600">
-                                      {item.productName} ? {item.quantity} - Tk{(item.price * item.quantity).toLocaleString()}
+                                      {item.productName} × {item.quantity} - Tk{(item.price * item.quantity).toLocaleString()}
                                     </p>
                                   ))}
                                   {((o as any).items ?? []).length > 4 && (
@@ -1501,12 +1501,12 @@ export function AdminPage() {
                                   <p className="text-xs text-gray-500 font-mono mt-1">{(o as any).transactionId}</p>
                                 )}
                                 {(o as any).couponCode && (
-                                  <p className="text-xs text-pink-500 mt-1">Coupon: {(o as any).couponCode} (?Tk{(o as any).discountAmount})</p>
+                                  <p className="text-xs text-pink-500 mt-1">Coupon: {(o as any).couponCode} (-Tk{(o as any).discountAmount})</p>
                                 )}
                               </div>
                               {o.orderStatus === "cancelled" && (o as any).cancellationReason && (
                                 <div className="col-span-full mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
-                                  <p className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">? Cancelled by Customer</p>
+                                  <p className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">⚠️ Cancelled by Customer</p>
                                   <p className="text-xs text-red-700">Reason: {(o as any).cancellationReason}</p>
                                 </div>
                               )}
@@ -1539,7 +1539,7 @@ export function AdminPage() {
     </div>
   );
 
-  // ??? Users Tab ?????????????????????????????????????????????????????????????
+  // ??⭐ Users Tab ?????????????????????????????????????????????????????????????
   const UsersTab = () => {
     const filteredUsers = (users ?? []).filter((u: any) =>
       !debouncedUserSearch ||
@@ -1580,7 +1580,7 @@ export function AdminPage() {
                       <div className="flex items-center gap-3">
                         <div className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${u.isBlocked ? "bg-red-100" : "bg-gradient-to-br from-pink-200 to-rose-300"}`}>
                           <span className={`text-xs font-bold ${u.isBlocked ? "text-red-500" : "text-rose-700"}`}>
-                            {u.firstName?.[0] ?? ""}{u.lastName?.[0] ?? ""}{!u.firstName && !u.lastName ? "?" : ""}
+                            {u.firstName?.[0] ?? ""}{u.lastName?.[0] ?? ""}{!u.firstName && !u.lastName ? "📱" : ""}
                           </span>
                         </div>
                         <div>
@@ -1698,7 +1698,7 @@ export function AdminPage() {
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-2">
                         <div className="h-7 w-7 rounded-full bg-gradient-to-br from-pink-200 to-rose-300 flex items-center justify-center shrink-0">
-                          <span className="text-xs font-bold text-rose-700">{r.userName?.[0] ?? "?"}</span>
+                          <span className="text-xs font-bold text-rose-700">{r.userName?.[0] ?? "📱"}</span>
                         </div>
                         <p className="text-xs font-medium text-gray-700">{r.userName}</p>
                       </div>
@@ -1793,7 +1793,7 @@ export function AdminPage() {
                       <td className="px-4 py-3.5">
                         <div className="space-y-0.5 max-w-[180px]">
                           {((o as any).items ?? []).slice(0, 2).map((item: any, idx: number) => (
-                            <p key={idx} className="text-xs text-gray-600 truncate">{item.productName} ?{item.quantity}</p>
+                            <p key={idx} className="text-xs text-gray-600 truncate">{item.productName} ×{item.quantity}</p>
                           ))}
                           {((o as any).items ?? []).length > 2 && (
                             <p className="text-xs text-gray-400">+{((o as any).items ?? []).length - 2} more</p>
@@ -1809,7 +1809,7 @@ export function AdminPage() {
                           )}
                           <p className="text-gray-400">{new Date(o.updatedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</p>
                           {(o as any).orderStatus === "cancelled" && (o as any).cancellationReason && (
-                            <p className="text-red-400 text-xs mt-0.5 max-w-[120px] truncate" title={(o as any).cancellationReason}>? {(o as any).cancellationReason}</p>
+                            <p className="text-red-400 text-xs mt-0.5 max-w-[120px] truncate" title={(o as any).cancellationReason}>🔍 {(o as any).cancellationReason}</p>
                           )}
                         </div>
                       </td>
@@ -1817,7 +1817,7 @@ export function AdminPage() {
                         <div>
                           <span className="text-xs bg-gray-100 px-2 py-1 rounded-lg font-medium text-gray-600 capitalize">{(o as any).paymentMethod ?? "-"}</span>
                           <span className={`ml-1.5 text-xs font-medium capitalize ${(o as any).paymentStatus === "paid" ? "text-green-600" : "text-amber-500"}`}>
-                            ? {(o as any).paymentStatus}
+                            · {(o as any).paymentStatus}
                           </span>
                         </div>
                       </td>
@@ -2269,7 +2269,7 @@ function ReturnsTab() {
       });
       if (r.ok) {
         const updated = await r.json();
-        setReturns(prev => prev.map(ret => ret.id === id ? { ...ret, ...updated } : ret));
+        setReturns(prev => prev.map(ret => ret.id === id 🔍 { ...ret, ...updated } : ret));
       }
     } finally { setUpdatingId(null); }
   }
@@ -2298,7 +2298,7 @@ function ReturnsTab() {
       </div>
       {returns.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="text-4xl mb-3">?</div>
+          <div className="text-4xl mb-3">📋</div>
           <p className="text-sm text-muted-foreground">No return requests yet.</p>
         </div>
       ) : (
@@ -2312,11 +2312,11 @@ function ReturnsTab() {
                 <div className="flex items-center justify-between px-4 py-3 bg-muted/40 border-b">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-semibold text-sm">Return #{ret.id}</span>
-                    <span className="text-muted-foreground text-xs">?</span>
+                    <span className="text-muted-foreground text-xs">·</span>
                     <span className="text-xs text-muted-foreground">Order #{ret.orderId}</span>
                     {ret.customerName && (
                       <>
-                        <span className="text-muted-foreground text-xs">?</span>
+                        <span className="text-muted-foreground text-xs">·</span>
                         <span className="text-xs text-muted-foreground">{ret.customerName}</span>
                       </>
                     )}
@@ -2358,7 +2358,7 @@ function ReturnsTab() {
                     )}
                     {deliveredAt && (
                       <div className="flex items-center gap-1.5 bg-green-50 text-green-700 rounded-lg px-3 py-1.5">
-                        <span>? Delivered</span>
+                        <span>✅ Delivered</span>
                         <span className="font-medium">{deliveredAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
                       </div>
                     )}
@@ -2387,11 +2387,11 @@ function ReturnsTab() {
                     <div className="flex gap-2 pt-1">
                       <button onClick={() => updateStatus(ret.id, "approved")} disabled={updatingId === ret.id}
                         className="flex-1 text-sm font-medium bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors disabled:opacity-50">
-                        ? Approve Return
+                        ✅ Approve Return
                       </button>
                       <button onClick={() => { const note = prompt("Rejection reason?"); if (note) updateStatus(ret.id, "rejected", note); }} disabled={updatingId === ret.id}
                         className="flex-1 text-sm font-medium bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50">
-                        ? Reject
+                        ❌ Reject
                       </button>
                     </div>
                   )}
@@ -2659,7 +2659,7 @@ function CashoutsSection() {
     });
     if (r.ok) {
       const updated = await r.json();
-      setCashouts(prev => prev.map(c => c.id === id ? { ...c, ...updated } : c));
+      setCashouts(prev => prev.map(c => c.id === id 🔍 { ...c, ...updated } : c));
     }
   }
 
@@ -2683,7 +2683,7 @@ function CashoutsSection() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-semibold text-sm">{co.affiliateName} <span className="text-muted-foreground font-normal">({co.affiliateEmail})</span></p>
-                      <p className="text-xs text-muted-foreground">Code: {co.affiliateCode} ? {new Date(co.createdAt).toLocaleDateString()}</p>
+                      <p className="text-xs text-muted-foreground">Code: {co.affiliateCode} 🔍 {new Date(co.createdAt).toLocaleDateString()}</p>
                     </div>
                     <p className="font-bold text-lg">Tk{Number(co.amount).toLocaleString()}</p>
                   </div>
@@ -2979,7 +2979,7 @@ function AuditLogsTab() {
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-muted-foreground">
                   by <span className="font-medium text-foreground">{log.adminEmail ?? log.adminId?.slice(0, 8)}</span>
-                  {log.targetType && <> ? {log.targetType} #{log.targetId}</>}
+                  {log.targetType && <> → {log.targetType} #{log.targetId}</>}
                 </p>
                 {(log.after || log.before) && (
                 <p className="text-xs text-muted-foreground mt-0.5">
@@ -3052,7 +3052,7 @@ function QATab() {
       </div>
       {questions.length === 0 ? (
         <div className="text-center py-10 text-muted-foreground">
-          <p className="text-2xl mb-2">?</p>
+          <p className="text-2xl mb-2">❓</p>
           <p className="font-medium">All questions answered!</p>
           <p className="text-sm">No pending product questions.</p>
         </div>
@@ -3062,7 +3062,7 @@ function QATab() {
             <div key={q.id} className="bg-card border rounded-xl p-5 space-y-3">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs text-muted-foreground mb-1">{q.userName} ? Product #{q.productId} ? {new Date(q.createdAt).toLocaleDateString()}</p>
+                  <p className="text-xs text-muted-foreground mb-1">{q.userName} ? Product #{q.productId} 🔍 {new Date(q.createdAt).toLocaleDateString()}</p>
                   <p className="font-medium text-sm">{q.question}</p>
                 </div>
                 <button onClick={() => deleteQuestion(q.id)} className="text-muted-foreground hover:text-destructive transition-colors shrink-0">
@@ -3193,7 +3193,7 @@ function BulkImportTab() {
           {result.errorDetails?.length > 0 && (
             <ul className="mt-2 space-y-1">
               {result.errorDetails.map((e: string, i: number) => (
-                <li key={i} className="text-xs text-red-600">? {e}</li>
+                <li key={i} className="text-xs text-red-600">🔍 {e}</li>
               ))}
             </ul>
           )}
@@ -3311,7 +3311,7 @@ function BulkImportTab() {
               className="rounded-xl resize-none text-sm"
               rows={3}
               value={cancelModal?.reason ?? ""}
-              onChange={e => setCancelModal(m => m ? { ...m, reason: e.target.value } : m)}
+              onChange={e => setCancelModal(m => m 🔍 { ...m, reason: e.target.value } : m)}
             />
           </div>
           <DialogFooter className="gap-2">

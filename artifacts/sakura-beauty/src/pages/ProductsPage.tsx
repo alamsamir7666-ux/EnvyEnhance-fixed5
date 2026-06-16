@@ -427,7 +427,7 @@ export function ProductsPage() {
                     : "Load More Products"}
                 </Button>
               ) : allProducts.length > INITIAL_LOAD ? (
-                <p className="text-sm text-muted-foreground py-4">? All {totalFromAPI} products shown</p>
+                <p className="text-sm text-muted-foreground py-4">✓ All {totalFromAPI} products shown</p>
               ) : null}
             </div>
           </>

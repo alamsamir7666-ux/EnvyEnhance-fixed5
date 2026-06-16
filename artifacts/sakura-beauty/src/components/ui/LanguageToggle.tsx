@@ -10,7 +10,7 @@ export function LanguageToggle() {
       aria-label={lang === "en" ? "Switch to Bengali" : "Switch to English"}
       title={lang === "en" ? "??????? ?????" : "View in English"}
     >
-      <span className="text-base leading-none">{lang === "en" ? "??" : "??"}</span>
+      <span className="text-base leading-none">{lang === "en" ? "📲" : "📲"}</span>
       <span>{lang === "en" ? "?????" : "EN"}</span>
     </button>
   );

@@ -110,7 +110,7 @@ export function GiftCardsPage() {
             </div>
             <div>
               <p className="font-semibold text-sm">Send the gift of beautiful skin</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Valid for 1 year ? No fees ? Instant code delivery</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Valid for 1 year · No fees · Instant code delivery</p>
             </div>
           </div>
 

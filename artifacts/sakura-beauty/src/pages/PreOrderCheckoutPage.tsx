@@ -96,7 +96,7 @@ export function PreOrderCheckoutPage() {
             <CheckCircle2 className="h-10 w-10 text-green-600" />
           </div>
           <div>
-            <h1 className="font-serif text-2xl font-medium mb-2">Pre-Order Confirmed! ?</h1>
+            <h1 className="font-serif text-2xl font-medium mb-2">Pre-Order Confirmed! 🎉</h1>
             <p className="text-muted-foreground">Your pre-order for <strong>{productName}</strong> has been placed.</p>
           </div>
           <div className="bg-muted/30 rounded-2xl p-5 text-left space-y-3">
@@ -177,7 +177,7 @@ export function PreOrderCheckoutPage() {
                   {(["bkash", "nagad"] as PaymentMethod[]).map((method) => (
                     <button type="button" key={method} onClick={() => setPaymentMethod(method)}
                       className={`border rounded-xl py-3 px-4 text-sm font-medium transition-all ${paymentMethod === method ? "border-primary bg-primary/5 text-foreground" : "border-border text-muted-foreground hover:border-foreground/50"}`}>
-                      <div className="text-lg mb-1">{method === "bkash" ? "BK" : "NG"}</div>
+                      <div className="text-lg mb-1">{method === "bkash" ? "📱" : "📲"}</div>
                       {method === "bkash" ? "bKash" : "Nagad"}
                     </button>
                   ))}

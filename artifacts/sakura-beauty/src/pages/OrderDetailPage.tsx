@@ -179,7 +179,7 @@ export function OrderDetailPage() {
         <div className="flex">
           <a href="/products">
             <button className="px-6 py-2.5 rounded-full border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground transition-colors">
-              ? Continue Shopping
+              🛍️ Continue Shopping
             </button>
           </a>
         </div>
@@ -189,7 +189,7 @@ export function OrderDetailPage() {
           <div className="bg-red-50 border border-red-200 rounded-xl p-5">
             <div className="flex items-start gap-3">
               <div className="h-9 w-9 rounded-full bg-red-100 flex items-center justify-center shrink-0">
-                <span className="text-red-600 text-lg">?</span>
+                <span className="text-red-600 text-lg">⚠️</span>
               </div>
               <div>
                 <p className="font-medium text-red-700 text-sm">This order has been cancelled</p>
@@ -300,7 +300,7 @@ export function OrderDetailPage() {
                 <p className="font-medium text-foreground">{addr.fullName}</p>
                 <p>{addr.street ?? addr.line1}</p>
                 <p>{addr.city}{addr.district ? `, ${addr.district}` : ""}</p>
-                {addr.phone && <p>? {addr.phone}</p>}
+                {addr.phone && <p>📞 {addr.phone}</p>}
               </div>
             </div>
           )}

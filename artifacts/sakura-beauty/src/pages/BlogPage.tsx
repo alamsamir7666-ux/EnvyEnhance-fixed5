@@ -42,7 +42,7 @@ const FALLBACK_POSTS = [
   {
     slug: "hyaluronic-acid-guide",
     title: "Hyaluronic Acid: Hydration Done Right",
-    excerpt: "It holds 1000? its weight in water - but are you using it correctly? Learn when, how, and why to apply hyaluronic acid for maximum plumping effect.",
+    excerpt: "It holds 1000× its weight in water - but are you using it correctly? Learn when, how, and why to apply hyaluronic acid for maximum plumping effect.",
     category: "Ingredients", readTime: "4 min read", publishedAt: "January 2025", featured: false,
     image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=80&fm=webp",
   },

@@ -71,7 +71,7 @@ function renderCell(key: string, product: Product) {
         <ul className="text-xs text-muted-foreground space-y-0.5">
           {((product[key as keyof Product] as string[]) ?? []).slice(0, 4).map((v) => (
             <li key={v} className="flex items-start gap-1">
-              <span className="text-accent mt-0.5">?</span> {v}
+              <span className="text-accent mt-0.5">✓</span> {v}
             </li>
           ))}
         </ul>

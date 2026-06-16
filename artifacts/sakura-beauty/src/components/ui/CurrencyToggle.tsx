@@ -9,7 +9,7 @@ export function CurrencyToggle() {
       aria-label={`Switch to ${currency === "BDT" ? "USD" : "BDT"}`}
     >
       <span>{currency === "BDT" ? "Tk BDT" : "$ USD"}</span>
-      <span className="text-muted-foreground">?</span>
+      <span className="text-muted-foreground">·</span>
     </button>
   );
 }

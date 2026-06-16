@@ -83,7 +83,7 @@ const ARTICLES: Record<string, {
     title: "Hyaluronic Acid: Hydration Done Right",
     category: "Ingredients", readTime: "4 min read", date: "January 2025",
     image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1200&q=80&fm=webp",
-    excerpt: "It holds 1000? its weight in water - but are you using it correctly?",
+    excerpt: "It holds 1000× its weight in water - but are you using it correctly?",
     content: [
       { type: "p", text: "Hyaluronic acid (HA) is a molecule naturally found in your skin that holds water and keeps it plump. As we age, HA levels decline - which is why skin loses volume and elasticity. Topical HA can help restore surface hydration, but only if applied correctly." },
       { type: "h2", text: "The Molecular Weight Problem" },
@@ -160,9 +160,9 @@ export function BlogArticlePage() {
   if (!article) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
-        <p className="text-2xl mb-4">?</p>
+        <p className="text-2xl mb-4">📖</p>
         <h2 className="font-serif text-xl font-medium mb-2">Article not found</h2>
-        <Link href="/blog"><a className="text-accent hover:underline text-sm">? Back to Blog</a></Link>
+        <Link href="/blog"><a className="text-accent hover:underline text-sm">← Back to Blog</a></Link>
       </div>
     );
   }
@@ -187,7 +187,7 @@ export function BlogArticlePage() {
         <PageBreadcrumb
           crumbs={[
             { label: "Blog", href: "/blog", icon: <BookOpen className="h-3 w-3" /> },
-            { label: article.title.length > 40 ? article.title.slice(0, 40) + "?" : article.title, icon: <FileText className="h-3 w-3" /> },
+            { label: article.title.length > 40 ? article.title.slice(0, 40) + "📱" : article.title, icon: <FileText className="h-3 w-3" /> },
           ]}
         />
       </div>
@@ -246,7 +246,7 @@ export function BlogArticlePage() {
               <ul key={i} className="space-y-2 ml-4">
                 {(block.items ?? []).map((item: string, j: number) => (
                   <li key={j} className="text-sm text-muted-foreground leading-relaxed flex items-start gap-2">
-                    <span className="text-accent mt-1 flex-shrink-0">?</span>
+                    <span className="text-accent mt-1 flex-shrink-0">✓</span>
                     <span>{item}</span>
                   </li>
                 ))}

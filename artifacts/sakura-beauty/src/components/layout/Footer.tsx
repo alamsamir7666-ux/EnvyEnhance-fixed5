@@ -112,7 +112,7 @@ export function Footer() {
                   });
                   if (r.ok) {
                     input.value = "";
-                    alert("Thank you for subscribing! ?");
+                    alert("Thank you for subscribing! 🌸");
                   }
                 } catch {}
               }}

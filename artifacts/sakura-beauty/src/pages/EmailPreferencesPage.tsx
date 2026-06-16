@@ -117,7 +117,7 @@ export function EmailPreferencesPage() {
     <div className="container mx-auto px-4 py-12 max-w-2xl">
       <div className="mb-8">
         <Link href="/profile">
-          <span className="text-sm text-muted-foreground hover:text-foreground transition-colors">? Back to Profile</span>
+          <span className="text-sm text-muted-foreground hover:text-foreground transition-colors">← Back to Profile</span>
         </Link>
         <h1 className="font-serif text-3xl font-medium mt-4">Email Preferences</h1>
         <p className="text-muted-foreground mt-1 text-sm">Choose what you hear about from us.</p>

@@ -47,7 +47,7 @@ export function ImageZoom({ src, alt, className = "" }: ImageZoomProps) {
         className="w-full h-full object-cover transition-transform duration-100"
         style={
           zoomed
-            ? {
+            🔍 {
                 transform: "scale(2.2)",
                 transformOrigin: `${pos.x}% ${pos.y}%`,
                 cursor: "zoom-in",

@@ -262,7 +262,7 @@ export function ProductDetailPage() {
           crumbs={[
             { label: "Products", href: "/products", icon: <ShoppingBag className="h-3 w-3" /> },
             ...(product.category ? [{ label: product.category.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()), href: `/products?category=${product.category}`, icon: <Package className="h-3 w-3" /> }] : []),
-            { label: product.name.length > 35 ? product.name.slice(0, 35) + "?" : product.name },
+            { label: product.name.length > 35 ? product.name.slice(0, 35) + "…" : product.name },
           ]}
           className="mb-4"
         />
@@ -323,7 +323,7 @@ export function ProductDetailPage() {
             <div className="flex items-center gap-2 mb-4">
               {(product as any).productStatus === "out_of_stock" || product.stock === 0 && (product as any).productStatus !== "pre_order" ? (
                 <button onClick={() => setShowStockSheet(true)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
-                  ? Out of stock - Notify me
+                  🔔 Out of stock — Notify me
                 </button>
               ) : (product as any).productStatus === "pre_order" ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-sm font-medium">
@@ -445,7 +445,7 @@ export function ProductDetailPage() {
           <details className="mb-6 group">
             <summary className="cursor-pointer text-sm font-medium text-foreground flex items-center gap-2 mb-2 list-none">
               <span className="text-xs uppercase tracking-wider">Full Ingredients</span>
-              <span className="text-muted-foreground group-open:rotate-180 transition-transform">?</span>
+              <span className="text-muted-foreground group-open:rotate-180 transition-transform">▾</span>
             </summary>
             <p className="text-sm text-muted-foreground leading-relaxed pl-2 border-l-2 border-accent/30">{product.ingredients}</p>
           </details>
@@ -590,7 +590,7 @@ export function ProductDetailPage() {
                 <p className="font-semibold text-sm">Standard Delivery</p>
                 <p className="text-xs text-muted-foreground mt-0.5">Delivery Time: 2-5 business days</p>
                 <div className="mt-3 inline-flex items-center gap-1.5 bg-accent/8 border border-accent/20 text-accent text-xs font-medium px-3 py-1.5 rounded-full">
-                  <span>Tk60 within Dhaka City</span><span className="text-accent/40">?</span><span>Tk120 outside Dhaka</span>
+                  <span>Tk60 within Dhaka City</span><span className="text-accent/40">·</span><span>Tk120 outside Dhaka</span>
                 </div>
               </div>
             </div>
@@ -600,7 +600,7 @@ export function ProductDetailPage() {
                 <p className="font-semibold text-sm">Dhaka City Same Day Delivery</p>
                 <p className="text-xs text-muted-foreground mt-0.5">Delivery Time: Within 24h</p>
                 <div className="mt-3 inline-flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 text-xs font-medium px-3 py-1.5 rounded-full">
-                  <span>3pm - 9pm</span><span className="text-green-400">?</span><span>Except Friday</span>
+                  <span>3pm - 9pm</span><span className="text-green-400">·</span><span>Except Friday</span>
                 </div>
               </div>
             </div>

@@ -294,7 +294,7 @@ export function AdminAnalyticsPanel() {
           {/* Date range hint */}
           <p className="text-xs text-muted-foreground mt-4 border-t pt-3">
             Based on last 12 months of completed orders.
-            {" "}<span className="text-accent cursor-pointer hover:underline" onClick={() => {}}>Export CSV ?</span>
+            {" "}<span className="text-accent cursor-pointer hover:underline" onClick={() => {}}>Export CSV →</span>
           </p>
         </div>
       </div>

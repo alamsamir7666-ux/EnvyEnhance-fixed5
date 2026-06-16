@@ -112,7 +112,7 @@ export function BundleBuilder({ initialProductId }: BundleBuilderProps) {
             <h3 className="font-semibold">Build Your Routine Bundle</h3>
           </div>
           <p className="text-xs text-muted-foreground">
-            Pick 2-4 products ? <span className="text-green-600 font-medium">15% off when you add 3+</span>
+            Pick 2-4 products — <span className="text-green-600 font-medium">15% off when you add 3+</span>
           </p>
         </div>
         {bundleItems.length >= 3 && (

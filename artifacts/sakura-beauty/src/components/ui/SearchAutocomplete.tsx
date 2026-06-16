@@ -122,7 +122,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
                     <Tag size={14} color="#e05c9a" />
                   </div>
                   <span style={{ fontSize: 14, color: '#111827' }}>{cat.name}</span>
-                  <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>Category ?</span>
+                  <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>Category →</span>
                 </div>
               ))}
             </div>
