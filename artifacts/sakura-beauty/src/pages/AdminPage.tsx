@@ -1482,7 +1482,7 @@ export function AdminPage() {
                               <div>
                                 {(o.giftWrap === "true" || (o.giftWrap as any) === true) && (
                                   <div className="mb-3 p-2 bg-pink-50 border border-pink-200 rounded-lg">
-                                    <p className="text-xs font-semibold text-pink-600 uppercase tracking-wider mb-1">Gift Wrapping</p>
+                                    <p className="text-xs font-semibold text-pink-600 uppercase tracking-wider mb-1">🎁 Gift Wrapping</p>
                                     {o.giftMessage && <p className="text-sm text-gray-700">{o.giftMessage}</p>}
                                   </div>
                                 )}
