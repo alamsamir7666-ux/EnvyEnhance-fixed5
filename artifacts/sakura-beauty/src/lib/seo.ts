@@ -1,10 +1,10 @@
 /**
- * SEO utility — update document.title and meta tags dynamically.
+ * SEO utility - update document.title and meta tags dynamically.
  * Since this is a SPA (no SSR), we do this client-side.
  * For proper server-side SEO, consider migrating to Next.js.
  */
 
-const DEFAULT_TITLE = "EnvyEnhance – Authentic Japanese Skincare | Bangladesh";
+const DEFAULT_TITLE = "EnvyEnhance - Authentic Japanese Skincare | Bangladesh";
 const DEFAULT_DESCRIPTION =
   "Shop authentic Japanese skincare products in Bangladesh. Serums, moisturizers, cleansers, sunscreen and more. Fair pricing, genuine brands, delivered responsibly.";
 const DEFAULT_IMAGE = "/opengraph.jpg";

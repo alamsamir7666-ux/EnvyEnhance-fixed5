@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useCallback, type ReactNode, creat
 
 type Currency = "BDT" | "USD";
 
-// Approximate exchange rate — update periodically or fetch from API
+// Approximate exchange rate - update periodically or fetch from API
 const BDT_TO_USD = 0.0091;
 
 interface CurrencyContextType {
@@ -15,8 +15,8 @@ interface CurrencyContextType {
 const CurrencyContext = createContext<CurrencyContextType>({
   currency: "BDT",
   setCurrency: () => {},
-  format: (n) => `৳${n.toLocaleString()}`,
-  symbol: "৳",
+  format: (n) => `Tk${n.toLocaleString()}`,
+  symbol: "Tk",
 });
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
@@ -36,12 +36,12 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         const usd = amountBdt * BDT_TO_USD;
         return `$${usd.toFixed(2)}`;
       }
-      return `৳${amountBdt.toLocaleString()}`;
+      return `Tk${amountBdt.toLocaleString()}`;
     },
     [currency],
   );
 
-  const symbol = currency === "USD" ? "$" : "৳";
+  const symbol = currency === "USD" ? "$" : "Tk";
 
   return h(CurrencyContext.Provider, { value: { currency, setCurrency, format, symbol } }, children);
 }

@@ -110,12 +110,12 @@ export function GiftCardsPage() {
             </div>
             <div>
               <p className="font-semibold text-sm">Send the gift of beautiful skin</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Valid for 1 year · No fees · Instant code delivery</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Valid for 1 year ? No fees ? Instant code delivery</p>
             </div>
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">Amount (৳)</label>
+            <label className="text-sm font-medium mb-2 block">Amount (Tk)</label>
             <div className="grid grid-cols-4 gap-2 mb-3">
               {PRESET_AMOUNTS.map((a) => (
                 <button
@@ -127,13 +127,13 @@ export function GiftCardsPage() {
                       : "border-border hover:border-accent/50"
                   }`}
                 >
-                  ৳{a.toLocaleString()}
+                  Tk{a.toLocaleString()}
                 </button>
               ))}
             </div>
             <Input
               type="number"
-              placeholder="Or enter custom amount (min ৳100)"
+              placeholder="Or enter custom amount (min Tk100)"
               value={amount}
               onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : "")}
               min={100}
@@ -165,7 +165,7 @@ export function GiftCardsPage() {
             <Textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Wishing you glowing skin! 🌸"
+              placeholder="Wishing you glowing skin! ?"
               rows={3}
               maxLength={300}
             />
@@ -178,7 +178,7 @@ export function GiftCardsPage() {
             disabled={!amount || Number(amount) < 100 || purchase.isPending || !user}
           >
             {purchase.isPending ? (
-              <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Creating…</>
+              <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Creating?</>
             ) : (
               <><Gift className="h-4 w-4 mr-2" /> Purchase Gift Card</>
             )}
@@ -207,7 +207,7 @@ export function GiftCardsPage() {
             </div>
             {checkedBalance !== null && (
               <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
-                ✓ Available balance: <strong>৳{checkedBalance.toLocaleString()}</strong>
+                ? Available balance: <strong>Tk{checkedBalance.toLocaleString()}</strong>
               </p>
             )}
             {checkError && (
@@ -245,7 +245,7 @@ export function GiftCardsPage() {
                         </button>
                       </div>
                       <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span>Balance: <strong className="text-foreground">৳{card.balance.toLocaleString()}</strong> / ৳{card.initialBalance.toLocaleString()}</span>
+                        <span>Balance: <strong className="text-foreground">Tk{card.balance.toLocaleString()}</strong> / Tk{card.initialBalance.toLocaleString()}</span>
                         {card.recipientName && <span>For {card.recipientName}</span>}
                       </div>
                       {card.expiryDate && (

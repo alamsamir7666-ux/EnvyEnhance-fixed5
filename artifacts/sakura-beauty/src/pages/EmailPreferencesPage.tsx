@@ -30,7 +30,7 @@ const PREF_META = [
     label: "Order Updates",
     description: "Confirmations, shipping notifications, and delivery status.",
     icon: ShoppingBag,
-    canDisable: false, // transactional — always on
+    canDisable: false, // transactional - always on
   },
   {
     key: "promotions" as keyof EmailPrefs,
@@ -117,7 +117,7 @@ export function EmailPreferencesPage() {
     <div className="container mx-auto px-4 py-12 max-w-2xl">
       <div className="mb-8">
         <Link href="/profile">
-          <span className="text-sm text-muted-foreground hover:text-foreground transition-colors">← Back to Profile</span>
+          <span className="text-sm text-muted-foreground hover:text-foreground transition-colors">? Back to Profile</span>
         </Link>
         <h1 className="font-serif text-3xl font-medium mt-4">Email Preferences</h1>
         <p className="text-muted-foreground mt-1 text-sm">Choose what you hear about from us.</p>
@@ -167,7 +167,7 @@ export function EmailPreferencesPage() {
               size="lg"
             >
               {saving ? (
-                <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving…</>
+                <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving?</>
               ) : saved ? (
                 <><Check className="h-4 w-4 mr-2 text-green-300" /> Saved!</>
               ) : (

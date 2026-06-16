@@ -39,7 +39,7 @@ export function ImageZoom({ src, alt, className = "" }: ImageZoomProps) {
       onTouchStart={() => setZoomed(true)}
       onTouchEnd={() => setZoomed(false)}
       onTouchMove={handleTouchMove}
-      aria-label={`${alt} — hover to zoom`}
+      aria-label={`${alt} - hover to zoom`}
     >
       <img
         src={src}

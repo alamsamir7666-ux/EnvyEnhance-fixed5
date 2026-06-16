@@ -42,7 +42,7 @@ export function PreOrderCheckoutPage() {
   const [success, setSuccess] = useState<{ trackingId: string; deliveryCharge: number } | null>(null);
 
   const city = address.city.toLowerCase();
-  const isDhaka = ["dhaka", "ঢাকা"].some(k => city.includes(k));
+  const isDhaka = ["dhaka", "????"].some(k => city.includes(k));
   const deliveryCharge = address.city ? (isDhaka ? 80 : 120) : 80;
 
   function getDaysUntilShipment() {
@@ -96,12 +96,12 @@ export function PreOrderCheckoutPage() {
             <CheckCircle2 className="h-10 w-10 text-green-600" />
           </div>
           <div>
-            <h1 className="font-serif text-2xl font-medium mb-2">Pre-Order Confirmed! 🎉</h1>
+            <h1 className="font-serif text-2xl font-medium mb-2">Pre-Order Confirmed! ?</h1>
             <p className="text-muted-foreground">Your pre-order for <strong>{productName}</strong> has been placed.</p>
           </div>
           <div className="bg-muted/30 rounded-2xl p-5 text-left space-y-3">
             <div className="flex justify-between text-sm"><span className="text-muted-foreground">Tracking ID</span><span className="font-mono font-semibold">{success.trackingId}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Delivery paid</span><span className="font-semibold">৳{success.deliveryCharge}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Delivery paid</span><span className="font-semibold">Tk{success.deliveryCharge}</span></div>
             <div className="flex justify-between text-sm"><span className="text-muted-foreground">Product price</span><span className="font-semibold">Cash on delivery</span></div>
             <div className="flex justify-between text-sm"><span className="text-muted-foreground">Expected delivery</span><span className="font-semibold">{getDaysUntilShipment()}</span></div>
           </div>
@@ -146,7 +146,7 @@ export function PreOrderCheckoutPage() {
                       <button key={addr.id} type="button" onClick={() => applyAddress(addr)}
                         className={`w-full text-left px-4 py-3 rounded-xl border transition-all text-sm ${selectedAddressId === addr.id ? "border-primary bg-primary/5" : "border-border hover:border-foreground/30 hover:bg-muted/30"}`}>
                         <p className="font-medium">{addr.fullName}</p>
-                        <p className="text-muted-foreground text-xs mt-0.5">{addr.street}, {addr.city}{addr.district ? `, ${addr.district}` : ""}{addr.phone ? ` · ${addr.phone}` : ""}</p>
+                        <p className="text-muted-foreground text-xs mt-0.5">{addr.street}, {addr.city}{addr.district ? `, ${addr.district}` : ""}{addr.phone ? ` ? ${addr.phone}` : ""}</p>
                       </button>
                     ))}
                     <p className="text-xs text-muted-foreground pl-1">Or enter a new address below</p>
@@ -177,7 +177,7 @@ export function PreOrderCheckoutPage() {
                   {(["bkash", "nagad"] as PaymentMethod[]).map((method) => (
                     <button type="button" key={method} onClick={() => setPaymentMethod(method)}
                       className={`border rounded-xl py-3 px-4 text-sm font-medium transition-all ${paymentMethod === method ? "border-primary bg-primary/5 text-foreground" : "border-border text-muted-foreground hover:border-foreground/50"}`}>
-                      <div className="text-lg mb-1">{method === "bkash" ? "📱" : "📲"}</div>
+                      <div className="text-lg mb-1">{method === "bkash" ? "?" : "?"}</div>
                       {method === "bkash" ? "bKash" : "Nagad"}
                     </button>
                   ))}
@@ -185,7 +185,7 @@ export function PreOrderCheckoutPage() {
                 <div className="bg-muted/30 rounded-lg p-4 space-y-3 text-sm">
                   <p className="font-medium">{paymentMethod === "bkash" ? "bKash" : "Nagad"} Payment Instructions</p>
                   <p className="text-muted-foreground">
-                    1. Send ৳{deliveryCharge} to our {paymentMethod === "bkash" ? "bKash" : "Nagad"} number: <strong>01636575741</strong><br />
+                    1. Send Tk{deliveryCharge} to our {paymentMethod === "bkash" ? "bKash" : "Nagad"} number: <strong>01636575741</strong><br />
                     2. Use "Send Money" option<br />
                     3. Your pre-order will be confirmed automatically after payment
                   </p>
@@ -208,8 +208,8 @@ export function PreOrderCheckoutPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium line-clamp-2">{productName}</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-sm font-semibold">৳{discountedPrice.toLocaleString()}</span>
-                      <span className="text-xs text-muted-foreground line-through">৳{originalPrice.toLocaleString()}</span>
+                      <span className="text-sm font-semibold">Tk{discountedPrice.toLocaleString()}</span>
+                      <span className="text-xs text-muted-foreground line-through">Tk{originalPrice.toLocaleString()}</span>
                       <Badge className="bg-green-100 text-green-700 border-green-200 text-xs">5% off</Badge>
                     </div>
                   </div>
@@ -222,18 +222,18 @@ export function PreOrderCheckoutPage() {
                 </div>
 
                 <div className="border-t pt-4 space-y-2 text-sm">
-                  <div className="flex justify-between"><span className="text-muted-foreground">Delivery charge</span><span>৳{deliveryCharge}</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Product price (৳{discountedPrice.toLocaleString()})</span><span className="text-muted-foreground">COD</span></div>
-                  <div className="flex justify-between font-semibold text-base pt-2 border-t"><span>Pay Now</span><span>৳{deliveryCharge}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Delivery charge</span><span>Tk{deliveryCharge}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Product price (Tk{discountedPrice.toLocaleString()})</span><span className="text-muted-foreground">COD</span></div>
+                  <div className="flex justify-between font-semibold text-base pt-2 border-t"><span>Pay Now</span><span>Tk{deliveryCharge}</span></div>
                 </div>
 
                 {error && <p className="text-sm text-destructive text-center">{error}</p>}
 
                 <Button type="submit" disabled={loading} className="w-full rounded-full" size="lg">
-                  {loading ? "Placing Pre-Order..." : `Confirm Pre-Order — Pay ৳${deliveryCharge}`}
+                  {loading ? "Placing Pre-Order..." : `Confirm Pre-Order - Pay Tk${deliveryCharge}`}
                 </Button>
 
-                <p className="text-xs text-center text-muted-foreground">You save ৳{savings.toLocaleString()} with 5% pre-order discount</p>
+                <p className="text-xs text-center text-muted-foreground">You save Tk{savings.toLocaleString()} with 5% pre-order discount</p>
               </div>
             </div>
           </div>

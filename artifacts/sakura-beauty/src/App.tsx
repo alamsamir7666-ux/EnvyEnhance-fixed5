@@ -175,7 +175,7 @@ function ClerkQueryClientCacheInvalidator() {
   return null;
 }
 
-// Must be set at module level — before any component renders — so the browser
+// Must be set at module level - before any component renders - so the browser
 // never auto-scrolls on popstate before we can intercept it.
 if (typeof window !== "undefined") {
   window.history.scrollRestoration = "manual";
@@ -183,7 +183,7 @@ if (typeof window !== "undefined") {
 
 const SCROLL_KEY = (path: string) => `__scroll__${path}`;
 
-// Module-level flag — survives React render batching unlike a ref
+// Module-level flag - survives React render batching unlike a ref
 let _isPop = false;
 let _lastScrollY = 0;
 
@@ -200,7 +200,7 @@ function readScrollPosition(path: string): number {
   } catch (_) { return 0; }
 }
 
-// Fixed ScrollManager — handles async/data-fetching pages correctly.
+// Fixed ScrollManager - handles async/data-fetching pages correctly.
 // Root cause of the original bug: double-rAF fired before data-fetching pages
 // finished rendering their full content, so scrollTo(y) landed on a skeleton
 // page that was still short. The page then grew below the viewport.
@@ -237,10 +237,10 @@ function ScrollManager() {
     };
   }, [fullHref]);
 
-  // Detect back/forward navigation — capture leaving path before wouter updates
+  // Detect back/forward navigation - capture leaving path before wouter updates
   useEffect(() => {
     const onPopState = () => {
-      // Do NOT save here — scrollY is already 0 by the time popstate fires.
+      // Do NOT save here - scrollY is already 0 by the time popstate fires.
       // The scroll listener already saved the correct position continuously.
       isPopStateRef.current = true;
       console.log("[scroll] saved value for /:", sessionStorage.getItem("__scroll__/"));
@@ -273,7 +273,7 @@ function ScrollManager() {
       }
 
       // Poll until page is tall enough, then scroll.
-      // MAX_ATTEMPTS × INTERVAL_MS = max wait time before giving up.
+      // MAX_ATTEMPTS ? INTERVAL_MS = max wait time before giving up.
       // Increased to handle slow API responses on all pages.
       let attempts = 0;
       const MAX_ATTEMPTS = 50;
@@ -322,7 +322,7 @@ function AdminRoute() {
   return <Suspense fallback={<div className="min-h-[60vh]" />}><AdminPage /></Suspense>;
 }
 
-// Compute flash sale end time once at module level — not inside the component
+// Compute flash sale end time once at module level - not inside the component
 // to avoid creating a new Date() reference on every render which confuses the timer.
 function getTodayMidnight(): Date {
   const d = new Date();
@@ -338,7 +338,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="min-h-[100dvh] flex flex-col">
-        <FlashSaleBanner label="Flash Sale — Up to 30% Off" endsAt={flashSaleEnd} href="/products" />
+        <FlashSaleBanner label="Flash Sale - Up to 30% Off" endsAt={flashSaleEnd} href="/products" />
         <Navbar />
         <main className="flex-1">
           {children}

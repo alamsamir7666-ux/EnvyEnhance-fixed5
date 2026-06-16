@@ -55,9 +55,9 @@ async function fetchAnalytics(): Promise<AnalyticsData> {
 }
 
 function formatBDT(n: number) {
-  if (n >= 100000) return `৳${(n / 100000).toFixed(1)}L`;
-  if (n >= 1000) return `৳${(n / 1000).toFixed(1)}K`;
-  return `৳${Math.round(n)}`;
+  if (n >= 100000) return `Tk${(n / 100000).toFixed(1)}L`;
+  if (n >= 1000) return `Tk${(n / 1000).toFixed(1)}K`;
+  return `Tk${Math.round(n)}`;
 }
 
 function StatCard({
@@ -160,7 +160,7 @@ export function AdminAnalyticsPanel() {
         />
         <StatCard
           label="Top Product"
-          value={data.topProductsByRevenue[0]?.name?.split(" ").slice(0, 2).join(" ") ?? "—"}
+          value={data.topProductsByRevenue[0]?.name?.split(" ").slice(0, 2).join(" ") ?? "-"}
           sub={data.topProductsByRevenue[0] ? formatBDT(data.topProductsByRevenue[0].revenue) : undefined}
           icon={Star}
         />
@@ -206,7 +206,7 @@ export function AdminAnalyticsPanel() {
             />
             <Tooltip
               formatter={(val: number) =>
-                revenueView === "revenue" ? [`৳${val.toLocaleString()}`, "Revenue"] : [val.toLocaleString(), revenueView === "orders" ? "Orders" : "Customers"]
+                revenueView === "revenue" ? [`Tk${val.toLocaleString()}`, "Revenue"] : [val.toLocaleString(), revenueView === "orders" ? "Orders" : "Customers"]
               }
               labelFormatter={(label) => {
                 const [y, m] = label.split("-");
@@ -294,7 +294,7 @@ export function AdminAnalyticsPanel() {
           {/* Date range hint */}
           <p className="text-xs text-muted-foreground mt-4 border-t pt-3">
             Based on last 12 months of completed orders.
-            {" "}<span className="text-accent cursor-pointer hover:underline" onClick={() => {}}>Export CSV →</span>
+            {" "}<span className="text-accent cursor-pointer hover:underline" onClick={() => {}}>Export CSV ?</span>
           </p>
         </div>
       </div>
@@ -323,7 +323,7 @@ export function AdminAnalyticsPanel() {
               width={50}
             />
             <Tooltip
-              formatter={(val: number) => [`৳${val.toLocaleString()}`, "Revenue"]}
+              formatter={(val: number) => [`Tk${val.toLocaleString()}`, "Revenue"]}
             />
             <Bar dataKey="revenue" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
           </BarChart>

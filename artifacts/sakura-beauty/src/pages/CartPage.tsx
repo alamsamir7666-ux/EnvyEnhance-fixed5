@@ -89,9 +89,9 @@ function GuestCartPage() {
                         </button>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold">৳{(price * item.quantity).toLocaleString()}</p>
+                        <p className="font-semibold">Tk{(price * item.quantity).toLocaleString()}</p>
                         {item.discountPrice && (
-                          <p className="text-xs text-muted-foreground line-through">৳{(item.price * item.quantity).toLocaleString()}</p>
+                          <p className="text-xs text-muted-foreground line-through">Tk{(item.price * item.quantity).toLocaleString()}</p>
                         )}
                       </div>
                     </div>
@@ -108,18 +108,18 @@ function GuestCartPage() {
               <div className="space-y-3 text-sm mb-5">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>৳{subtotal.toLocaleString()}</span>
+                  <span>Tk{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Delivery</span>
-                  <span>{shipping === 0 ? <span className="text-green-600">Free</span> : `৳${shipping}`}</span>
+                  <span>{shipping === 0 ? <span className="text-green-600">Free</span> : `Tk${shipping}`}</span>
                 </div>
                 {shipping > 0 && (
-                  <p className="text-xs text-muted-foreground">Free delivery on orders over ৳2,000</p>
+                  <p className="text-xs text-muted-foreground">Free delivery on orders over Tk2,000</p>
                 )}
                 <div className="border-t pt-3 flex justify-between font-semibold text-base">
                   <span>Total</span>
-                  <span>৳{total.toLocaleString()}</span>
+                  <span>Tk{total.toLocaleString()}</span>
                 </div>
               </div>
               <Button className="w-full rounded-full" size="lg" onClick={() => setLocation("/checkout")}>
@@ -235,9 +235,9 @@ function AuthenticatedCartPage() {
                         </button>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold">৳{(price * item.quantity).toLocaleString()}</p>
+                        <p className="font-semibold">Tk{(price * item.quantity).toLocaleString()}</p>
                         {product.discountPrice && (
-                          <p className="text-xs text-muted-foreground line-through">৳{(product.price * item.quantity).toLocaleString()}</p>
+                          <p className="text-xs text-muted-foreground line-through">Tk{(product.price * item.quantity).toLocaleString()}</p>
                         )}
                       </div>
                     </div>
@@ -254,18 +254,18 @@ function AuthenticatedCartPage() {
               <div className="space-y-3 text-sm mb-5">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>৳{subtotal.toLocaleString()}</span>
+                  <span>Tk{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Delivery</span>
-                  <span>{shipping === 0 ? <span className="text-green-600">Free</span> : `৳${shipping}`}</span>
+                  <span>{shipping === 0 ? <span className="text-green-600">Free</span> : `Tk${shipping}`}</span>
                 </div>
                 {shipping > 0 && (
-                  <p className="text-xs text-muted-foreground">Free delivery on orders over ৳2,000</p>
+                  <p className="text-xs text-muted-foreground">Free delivery on orders over Tk2,000</p>
                 )}
                 <div className="border-t pt-3 flex justify-between font-semibold text-base">
                   <span>Total</span>
-                  <span>৳{total.toLocaleString()}</span>
+                  <span>Tk{total.toLocaleString()}</span>
                 </div>
               </div>
               <Button className="w-full rounded-full" size="lg" onClick={() => setLocation("/checkout")}>

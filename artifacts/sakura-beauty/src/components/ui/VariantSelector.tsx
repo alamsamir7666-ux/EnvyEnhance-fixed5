@@ -69,7 +69,7 @@ export function VariantSelector({ productId, basePrice, onVariantChange }: Varia
                         : "border-border hover:border-accent/60 hover:bg-muted/40"
                   }`}
                   aria-pressed={selected?.id === v.id}
-                  aria-label={`${type} ${v.name}${v.stock === 0 ? " — out of stock" : ""}`}
+                  aria-label={`${type} ${v.name}${v.stock === 0 ? " - out of stock" : ""}`}
                 >
                   {v.name}
                   {v.stock > 0 && v.stock <= 5 && (
@@ -86,11 +86,11 @@ export function VariantSelector({ productId, basePrice, onVariantChange }: Varia
         <p className="text-sm text-muted-foreground">
           Price for {selected.name}:{" "}
           <span className="font-semibold text-foreground">
-            ৳{(selected.discountPrice ?? selected.price).toLocaleString()}
+            Tk{(selected.discountPrice ?? selected.price).toLocaleString()}
           </span>
           {selected.discountPrice && (
             <span className="line-through text-muted-foreground ml-2">
-              ৳{selected.price.toLocaleString()}
+              Tk{selected.price.toLocaleString()}
             </span>
           )}
         </p>

@@ -42,11 +42,11 @@ function renderCell(key: string, product: Product) {
       return (
         <div>
           <span className="font-semibold">
-            ৳{(product.discountPrice ?? product.price).toLocaleString()}
+            Tk{(product.discountPrice ?? product.price).toLocaleString()}
           </span>
           {product.discountPrice && (
             <span className="text-xs text-muted-foreground line-through ml-1">
-              ৳{product.price.toLocaleString()}
+              Tk{product.price.toLocaleString()}
             </span>
           )}
         </div>
@@ -71,7 +71,7 @@ function renderCell(key: string, product: Product) {
         <ul className="text-xs text-muted-foreground space-y-0.5">
           {((product[key as keyof Product] as string[]) ?? []).slice(0, 4).map((v) => (
             <li key={v} className="flex items-start gap-1">
-              <span className="text-accent mt-0.5">•</span> {v}
+              <span className="text-accent mt-0.5">?</span> {v}
             </li>
           ))}
         </ul>
@@ -79,7 +79,7 @@ function renderCell(key: string, product: Product) {
     default:
       return (
         <span className="text-sm text-muted-foreground">
-          {(product[key as keyof Product] as string) ?? "—"}
+          {(product[key as keyof Product] as string) ?? "-"}
         </span>
       );
   }

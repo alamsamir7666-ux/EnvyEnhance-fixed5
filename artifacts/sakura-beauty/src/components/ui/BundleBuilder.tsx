@@ -1,6 +1,6 @@
 // artifacts/sakura-beauty/src/components/ui/BundleBuilder.tsx
-// Self-contained bundle builder — show on ProductDetailPage or a dedicated /bundles route.
-// Lets users pick 2–4 products, see the 15% bundle discount, and add all to cart at once.
+// Self-contained bundle builder - show on ProductDetailPage or a dedicated /bundles route.
+// Lets users pick 2-4 products, see the 15% bundle discount, and add all to cart at once.
 // Usage: <BundleBuilder initialProductId={product.id} />
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -93,7 +93,7 @@ export function BundleBuilder({ initialProductId }: BundleBuilderProps) {
         }
       }
       qc.invalidateQueries({ queryKey: getGetCartQueryKey() });
-      toast({ title: `${bundleItems.length} products added to cart${applyDiscount ? " — 15% bundle discount applied!" : ""}` });
+      toast({ title: `${bundleItems.length} products added to cart${applyDiscount ? " - 15% bundle discount applied!" : ""}` });
       setBundleItems([]);
     } catch {
       toast({ title: "Failed to add bundle to cart", variant: "destructive" });
@@ -112,7 +112,7 @@ export function BundleBuilder({ initialProductId }: BundleBuilderProps) {
             <h3 className="font-semibold">Build Your Routine Bundle</h3>
           </div>
           <p className="text-xs text-muted-foreground">
-            Pick 2–4 products · <span className="text-green-600 font-medium">15% off when you add 3+</span>
+            Pick 2-4 products ? <span className="text-green-600 font-medium">15% off when you add 3+</span>
           </p>
         </div>
         {bundleItems.length >= 3 && (
@@ -133,7 +133,7 @@ export function BundleBuilder({ initialProductId }: BundleBuilderProps) {
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium leading-snug line-clamp-2">{product.name}</p>
                 <p className="text-xs text-accent font-semibold mt-1">
-                  ৳{(product.discountPrice ?? product.price).toLocaleString()}
+                  Tk{(product.discountPrice ?? product.price).toLocaleString()}
                 </p>
               </div>
               <button
@@ -173,12 +173,12 @@ export function BundleBuilder({ initialProductId }: BundleBuilderProps) {
           <div className="bg-muted/30 rounded-xl px-4 py-3 space-y-1.5">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal ({bundleItems.length} items)</span>
-              <span>৳{subtotal.toLocaleString()}</span>
+              <span>Tk{subtotal.toLocaleString()}</span>
             </div>
             {applyDiscount && (
               <div className="flex justify-between text-sm text-green-600">
                 <span>Bundle discount (15%)</span>
-                <span>–৳{discountAmount.toFixed(0)}</span>
+                <span>-Tk{discountAmount.toFixed(0)}</span>
               </div>
             )}
             {!applyDiscount && bundleItems.length > 0 && (
@@ -188,7 +188,7 @@ export function BundleBuilder({ initialProductId }: BundleBuilderProps) {
             )}
             <div className="flex justify-between font-semibold pt-1 border-t">
               <span>Total</span>
-              <span>৳{total.toFixed(0)}</span>
+              <span>Tk{total.toFixed(0)}</span>
             </div>
           </div>
         )}
@@ -200,7 +200,7 @@ export function BundleBuilder({ initialProductId }: BundleBuilderProps) {
           disabled={bundleItems.length < MIN_BUNDLE || addingToCart}
         >
           {addingToCart ? (
-            <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Adding to Cart…</>
+            <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Adding to Cart?</>
           ) : (
             <><ShoppingBag className="h-4 w-4 mr-2" /> Add Bundle to Cart</>
           )}
@@ -222,7 +222,7 @@ export function BundleBuilder({ initialProductId }: BundleBuilderProps) {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search products…"
+              placeholder="Search products?"
               className="pl-9"
               autoFocus
             />
@@ -260,7 +260,7 @@ export function BundleBuilder({ initialProductId }: BundleBuilderProps) {
                     </div>
                     <div className="text-right shrink-0">
                       <p className="text-sm font-semibold">
-                        ৳{((product.discountPrice ?? product.price) as number).toLocaleString()}
+                        Tk{((product.discountPrice ?? product.price) as number).toLocaleString()}
                       </p>
                       {alreadyAdded && <p className="text-xs text-green-600">Added</p>}
                     </div>

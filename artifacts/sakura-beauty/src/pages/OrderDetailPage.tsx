@@ -23,8 +23,8 @@ const statusColors: Record<string, string> = {
 };
 
 const returnStatusConfig: Record<string, { label: string; color: string; bg: string }> = {
-  requested: { label: "Return Requested — Under Review",     color: "text-amber-700", bg: "bg-amber-50 border-amber-200" },
-  approved:  { label: "Return Approved — Refund Processing", color: "text-blue-700",  bg: "bg-blue-50 border-blue-200"  },
+  requested: { label: "Return Requested - Under Review",     color: "text-amber-700", bg: "bg-amber-50 border-amber-200" },
+  approved:  { label: "Return Approved - Refund Processing", color: "text-blue-700",  bg: "bg-blue-50 border-blue-200"  },
   rejected:  { label: "Return Rejected",                     color: "text-red-700",   bg: "bg-red-50 border-red-200"    },
   completed: { label: "Refund Completed",                    color: "text-teal-700",  bg: "bg-teal-50 border-teal-200"  },
 };
@@ -179,7 +179,7 @@ export function OrderDetailPage() {
         <div className="flex">
           <a href="/products">
             <button className="px-6 py-2.5 rounded-full border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground transition-colors">
-              ← Continue Shopping
+              ? Continue Shopping
             </button>
           </a>
         </div>
@@ -189,7 +189,7 @@ export function OrderDetailPage() {
           <div className="bg-red-50 border border-red-200 rounded-xl p-5">
             <div className="flex items-start gap-3">
               <div className="h-9 w-9 rounded-full bg-red-100 flex items-center justify-center shrink-0">
-                <span className="text-red-600 text-lg">✕</span>
+                <span className="text-red-600 text-lg">?</span>
               </div>
               <div>
                 <p className="font-medium text-red-700 text-sm">This order has been cancelled</p>
@@ -243,7 +243,7 @@ export function OrderDetailPage() {
                       <p className="font-medium text-sm">{item.productName}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">Qty: {item.quantity}</p>
                     </div>
-                    <p className="font-medium text-sm">৳{(item.price * item.quantity).toLocaleString()}</p>
+                    <p className="font-medium text-sm">Tk{(item.price * item.quantity).toLocaleString()}</p>
                   </div>
                 </div>
               );
@@ -267,12 +267,12 @@ export function OrderDetailPage() {
               <div className="border-t pt-2 mt-1 space-y-1.5">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>৳{(order.items ?? []).reduce((s: number, i: any) => s + Number(i.price) * i.quantity, 0).toLocaleString()}</span>
+                  <span>Tk{(order.items ?? []).reduce((s: number, i: any) => s + Number(i.price) * i.quantity, 0).toLocaleString()}</span>
                 </div>
                 {order.discountAmount > 0 && (
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Discount{order.couponCode ? ` (${order.couponCode})` : ""}</span>
-                    <span className="text-green-600">-৳{Number(order.discountAmount).toLocaleString()}</span>
+                    <span className="text-green-600">-Tk{Number(order.discountAmount).toLocaleString()}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
@@ -281,14 +281,14 @@ export function OrderDetailPage() {
                     {(() => {
                       const subtotal = (order.items ?? []).reduce((s: number, i: any) => s + Number(i.price) * i.quantity, 0);
                       const delivery = Number(order.totalAmount) - subtotal + Number(order.discountAmount ?? 0);
-                      return delivery <= 0 ? <span className="text-green-600">Free</span> : `৳${delivery.toLocaleString()}`;
+                      return delivery <= 0 ? <span className="text-green-600">Free</span> : `Tk${delivery.toLocaleString()}`;
                     })()}
                   </span>
                 </div>
               </div>
               <div className="flex justify-between font-semibold border-t pt-2 mt-1">
                 <span>Total</span>
-                <span>৳{order.totalAmount.toLocaleString()}</span>
+                <span>Tk{order.totalAmount.toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -300,7 +300,7 @@ export function OrderDetailPage() {
                 <p className="font-medium text-foreground">{addr.fullName}</p>
                 <p>{addr.street ?? addr.line1}</p>
                 <p>{addr.city}{addr.district ? `, ${addr.district}` : ""}</p>
-                {addr.phone && <p>📞 {addr.phone}</p>}
+                {addr.phone && <p>? {addr.phone}</p>}
               </div>
             </div>
           )}
@@ -341,7 +341,7 @@ export function OrderDetailPage() {
                   </div>
                   {existingReturn.status === "completed" && existingReturn.refundAmount != null && (
                     <span className="text-sm font-bold text-teal-700">
-                      ৳{Number(existingReturn.refundAmount).toLocaleString()} refunded
+                      Tk{Number(existingReturn.refundAmount).toLocaleString()} refunded
                     </span>
                   )}
                 </div>
@@ -389,7 +389,7 @@ export function OrderDetailPage() {
           </DialogHeader>
           <div className="space-y-3 mt-2">
             <Textarea
-              placeholder="Reason for cancellation (e.g. Changed my mind, ordered by mistake…)"
+              placeholder="Reason for cancellation (e.g. Changed my mind, ordered by mistake?)"
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
               rows={3}
@@ -421,7 +421,7 @@ export function OrderDetailPage() {
           <DialogHeader>
             <DialogTitle>Request Return / Refund</DialogTitle>
             <DialogDescription>
-              Describe the issue with your order. Our team will review your request within 2–3 business days.
+              Describe the issue with your order. Our team will review your request within 2-3 business days.
             </DialogDescription>
           </DialogHeader>
           {returnSuccess ? (
@@ -435,7 +435,7 @@ export function OrderDetailPage() {
           ) : (
             <div className="space-y-3 mt-2">
               <Textarea
-                placeholder="Describe the issue (e.g. Wrong item received, product damaged, doesn't match description…)"
+                placeholder="Describe the issue (e.g. Wrong item received, product damaged, doesn't match description?)"
                 value={returnReason}
                 onChange={(e) => setReturnReason(e.target.value)}
                 rows={4}

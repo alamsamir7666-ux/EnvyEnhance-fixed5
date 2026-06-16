@@ -241,7 +241,7 @@ export function CheckoutPage() {
                         <p className="font-medium">{addr.fullName}</p>
                         <p className="text-muted-foreground text-xs mt-0.5">
                           {addr.street}, {addr.city}{addr.district ? `, ${addr.district}` : ""}
-                          {addr.phone ? ` · ${addr.phone}` : ""}
+                          {addr.phone ? ` ? ${addr.phone}` : ""}
                         </p>
                         {addr.isDefault && (
                           <span className="inline-block mt-1 text-xs bg-accent/10 text-accent px-2 py-0.5 rounded-full font-medium">Default</span>
@@ -293,8 +293,8 @@ export function CheckoutPage() {
                     />
                     <div>
                       <label htmlFor="usePoints" className="font-medium cursor-pointer flex items-center gap-2 text-sm">
-                        ⭐ Use {loyaltyData.points} Loyalty Points
-                        <span className="text-muted-foreground font-normal">= ৳{maxPointsDiscount} off</span>
+                        ? Use {loyaltyData.points} Loyalty Points
+                        <span className="text-muted-foreground font-normal">= Tk{maxPointsDiscount} off</span>
                       </label>
                       <p className="text-xs text-muted-foreground mt-0.5">Up to 20% of your order value</p>
                     </div>
@@ -314,15 +314,15 @@ export function CheckoutPage() {
                   />
                   <div className="flex-1">
                     <label htmlFor="giftWrap" className="font-medium cursor-pointer flex items-center gap-2">
-                      🎁 Gift Wrapping
-                      <span className="text-sm text-muted-foreground font-normal">+৳50</span>
+                      ? Gift Wrapping
+                      <span className="text-sm text-muted-foreground font-normal">+Tk50</span>
                     </label>
                     <p className="text-sm text-muted-foreground mt-0.5">Beautiful gift packaging with a handwritten card</p>
                     {giftWrap && (
                       <textarea
                         value={giftMessage}
                         onChange={(e) => setGiftMessage(e.target.value)}
-                        placeholder="Add a personal message (optional)…"
+                        placeholder="Add a personal message (optional)?"
                         maxLength={200}
                         rows={3}
                         className="mt-3 w-full text-sm border rounded-xl px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-accent/40 bg-muted/30"
@@ -344,7 +344,7 @@ export function CheckoutPage() {
                       className={`border rounded-xl py-3 px-4 text-sm font-medium transition-all ${paymentMethod === method ? "border-primary bg-primary/5 text-foreground" : "border-border text-muted-foreground hover:border-foreground/50"}`}
                     >
                       <div className="text-lg mb-1">
-                        {method === "bkash" ? "📱" : method === "nagad" ? "📲" : "💵"}
+                        {method === "bkash" ? "?" : method === "nagad" ? "?" : "?"}
                       </div>
                       {method === "bkash" ? "bKash" : method === "nagad" ? "Nagad" : "Cash on Delivery"}
                     </button>
@@ -357,7 +357,7 @@ export function CheckoutPage() {
                       {paymentMethod === "bkash" ? "bKash" : "Nagad"} Payment Instructions
                     </p>
                     <p className="text-muted-foreground">
-                      1. Send ৳{total.toLocaleString()} to our {paymentMethod === "bkash" ? "bKash" : "Nagad"} number: <strong>01636575741</strong><br />
+                      1. Send Tk{total.toLocaleString()} to our {paymentMethod === "bkash" ? "bKash" : "Nagad"} number: <strong>01636575741</strong><br />
                       2. Use "Send Money" option<br />
                       3. Your order will be confirmed automatically after payment
                     </p>
@@ -396,7 +396,7 @@ export function CheckoutPage() {
                 ) : (
                   <div className="flex items-center gap-2 text-sm text-green-600">
                     <CheckCircle2 className="h-4 w-4" />
-                    Coupon applied: -৳{discount.toLocaleString()}
+                    Coupon applied: -Tk{discount.toLocaleString()}
                   </div>
                 )}
 
@@ -404,8 +404,8 @@ export function CheckoutPage() {
                 <div className="space-y-2 max-h-60 overflow-y-auto">
                   {items.map(item => (
                     <div key={item.productId} className="flex justify-between text-sm">
-                      <span className="text-muted-foreground line-clamp-1 flex-1 pr-2">{item.product.name} × {item.quantity}</span>
-                      <span>৳{((item.product.discountPrice ?? item.product.price) * item.quantity).toLocaleString()}</span>
+                      <span className="text-muted-foreground line-clamp-1 flex-1 pr-2">{item.product.name} ? {item.quantity}</span>
+                      <span>Tk{((item.product.discountPrice ?? item.product.price) * item.quantity).toLocaleString()}</span>
                     </div>
                   ))}
                 </div>
@@ -413,33 +413,33 @@ export function CheckoutPage() {
                 <div className="border-t pt-4 space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span>৳{subtotal.toLocaleString()}</span>
+                    <span>Tk{subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Delivery</span>
-                    <span>{shipping === 0 ? <span className="text-green-600">Free</span> : `৳${shipping}`}</span>
+                    <span>{shipping === 0 ? <span className="text-green-600">Free</span> : `Tk${shipping}`}</span>
                   </div>
                   {giftWrap && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">🎁 Gift Wrapping</span>
-                      <span>৳50</span>
+                      <span className="text-muted-foreground">? Gift Wrapping</span>
+                      <span>Tk50</span>
                     </div>
                   )}
                   {discount > 0 && (
                     <div className="flex justify-between text-green-600">
                       <span>Coupon Discount</span>
-                      <span>-৳{discount.toLocaleString()}</span>
+                      <span>-Tk{discount.toLocaleString()}</span>
                     </div>
                   )}
                   {loyaltyDiscount > 0 && (
                     <div className="flex justify-between text-amber-600">
-                      <span>⭐ Loyalty Points</span>
-                      <span>-৳{loyaltyDiscount.toLocaleString()}</span>
+                      <span>? Loyalty Points</span>
+                      <span>-Tk{loyaltyDiscount.toLocaleString()}</span>
                     </div>
                   )}
                   <div className="flex justify-between font-semibold text-base pt-2 border-t">
                     <span>Total</span>
-                    <span>৳{total.toLocaleString()}</span>
+                    <span>Tk{total.toLocaleString()}</span>
                   </div>
                 </div>
 

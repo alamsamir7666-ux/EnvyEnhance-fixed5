@@ -67,7 +67,7 @@ export function ReferralSection() {
 
   return (
     <div className="space-y-4">
-      {/* Affiliate Stats — only shown if user is an affiliate */}
+      {/* Affiliate Stats - only shown if user is an affiliate */}
       {affiliate && (
         <div className="rounded-2xl border bg-gradient-to-br from-amber-50/50 to-background p-6">
           <div className="flex items-center gap-2 mb-1">
@@ -90,7 +90,7 @@ export function ReferralSection() {
 
             <div className="rounded-xl bg-muted/50 p-3 text-center">
               <TrendingUp className="h-4 w-4 text-amber-600 mx-auto mb-1" />
-              <p className="text-xl font-bold text-amber-600">৳{affiliate.totalCommission.toLocaleString()}</p>
+              <p className="text-xl font-bold text-amber-600">Tk{affiliate.totalCommission.toLocaleString()}</p>
               <p className="text-xs text-muted-foreground mt-0.5">Commission</p>
             </div>
           </div>
@@ -110,8 +110,8 @@ export function ReferralSection() {
             >
               {cashoutLoading ? "Sending..." :
                cashouts.some((c: any) => c.status === "pending") ? "Cashout Pending..." :
-               affiliate.totalCommission < 500 ? `Need ৳${(500 - affiliate.totalCommission).toFixed(0)} more to cashout` :
-               `Request Cashout (৳${Number(affiliate.totalCommission).toLocaleString()})`}
+               affiliate.totalCommission < 500 ? `Need Tk${(500 - affiliate.totalCommission).toFixed(0)} more to cashout` :
+               `Request Cashout (Tk${Number(affiliate.totalCommission).toLocaleString()})`}
             </Button>
           </div>
 
@@ -122,7 +122,7 @@ export function ReferralSection() {
               {cashouts.map((co: any) => (
                 <div key={co.id} className="flex items-center justify-between text-sm bg-muted/40 rounded-xl px-3 py-2">
                   <div>
-                    <p className="font-medium">৳{Number(co.amount).toLocaleString()}</p>
+                    <p className="font-medium">Tk{Number(co.amount).toLocaleString()}</p>
                     <p className="text-xs text-muted-foreground">{new Date(co.createdAt).toLocaleDateString()}</p>
                   </div>
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
@@ -145,7 +145,7 @@ export function ReferralSection() {
             <h3 className="font-semibold text-base">Refer & Earn</h3>
           </div>
           <p className="text-sm text-muted-foreground mb-5">
-            Share your code. Your friend gets <strong>৳100 off</strong> their first order, and you earn <strong>100 loyalty points</strong>.
+            Share your code. Your friend gets <strong>Tk100 off</strong> their first order, and you earn <strong>100 loyalty points</strong>.
           </p>
 
           <div className="grid grid-cols-2 gap-3 mb-5">
@@ -169,7 +169,7 @@ export function ReferralSection() {
           </div>
 
           <a
-            href={`https://wa.me/?text=${encodeURIComponent(`Hey! Use my code ${data.code} for ৳100 off your first order at EnvyEnhance — authentic Japanese skincare! ${data.shareUrl}`)}`}
+            href={`https://wa.me/?text=${encodeURIComponent(`Hey! Use my code ${data.code} for Tk100 off your first order at EnvyEnhance - authentic Japanese skincare! ${data.shareUrl}`)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-3 w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium py-2.5 px-4 rounded-xl transition-colors"

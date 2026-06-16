@@ -8,8 +8,8 @@ export function CurrencyToggle() {
       className="flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-full border border-border hover:bg-muted/60 transition-colors"
       aria-label={`Switch to ${currency === "BDT" ? "USD" : "BDT"}`}
     >
-      <span>{currency === "BDT" ? "৳ BDT" : "$ USD"}</span>
-      <span className="text-muted-foreground">⇄</span>
+      <span>{currency === "BDT" ? "Tk BDT" : "$ USD"}</span>
+      <span className="text-muted-foreground">?</span>
     </button>
   );
 }

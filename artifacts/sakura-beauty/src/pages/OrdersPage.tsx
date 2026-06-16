@@ -25,10 +25,10 @@ const returnBadgeColors: Record<string, string> = {
 };
 
 const returnBadgeLabels: Record<string, string> = {
-  requested: "↩ Return Requested",
-  approved:  "↩ Return Approved",
-  rejected:  "↩ Return Rejected",
-  completed: "↩ Refund Completed",
+  requested: "? Return Requested",
+  approved:  "? Return Approved",
+  rejected:  "? Return Rejected",
+  completed: "? Refund Completed",
 };
 
 function CopyTrackingButton({ trackingId }: { trackingId: string }) {
@@ -143,8 +143,8 @@ export function OrdersPage() {
                         {item.productImage && (
                           <img src={item.productImage} alt={item.productName} className="h-8 w-8 rounded-md object-cover border shrink-0" />
                         )}
-                        <p className="text-xs text-muted-foreground truncate flex-1">{item.productName} × {item.quantity}</p>
-                        <p className="text-xs font-medium shrink-0">৳{(item.price * item.quantity).toLocaleString()}</p>
+                        <p className="text-xs text-muted-foreground truncate flex-1">{item.productName} ? {item.quantity}</p>
+                        <p className="text-xs font-medium shrink-0">Tk{(item.price * item.quantity).toLocaleString()}</p>
                       </div>
                     ))}
                     {o.items.length > 3 && (
@@ -157,24 +157,24 @@ export function OrdersPage() {
                     {o.subtotal != null && (
                       <div className="flex justify-between text-xs text-muted-foreground">
                         <span>Subtotal</span>
-                        <span>৳{Number(o.subtotal).toLocaleString()}</span>
+                        <span>Tk{Number(o.subtotal).toLocaleString()}</span>
                       </div>
                     )}
                     {o.discount > 0 && (
                       <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">Discount{o.couponCode ? ` (${o.couponCode})` : ""}</span>
-                        <span className="text-green-600">-৳{Number(o.discount).toLocaleString()}</span>
+                        <span className="text-green-600">-Tk{Number(o.discount).toLocaleString()}</span>
                       </div>
                     )}
                     {o.shipping != null && (
                       <div className="flex justify-between text-xs text-muted-foreground">
                         <span>Delivery</span>
-                        <span>{o.shipping === 0 ? <span className="text-green-600">Free</span> : `৳${Number(o.shipping).toLocaleString()}`}</span>
+                        <span>{o.shipping === 0 ? <span className="text-green-600">Free</span> : `Tk${Number(o.shipping).toLocaleString()}`}</span>
                       </div>
                     )}
                     <div className="flex justify-between text-sm font-semibold pt-1">
                       <span>Total</span>
-                      <span>৳{Number(o.total).toLocaleString()}</span>
+                      <span>Tk{Number(o.total).toLocaleString()}</span>
                     </div>
                   </div>
                 )}
@@ -233,7 +233,7 @@ export function OrdersPage() {
                       </span>
                       {returnsMap[order.id] && order.orderStatus !== "return_completed" && (
                         <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${returnBadgeColors[returnsMap[order.id].status] ?? "bg-muted"}`}>
-                          {returnBadgeLabels[returnsMap[order.id].status] ?? "↩ Return"}
+                          {returnBadgeLabels[returnsMap[order.id].status] ?? "? Return"}
                         </span>
                       )}
                     </div>
@@ -246,7 +246,7 @@ export function OrdersPage() {
                     )}
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold">৳{order.totalAmount.toLocaleString()}</p>
+                    <p className="font-semibold">Tk{order.totalAmount.toLocaleString()}</p>
                     <p className="text-xs text-muted-foreground capitalize">{order.paymentMethod}</p>
                   </div>
                 </div>

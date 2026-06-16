@@ -201,7 +201,7 @@ export function SubscriptionsPage() {
                       <p className="text-sm font-medium truncate">{item.productName}</p>
                       <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
                     </div>
-                    <p className="text-sm font-medium">৳{(item.price * item.quantity * (1 - sub.discountPercent / 100)).toFixed(0)}</p>
+                    <p className="text-sm font-medium">Tk{(item.price * item.quantity * (1 - sub.discountPercent / 100)).toFixed(0)}</p>
                   </div>
                 ))}
               </div>
@@ -213,7 +213,7 @@ export function SubscriptionsPage() {
                   <span>Next order: <strong className="text-foreground">{new Date(sub.nextOrderDate).toLocaleDateString("en-BD", { day: "numeric", month: "short", year: "numeric" })}</strong></span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <p className="text-sm font-semibold">৳{sub.totalAmount.toFixed(0)} <span className="text-green-600 text-xs font-normal">({sub.discountPercent}% off)</span></p>
+                  <p className="text-sm font-semibold">Tk{sub.totalAmount.toFixed(0)} <span className="text-green-600 text-xs font-normal">({sub.discountPercent}% off)</span></p>
                   <Button
                     variant="ghost"
                     size="sm"

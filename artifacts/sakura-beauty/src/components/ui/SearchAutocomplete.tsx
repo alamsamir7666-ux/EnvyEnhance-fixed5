@@ -122,7 +122,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
                     <Tag size={14} color="#e05c9a" />
                   </div>
                   <span style={{ fontSize: 14, color: '#111827' }}>{cat.name}</span>
-                  <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>Category →</span>
+                  <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>Category ?</span>
                 </div>
               ))}
             </div>
@@ -149,8 +149,8 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
                       <p style={{ fontSize: 12, color: '#9ca3af', textTransform: 'capitalize' }}>{product.category}</p>
                     </div>
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <p style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>৳{displayPrice.toLocaleString()}</p>
-                      {product.discountPrice && <p style={{ fontSize: 12, color: '#9ca3af', textDecoration: 'line-through' }}>৳{product.price.toLocaleString()}</p>}
+                      <p style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>Tk{displayPrice.toLocaleString()}</p>
+                      {product.discountPrice && <p style={{ fontSize: 12, color: '#9ca3af', textDecoration: 'line-through' }}>Tk{product.price.toLocaleString()}</p>}
                     </div>
                   </div>
                 );
@@ -182,7 +182,7 @@ export function SearchAutocomplete({ onClose }: { onClose?: () => void }) {
             ref={inputRef}
             type="search" value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Search products, ingredients…"
+            placeholder="Search products, ingredients?"
             autoComplete="off"
             className="w-full h-10 pl-10 pr-10 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
           />

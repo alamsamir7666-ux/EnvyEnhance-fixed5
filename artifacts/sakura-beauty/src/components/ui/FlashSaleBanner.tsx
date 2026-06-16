@@ -59,7 +59,7 @@ export function FlashSaleBanner({
             <span>:</span>
             <span className="bg-white/20 rounded px-1.5 py-0.5">{pad(seconds)}</span>
           </div>
-          <span className="hidden sm:inline text-white/80 text-xs">→ Shop Now</span>
+          <span className="hidden sm:inline text-white/80 text-xs">? Shop Now</span>
         </div>
       </Link>
     </div>

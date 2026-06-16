@@ -28,7 +28,7 @@ interface ComparableProduct {
   ingredients?: string | null;
 }
 
-// Global comparison state (max 3 products) — persisted to localStorage
+// Global comparison state (max 3 products) - persisted to localStorage
 const STORAGE_KEY = "compare-ids";
 
 function readFromStorage(): number[] {
@@ -65,7 +65,7 @@ export function useComparison() {
   }, []);
 
   // Subscribe on mount, unsubscribe on unmount
-  // (useEffect — not useState — is the right API for side-effects with cleanup)
+  // (useEffect - not useState - is the right API for side-effects with cleanup)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => listen(), []);
 
@@ -139,7 +139,7 @@ export const ComparisonDrawer = memo(function ComparisonDrawer({
   if (products.length < 2) return null;
 
   const rows = [
-    { label: "Price", render: (p: ComparableProduct) => `৳${(p.discountPrice ?? p.price).toLocaleString()}` },
+    { label: "Price", render: (p: ComparableProduct) => `Tk${(p.discountPrice ?? p.price).toLocaleString()}` },
     { label: "Category", render: (p: ComparableProduct) => p.category },
     {
       label: "Rating",
@@ -150,7 +150,7 @@ export const ComparisonDrawer = memo(function ComparisonDrawer({
         </span>
       ),
     },
-    { label: "Texture", render: (p: ComparableProduct) => p.texture ?? "—" },
+    { label: "Texture", render: (p: ComparableProduct) => p.texture ?? "-" },
     {
       label: "Key Benefits",
       render: (p: ComparableProduct) =>
@@ -158,14 +158,14 @@ export const ComparisonDrawer = memo(function ComparisonDrawer({
           ? p.keyBenefits.map((b, i) => (
               <Badge key={i} variant="secondary" className="text-xs mr-1 mb-1">{b}</Badge>
             ))
-          : "—",
+          : "-",
     },
     {
       label: "Best For",
       render: (p: ComparableProduct) =>
         p.bestFor?.length
           ? p.bestFor.join(", ")
-          : "—",
+          : "-",
     },
   ];
 

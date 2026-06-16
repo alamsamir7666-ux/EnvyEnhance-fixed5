@@ -18,7 +18,7 @@ function PointsBadge({ points }: { points: number }) {
           <span className="text-sm font-medium opacity-90">Your Balance</span>
         </div>
         <p className="text-4xl font-bold tracking-tight">{points.toLocaleString()}</p>
-        <p className="text-sm opacity-80 mt-1">points = ৳{points.toLocaleString()} discount</p>
+        <p className="text-sm opacity-80 mt-1">points = Tk{points.toLocaleString()} discount</p>
       </div>
     </div>
   );
@@ -65,7 +65,7 @@ export default function LoyaltyPage() {
     <div className="max-w-2xl mx-auto px-4 py-10">
       <PageBreadcrumb crumbs={[{ label: "Loyalty Points", icon: <Star className="h-3 w-3" /> }]} className="mb-4" />
       <h1 className="font-serif text-3xl mb-2">Loyalty Points</h1>
-      <p className="text-muted-foreground text-sm mb-8">Earn 1 point for every ৳100 spent. Redeem at checkout.</p>
+      <p className="text-muted-foreground text-sm mb-8">Earn 1 point for every Tk100 spent. Redeem at checkout.</p>
 
       {isLoading ? (
         <div className="h-32 bg-muted animate-pulse rounded-2xl mb-8" />
@@ -79,8 +79,8 @@ export default function LoyaltyPage() {
       <div className="grid grid-cols-3 gap-4 mb-10">
         {[
           { icon: ShoppingBag, label: "Shop", desc: "Place any order" },
-          { icon: Star, label: "Earn", desc: "1 pt per ৳100" },
-          { icon: Gift, label: "Redeem", desc: "৳1 per point" },
+          { icon: Star, label: "Earn", desc: "1 pt per Tk100" },
+          { icon: Gift, label: "Redeem", desc: "Tk1 per point" },
         ].map(({ icon: Icon, label, desc }) => (
           <div key={label} className="text-center p-4 bg-muted/30 rounded-2xl">
             <Icon className="h-6 w-6 mx-auto mb-2 text-accent" />

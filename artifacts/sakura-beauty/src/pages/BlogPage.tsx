@@ -14,7 +14,7 @@ const FALLBACK_POSTS = [
   {
     slug: "japanese-skincare-routine-beginners",
     title: "The Complete Japanese Skincare Routine for Beginners",
-    excerpt: "Learn the foundational steps of a Japanese skincare routine — from double cleansing to layering essences — and why it works so well for all skin types.",
+    excerpt: "Learn the foundational steps of a Japanese skincare routine - from double cleansing to layering essences - and why it works so well for all skin types.",
     category: "Routine Guide", readTime: "7 min read", publishedAt: "May 2025", featured: true,
     image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=800&q=80&fm=webp",
   },
@@ -35,21 +35,21 @@ const FALLBACK_POSTS = [
   {
     slug: "niacinamide-skincare-benefits",
     title: "Niacinamide: The Multi-Tasking Ingredient You Need",
-    excerpt: "Niacinamide (Vitamin B3) tackles pores, oil control, hyperpigmentation, and barrier repair — all in one. Here's how to add it to your routine.",
+    excerpt: "Niacinamide (Vitamin B3) tackles pores, oil control, hyperpigmentation, and barrier repair - all in one. Here's how to add it to your routine.",
     category: "Ingredients", readTime: "5 min read", publishedAt: "February 2025", featured: false,
     image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80&fm=webp",
   },
   {
     slug: "hyaluronic-acid-guide",
     title: "Hyaluronic Acid: Hydration Done Right",
-    excerpt: "It holds 1000× its weight in water — but are you using it correctly? Learn when, how, and why to apply hyaluronic acid for maximum plumping effect.",
+    excerpt: "It holds 1000? its weight in water - but are you using it correctly? Learn when, how, and why to apply hyaluronic acid for maximum plumping effect.",
     category: "Ingredients", readTime: "4 min read", publishedAt: "January 2025", featured: false,
     image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=80&fm=webp",
   },
   {
     slug: "retinol-beginners-guide",
     title: "Starting Retinol Without the Purge",
-    excerpt: "Retinol is the gold standard for anti-ageing — but used wrong, it causes irritation and purging. This guide walks you through introducing it safely.",
+    excerpt: "Retinol is the gold standard for anti-ageing - but used wrong, it causes irritation and purging. This guide walks you through introducing it safely.",
     category: "Anti-Ageing", readTime: "6 min read", publishedAt: "December 2024", featured: false,
     image: "https://images.unsplash.com/photo-1576426863848-c21f53c60b19?w=800&q=80&fm=webp",
   },
@@ -106,7 +106,7 @@ export function BlogPage() {
         <p className="text-xs uppercase tracking-widest text-accent mb-2">Knowledge Base</p>
         <h1 className="font-serif text-3xl md:text-4xl font-medium">Skincare Tips & Guides</h1>
         <p className="text-muted-foreground mt-3 max-w-lg mx-auto">
-          Expert advice on Japanese skincare ingredients, routines, and everything in between — written for the Bangladesh climate.
+          Expert advice on Japanese skincare ingredients, routines, and everything in between - written for the Bangladesh climate.
         </p>
       </div>
 

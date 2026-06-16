@@ -125,9 +125,9 @@ export function WishlistPage() {
                     <p className="font-medium text-sm leading-snug mb-2 line-clamp-2 cursor-pointer hover:text-accent">{product.name}</p>
                   </Link>
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="font-semibold text-sm">৳{price.toLocaleString()}</span>
+                    <span className="font-semibold text-sm">Tk{price.toLocaleString()}</span>
                     {product.discountPrice && (
-                      <span className="text-xs text-muted-foreground line-through">৳{product.price.toLocaleString()}</span>
+                      <span className="text-xs text-muted-foreground line-through">Tk{product.price.toLocaleString()}</span>
                     )}
                   </div>
                   <Button

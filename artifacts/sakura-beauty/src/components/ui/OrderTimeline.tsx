@@ -1,5 +1,5 @@
 // artifacts/sakura-beauty/src/components/ui/OrderTimeline.tsx
-// Drop into OrderDetailPage.tsx — replaces the static progress bar.
+// Drop into OrderDetailPage.tsx - replaces the static progress bar.
 // Reads statusTimeline from the order object (added via migration).
 import { CheckCircle2, Circle, Package, Truck, Home, Clock, XCircle } from "lucide-react";
 
@@ -58,7 +58,7 @@ export function OrderTimeline({ currentStatus, timeline = [] }: OrderTimelinePro
   const isCancelled = currentStatus === "cancelled";
   const currentStepIndex = STEPS.indexOf(currentStatus as (typeof STEPS)[number]);
 
-  // Build a map from status → timeline event (for timestamps/notes)
+  // Build a map from status ? timeline event (for timestamps/notes)
   const eventMap = new Map<string, TimelineEvent>();
   for (const event of timeline) {
     eventMap.set(event.status, event);

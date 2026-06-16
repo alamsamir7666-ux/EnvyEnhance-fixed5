@@ -92,7 +92,7 @@ export function ProductQA({ productId }: { productId: number }) {
       {showForm && (
         <form onSubmit={handleAsk} className="mb-6 p-4 rounded-xl border bg-muted/30">
           <Textarea
-            placeholder="Ask anything about this product…"
+            placeholder="Ask anything about this product?"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             rows={3}
@@ -137,7 +137,7 @@ export function ProductQA({ productId }: { productId: number }) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground">{item.question}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{item.userName} · {new Date(item.createdAt).toLocaleDateString()}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{item.userName} ? {new Date(item.createdAt).toLocaleDateString()}</p>
                   {item.answer && (
                     <div className="mt-3 pl-3 border-l-2 border-accent/40">
                       <p className="text-xs font-semibold text-accent mb-1">Official Answer</p>
@@ -145,7 +145,7 @@ export function ProductQA({ productId }: { productId: number }) {
                     </div>
                   )}
                   {!item.answer && (
-                    <p className="text-xs text-muted-foreground/60 mt-2 italic">Awaiting answer…</p>
+                    <p className="text-xs text-muted-foreground/60 mt-2 italic">Awaiting answer?</p>
                   )}
                 </div>
               </div>

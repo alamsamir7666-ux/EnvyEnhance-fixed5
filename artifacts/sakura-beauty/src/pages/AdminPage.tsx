@@ -32,7 +32,7 @@ import { useAuth } from "@clerk/react";
 
 const API = import.meta.env.VITE_API_BASE_URL ?? "";
 
-// ─── Status helpers ─────────────────────────────────────────────────────────
+// ??? Status helpers ?????????????????????????????????????????????????????????
 const statusConfig: Record<string, { color: string; icon: React.ElementType }> = {
   pending:    { color: "bg-yellow-100 text-yellow-700 border-yellow-200", icon: Clock },
   confirmed:  { color: "bg-blue-100 text-blue-700 border-blue-200", icon: CheckCircle2 },
@@ -43,7 +43,7 @@ const statusConfig: Record<string, { color: string; icon: React.ElementType }> =
   return_completed: { color: "bg-teal-100 text-teal-700 border-teal-200", icon: RotateCcw },
 };
 
-// ─── Sidebar nav items ───────────────────────────────────────────────────────
+// ??? Sidebar nav items ???????????????????????????????????????????????????????
 const navItems = [
   { id: "dashboard",  label: "Dashboard",       icon: LayoutDashboard },
   { id: "products",   label: "Products",        icon: Package2 },
@@ -64,7 +64,7 @@ const navItems = [
   { id: "settings",   label: "Settings",         icon: Settings },
 ];
 
-// ─── Product form ────────────────────────────────────────────────────────────
+// ??? Product form ????????????????????????????????????????????????????????????
 function ProductModal({ product, categories, onClose }: { product?: any; categories: any[]; onClose: () => void }) {
   const qc = useQueryClient();
   const { getToken } = useAuth();
@@ -96,7 +96,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
 
   function addMainIngredient() {
     if (!newIngName.trim()) return;
-    setForm(f => ({ ...f, mainIngredients: [...f.mainIngredients, { name: newIngName.trim(), icon: newIngIcon.trim() || "🌿" }] }));
+    setForm(f => ({ ...f, mainIngredients: [...f.mainIngredients, { name: newIngName.trim(), icon: newIngIcon.trim() || "?" }] }));
     setNewIngName("");
     setNewIngIcon("");
   }
@@ -210,11 +210,11 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
               </label>
             </div>
             <div>
-              <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Price (৳) *</Label>
+              <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Price (Tk) *</Label>
               <Input type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required className="mt-1.5 rounded-xl" placeholder="1500" />
             </div>
             <div>
-              <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Sale Price (৳)</Label>
+              <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Sale Price (Tk)</Label>
               <Input type="number" value={form.discountPrice} onChange={e => setForm(f => ({ ...f, discountPrice: e.target.value }))} className="mt-1.5 rounded-xl" placeholder="Optional" />
             </div>
             <div>
@@ -228,9 +228,9 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                 onChange={e => setForm(f => ({ ...f, productStatus: e.target.value } as any))}
                 className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm"
               >
-                <option value="in_stock">🟢 In Stock</option>
-                <option value="pre_order">🔵 Pre-Order</option>
-                <option value="out_of_stock">🔴 Out of Stock</option>
+                <option value="in_stock">? In Stock</option>
+                <option value="pre_order">? Pre-Order</option>
+                <option value="out_of_stock">? Out of Stock</option>
               </select>
             </div>
           </div>
@@ -260,7 +260,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                     value={ing.icon}
                     onChange={e => updateMainIngredient(idx, "icon", e.target.value)}
                     className="w-16 rounded-xl text-center text-lg"
-                    placeholder="🌿"
+                    placeholder="?"
                   />
                   <Input
                     value={ing.name}
@@ -282,7 +282,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                   value={newIngIcon}
                   onChange={e => setNewIngIcon(e.target.value)}
                   className="w-16 rounded-xl text-center text-lg"
-                  placeholder="🌿"
+                  placeholder="?"
                 />
                 <Input
                   value={newIngName}
@@ -355,7 +355,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                 />
                 <Button type="button" variant="outline" className="rounded-xl flex-1"
                   onClick={() => document.getElementById("product-image-upload")?.click()}>
-                  📁 Upload Images from Device
+                  ? Upload Images from Device
                 </Button>
               </div>
               {form.images && (
@@ -364,7 +364,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                     <div key={i} className="relative">
                       <img src={url.trim()} className="h-16 w-16 object-cover rounded-lg border" />
                       <button type="button" className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center"
-                        onClick={() => setForm(f => ({ ...f, images: String(f.images).split(",").filter((_, j) => j !== i).join(", ") }))}>×</button>
+                        onClick={() => setForm(f => ({ ...f, images: String(f.images).split(",").filter((_, j) => j !== i).join(", ") }))}>?</button>
                     </div>
                   ))}
                 </div>
@@ -395,7 +395,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
   );
 }
 
-// ─── Category form ────────────────────────────────────────────────────────────
+// ??? Category form ????????????????????????????????????????????????????????????
 function CategoryModal({ category, onClose }: { category?: any; onClose: () => void }) {
   const qc = useQueryClient();
   const { getToken } = useAuth();
@@ -473,7 +473,7 @@ function CategoryModal({ category, onClose }: { category?: any; onClose: () => v
               value={form.icon}
               onChange={e => setForm(f => ({ ...f, icon: e.target.value }))}
               className="mt-1.5 rounded-xl"
-              placeholder="🌸"
+              placeholder="?"
             />
           </div>
           <div>
@@ -538,7 +538,7 @@ function CategoryModal({ category, onClose }: { category?: any; onClose: () => v
 }
 
 
-// ─── Confirm Dialog ───────────────────────────────────────────────────────────
+// ??? Confirm Dialog ???????????????????????????????????????????????????????????
 function ConfirmDialog({ open, title, message, onConfirm, onCancel, danger = true }: {
   open: boolean; title: string; message: string;
   onConfirm: () => void; onCancel: () => void; danger?: boolean;
@@ -562,7 +562,7 @@ function ConfirmDialog({ open, title, message, onConfirm, onCancel, danger = tru
   );
 }
 
-// ─── Main AdminPage ──────────────────────────────────────────────────────────
+// ??? Main AdminPage ??????????????????????????????????????????????????????????
 export function AdminPage() {
   const [cdg, setCdg] = useState<{open:boolean;title:string;message:string;onConfirm:()=>void;danger:boolean}>({open:false,title:"",message:"",onConfirm:()=>{},danger:true});
   const askConfirm = (title:string,message:string,cb:()=>void,danger=true) => setCdg({open:true,title,message,onConfirm:cb,danger});
@@ -881,7 +881,7 @@ export function AdminPage() {
   const pendingOrders = dashStats.pendingOrders;
   const deliveredOrders = dashStats.deliveredOrders;
 
-  // ─── Sidebar ───────────────────────────────────────────────────────────────
+  // ??? Sidebar ???????????????????????????????????????????????????????????????
   const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
     <aside className={`${mobile ? "w-64" : "w-64"} bg-white border-r flex flex-col h-full`}>
       <div className="px-6 py-5 border-b">
@@ -939,7 +939,7 @@ export function AdminPage() {
     </aside>
   );
 
-  // ─── Dashboard Tab ─────────────────────────────────────────────────────────
+  // ??? Dashboard Tab ?????????????????????????????????????????????????????????
   const DashboardTab = () => {
     const dashLoading = productsLoading || ordersLoading;
     if (dashLoading) {
@@ -1018,28 +1018,28 @@ export function AdminPage() {
         {[
           {
             label: "Revenue (This Month)",
-            value: totalRevenue > 0 ? `৳${(totalRevenue / 1000).toFixed(1)}k` : "—",
+            value: totalRevenue > 0 ? `Tk${(totalRevenue / 1000).toFixed(1)}k` : "-",
             change: totalRevenue > 0 ? "from delivered orders" : "No delivered orders yet",
             icon: DollarSign,
             color: "bg-emerald-50 text-emerald-600",
           },
           {
             label: "Orders (This Month)",
-            value: totalOrdersThisMonth > 0 ? totalOrdersThisMonth : "—",
+            value: totalOrdersThisMonth > 0 ? totalOrdersThisMonth : "-",
             change: totalOrdersThisMonth > 0 ? `${pendingOrders} pending` : "No orders yet",
             icon: ShoppingCart,
             color: "bg-blue-50 text-blue-600",
           },
           {
             label: "Products",
-            value: products.length > 0 ? products.length : "—",
+            value: products.length > 0 ? products.length : "-",
             change: products.length > 0 ? `${products.filter(p => p.stock < 10).length} low stock` : "No products yet",
             icon: Package2,
             color: "bg-violet-50 text-violet-600",
           },
           {
             label: "Customers",
-            value: users && users.length > 0 ? users.length : "—",
+            value: users && users.length > 0 ? users.length : "-",
             change: deliveredOrders > 0 ? `${deliveredOrders} delivered` : "No deliveries yet",
             icon: Users,
             color: "bg-pink-50 text-pink-600",
@@ -1083,7 +1083,7 @@ export function AdminPage() {
                     <span className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium border ${cfg.color}`}>
                       <StatusIcon className="h-3 w-3" />{o.orderStatus}
                     </span>
-                    <span className="text-sm font-semibold text-gray-800 shrink-0">৳{o.totalAmount.toLocaleString()}</span>
+                    <span className="text-sm font-semibold text-gray-800 shrink-0">Tk{o.totalAmount.toLocaleString()}</span>
                   </div>
                 );
               })}
@@ -1150,7 +1150,7 @@ export function AdminPage() {
     );
   };
 
-  // ─── Products Tab ──────────────────────────────────────────────────────────
+  // ??? Products Tab ??????????????????????????????????????????????????????????
   const ProductsTab = () => (
     <div>
       <div className="flex items-center justify-between mb-4 gap-3">
@@ -1215,12 +1215,12 @@ export function AdminPage() {
                           {(p as any).homepageSection === "top" ? "Top Section" : "Below Section"}
                         </span>
                       ) : (
-                        <span className="text-xs text-gray-400">—</span>
+                        <span className="text-xs text-gray-400">-</span>
                       )}
                     </td>
                     <td className="px-5 py-3.5 text-right">
-                      <p className="font-semibold text-gray-800">৳{p.price.toLocaleString()}</p>
-                      {p.discountPrice && <p className="text-xs text-pink-500">Sale: ৳{p.discountPrice.toLocaleString()}</p>}
+                      <p className="font-semibold text-gray-800">Tk{p.price.toLocaleString()}</p>
+                      {p.discountPrice && <p className="text-xs text-pink-500">Sale: Tk{p.discountPrice.toLocaleString()}</p>}
                     </td>
                     <td className="px-5 py-3.5 text-right">
                       <span className={`font-semibold ${p.stock < 10 ? "text-red-500" : "text-gray-700"}`}>{p.stock}</span>
@@ -1256,7 +1256,7 @@ export function AdminPage() {
     </div>
   );
 
-  // ─── Categories Tab ─────────────────────────────────────────────────────────
+  // ??? Categories Tab ?????????????????????????????????????????????????????????
   const CategoriesTab = () => (
     <div>
       <div className="flex items-center justify-between mb-4">
@@ -1315,7 +1315,7 @@ export function AdminPage() {
                         <span className="font-mono text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">{cat.slug}</span>
                       </td>
                       <td className="px-5 py-3.5">
-                        <span className="text-xl">{cat.icon ?? "—"}</span>
+                        <span className="text-xl">{cat.icon ?? "-"}</span>
                       </td>
                       <td className="px-5 py-3.5 text-right text-gray-500">{cat.displayOrder}</td>
                       <td className="px-5 py-3.5 text-right">
@@ -1349,7 +1349,7 @@ export function AdminPage() {
     </div>
   );
 
-  // ─── Orders Tab ────────────────────────────────────────────────────────────
+  // ??? Orders Tab ????????????????????????????????????????????????????????????
   const OrdersTab = () => (
     <div>
       <div className="flex items-center justify-between mb-4 gap-3">
@@ -1425,19 +1425,19 @@ export function AdminPage() {
                           ) : (o as any).shippingAddress?.fullName ? (
                             <p className="text-xs text-gray-600">{(o as any).shippingAddress.fullName}</p>
                           ) : (
-                            <p className="text-xs text-gray-400">—</p>
+                            <p className="text-xs text-gray-400">-</p>
                           )}
                         </td>
                         <td className="px-4 py-3.5 text-gray-500 text-xs">{new Date(o.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</td>
                         <td className="px-4 py-3.5">
-                          <span className="text-xs bg-gray-100 px-2 py-1 rounded-lg font-medium text-gray-600 capitalize">{(o as any).paymentMethod ?? "—"}</span>
+                          <span className="text-xs bg-gray-100 px-2 py-1 rounded-lg font-medium text-gray-600 capitalize">{(o as any).paymentMethod ?? "-"}</span>
                         </td>
                         <td className="px-4 py-3.5">
                           <span className={`flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full text-xs font-medium border ${cfg.color}`}>
                             <StatusIcon className="h-3 w-3" />{o.orderStatus === "return_completed" ? "Refund Completed" : o.orderStatus}
                           </span>
                         </td>
-                        <td className="px-4 py-3.5 text-right font-semibold text-gray-800">৳{o.totalAmount.toLocaleString()}</td>
+                        <td className="px-4 py-3.5 text-right font-semibold text-gray-800">Tk{o.totalAmount.toLocaleString()}</td>
                         <td className="px-4 py-3.5 text-right" onClick={e => e.stopPropagation()}>
                           <Select value={o.orderStatus} onValueChange={(v) => handleOrderStatus(o.id, v)} disabled={o.orderStatus === "delivered" || o.orderStatus === "cancelled" || o.orderStatus === "return_completed"}>
                             <SelectTrigger className={`w-34 text-xs h-8 rounded-lg border-gray-200 ${(o.orderStatus === "delivered" || o.orderStatus === "cancelled" || o.orderStatus === "return_completed") ? "opacity-50 cursor-not-allowed" : ""}`}>
@@ -1463,7 +1463,7 @@ export function AdminPage() {
                                   <p className="font-medium text-gray-800">{addr.fullName}</p>
                                   <p className="text-gray-500 text-xs">{addr.street ?? addr.line1}</p>
                                   <p className="text-gray-500 text-xs">{addr.city}{addr.district ? `, ${addr.district}` : ""}</p>
-                                  {addr.phone && <p className="text-gray-500 text-xs mt-0.5">📞 {addr.phone}</p>}
+                                  {addr.phone && <p className="text-gray-500 text-xs mt-0.5">? {addr.phone}</p>}
                                 </div>
                               )}
                               <div>
@@ -1471,7 +1471,7 @@ export function AdminPage() {
                                 <div className="space-y-1">
                                   {((o as any).items ?? []).slice(0, 4).map((item: any) => (
                                     <p key={item.productId} className="text-xs text-gray-600">
-                                      {item.productName} × {item.quantity} — ৳{(item.price * item.quantity).toLocaleString()}
+                                      {item.productName} ? {item.quantity} - Tk{(item.price * item.quantity).toLocaleString()}
                                     </p>
                                   ))}
                                   {((o as any).items ?? []).length > 4 && (
@@ -1482,7 +1482,7 @@ export function AdminPage() {
                               <div>
                                 {(o.giftWrap === "true" || (o.giftWrap as any) === true) && (
                                   <div className="mb-3 p-2 bg-pink-50 border border-pink-200 rounded-lg">
-                                    <p className="text-xs font-semibold text-pink-600 uppercase tracking-wider mb-1">🎁 Gift Wrapping</p>
+                                    <p className="text-xs font-semibold text-pink-600 uppercase tracking-wider mb-1">? Gift Wrapping</p>
                                     {o.giftMessage && <p className="text-sm text-gray-700">{o.giftMessage}</p>}
                                   </div>
                                 )}
@@ -1501,12 +1501,12 @@ export function AdminPage() {
                                   <p className="text-xs text-gray-500 font-mono mt-1">{(o as any).transactionId}</p>
                                 )}
                                 {(o as any).couponCode && (
-                                  <p className="text-xs text-pink-500 mt-1">Coupon: {(o as any).couponCode} (−৳{(o as any).discountAmount})</p>
+                                  <p className="text-xs text-pink-500 mt-1">Coupon: {(o as any).couponCode} (?Tk{(o as any).discountAmount})</p>
                                 )}
                               </div>
                               {o.orderStatus === "cancelled" && (o as any).cancellationReason && (
                                 <div className="col-span-full mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
-                                  <p className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">❌ Cancelled by Customer</p>
+                                  <p className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">? Cancelled by Customer</p>
                                   <p className="text-xs text-red-700">Reason: {(o as any).cancellationReason}</p>
                                 </div>
                               )}
@@ -1539,7 +1539,7 @@ export function AdminPage() {
     </div>
   );
 
-  // ─── Users Tab ─────────────────────────────────────────────────────────────
+  // ??? Users Tab ?????????????????????????????????????????????????????????????
   const UsersTab = () => {
     const filteredUsers = (users ?? []).filter((u: any) =>
       !debouncedUserSearch ||
@@ -1592,7 +1592,7 @@ export function AdminPage() {
                       </div>
                     </td>
                     <td className="px-5 py-3.5 text-gray-500 text-xs">
-                      {u.email?.endsWith("@clerk.user") ? "—" : u.email}
+                      {u.email?.endsWith("@clerk.user") ? "-" : u.email}
                     </td>
                     <td className="px-5 py-3.5">
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${u.role === "admin" ? "bg-pink-100 text-pink-600" : "bg-gray-100 text-gray-500"}`}>
@@ -1641,7 +1641,7 @@ export function AdminPage() {
     );
   };
 
-  // ─── Reviews Tab ───────────────────────────────────────────────────────────
+  // ??? Reviews Tab ???????????????????????????????????????????????????????????
   const ReviewsTab = () => (
     <div>
       <div className="mb-4 space-y-3">
@@ -1650,7 +1650,7 @@ export function AdminPage() {
         <div className="relative max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search by product, customer, or review text…"
+            placeholder="Search by product, customer, or review text?"
             className="pl-10"
             value={reviewSearch}
             onChange={e => setReviewSearch(e.target.value)}
@@ -1737,7 +1737,7 @@ export function AdminPage() {
     </div>
   );
 
-  // ─── Archived Orders Tab ────────────────────────────────────────────────────
+  // ??? Archived Orders Tab ????????????????????????????????????????????????????
   const ArchivedOrdersTab = () => (
     <div>
       <div className="mb-4">
@@ -1787,13 +1787,13 @@ export function AdminPage() {
                         ) : sAddr?.fullName ? (
                           <p className="text-xs text-gray-600">{sAddr.fullName}</p>
                         ) : (
-                          <p className="text-xs text-gray-400">—</p>
+                          <p className="text-xs text-gray-400">-</p>
                         )}
                       </td>
                       <td className="px-4 py-3.5">
                         <div className="space-y-0.5 max-w-[180px]">
                           {((o as any).items ?? []).slice(0, 2).map((item: any, idx: number) => (
-                            <p key={idx} className="text-xs text-gray-600 truncate">{item.productName} ×{item.quantity}</p>
+                            <p key={idx} className="text-xs text-gray-600 truncate">{item.productName} ?{item.quantity}</p>
                           ))}
                           {((o as any).items ?? []).length > 2 && (
                             <p className="text-xs text-gray-400">+{((o as any).items ?? []).length - 2} more</p>
@@ -1809,19 +1809,19 @@ export function AdminPage() {
                           )}
                           <p className="text-gray-400">{new Date(o.updatedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</p>
                           {(o as any).orderStatus === "cancelled" && (o as any).cancellationReason && (
-                            <p className="text-red-400 text-xs mt-0.5 max-w-[120px] truncate" title={(o as any).cancellationReason}>↳ {(o as any).cancellationReason}</p>
+                            <p className="text-red-400 text-xs mt-0.5 max-w-[120px] truncate" title={(o as any).cancellationReason}>? {(o as any).cancellationReason}</p>
                           )}
                         </div>
                       </td>
                       <td className="px-4 py-3.5">
                         <div>
-                          <span className="text-xs bg-gray-100 px-2 py-1 rounded-lg font-medium text-gray-600 capitalize">{(o as any).paymentMethod ?? "—"}</span>
+                          <span className="text-xs bg-gray-100 px-2 py-1 rounded-lg font-medium text-gray-600 capitalize">{(o as any).paymentMethod ?? "-"}</span>
                           <span className={`ml-1.5 text-xs font-medium capitalize ${(o as any).paymentStatus === "paid" ? "text-green-600" : "text-amber-500"}`}>
-                            · {(o as any).paymentStatus}
+                            ? {(o as any).paymentStatus}
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-3.5 text-right font-semibold text-gray-800">৳{o.totalAmount.toLocaleString()}</td>
+                      <td className="px-4 py-3.5 text-right font-semibold text-gray-800">Tk{o.totalAmount.toLocaleString()}</td>
                     </tr>
                   );
                 })}
@@ -1844,7 +1844,7 @@ export function AdminPage() {
     </div>
   );
 
-  // ─── Coupon Modal ──────────────────────────────────────────────────────────
+  // ??? Coupon Modal ??????????????????????????????????????????????????????????
   const CouponModal = ({ coupon, onClose }: { coupon?: any; onClose: () => void }) => {
     const [form, setForm] = useState({
       code: coupon?.code ?? "",
@@ -1893,13 +1893,13 @@ export function AdminPage() {
                   <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="percentage">Percentage (%)</SelectItem>
-                    <SelectItem value="fixed">Fixed Amount (৳)</SelectItem>
+                    <SelectItem value="fixed">Fixed Amount (Tk)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
                 <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Value {form.discountType === "percentage" ? "(%)" : "(৳)"} *
+                  Value {form.discountType === "percentage" ? "(%)" : "(Tk)"} *
                 </Label>
                 <Input
                   type="number"
@@ -1913,7 +1913,7 @@ export function AdminPage() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Min Order (৳)</Label>
+                <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Min Order (Tk)</Label>
                 <Input
                   type="number"
                   value={form.minOrderAmount}
@@ -1944,7 +1944,7 @@ export function AdminPage() {
     );
   };
 
-  // ─── Coupons Tab ───────────────────────────────────────────────────────────
+  // ??? Coupons Tab ???????????????????????????????????????????????????????????
   const CouponsTab = () => (
     <div>
       <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
@@ -2000,17 +2000,17 @@ export function AdminPage() {
                       </td>
                       <td className="px-5 py-3.5">
                         <span className="font-semibold text-pink-600">
-                          {c.discountType === "percentage" ? `${c.discountValue}%` : `৳${c.discountValue}`}
+                          {c.discountType === "percentage" ? `${c.discountValue}%` : `Tk${c.discountValue}`}
                         </span>
                         <span className="text-xs text-gray-400 ml-1 capitalize">{c.discountType}</span>
                       </td>
                       <td className="px-5 py-3.5 text-gray-500 text-xs">
-                        {c.minOrderAmount ? `৳${c.minOrderAmount}` : "—"}
+                        {c.minOrderAmount ? `Tk${c.minOrderAmount}` : "-"}
                       </td>
                       <td className="px-5 py-3.5">
                         {c.expiryDate ? (
                           <span className={`text-xs ${isExpired ? "text-red-500 font-medium" : "text-gray-500"}`}>
-                            {isExpired ? "Expired · " : ""}{new Date(c.expiryDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                            {isExpired ? "Expired ? " : ""}{new Date(c.expiryDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
                           </span>
                         ) : (
                           <span className="text-xs text-gray-400">No expiry</span>
@@ -2056,7 +2056,7 @@ export function AdminPage() {
     </div>
   );
 
-  // ─── Monthly History Tab ───────────────────────────────────────────────────
+  // ??? Monthly History Tab ???????????????????????????????????????????????????
   const MonthlyHistoryTab = () => {
     const monthNames = ["", "January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"];
@@ -2104,7 +2104,7 @@ export function AdminPage() {
                         <span className="font-semibold text-gray-700">{r.totalOrders}</span>
                       </td>
                       <td className="px-5 py-4 text-right">
-                        <span className="font-semibold text-emerald-600">৳{Number(r.totalRevenue).toLocaleString()}</span>
+                        <span className="font-semibold text-emerald-600">Tk{Number(r.totalRevenue).toLocaleString()}</span>
                       </td>
                       <td className="px-5 py-4 text-right text-xs text-gray-400">
                         {new Date(r.archivedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
@@ -2120,9 +2120,9 @@ export function AdminPage() {
     );
   };
 
-  // ─── Settings Tab ──────────────────────────────────────────────────────────
+  // ??? Settings Tab ??????????????????????????????????????????????????????????
 
-  // ─── Pre-Orders Tab ──────────────────────────────────────────────────────────
+  // ??? Pre-Orders Tab ??????????????????????????????????????????????????????????
   const [preOrders, setPreOrders] = useState<any[]>([]);
   const [preOrdersLoading, setPreOrdersLoading] = useState(false);
 
@@ -2168,9 +2168,9 @@ export function AdminPage() {
               <div><span className="text-gray-400">Customer:</span> {o.shippingAddress?.fullName}</div>
               <div><span className="text-gray-400">Phone:</span> {o.shippingAddress?.phone}</div>
               <div><span className="text-gray-400">City:</span> {o.shippingAddress?.city}</div>
-              <div><span className="text-gray-400">WhatsApp:</span> {o.whatsappPhone ?? "—"}</div>
-              <div><span className="text-gray-400">Delivery paid:</span> ৳{o.deliveryCharge}</div>
-              <div><span className="text-gray-400">Product price:</span> ৳{o.discountedPrice}</div>
+              <div><span className="text-gray-400">WhatsApp:</span> {o.whatsappPhone ?? "-"}</div>
+              <div><span className="text-gray-400">Delivery paid:</span> Tk{o.deliveryCharge}</div>
+              <div><span className="text-gray-400">Product price:</span> Tk{o.discountedPrice}</div>
               <div><span className="text-gray-400">Payment:</span> {o.paymentMethod}</div>
               <div><span className={`font-semibold ${o.paymentStatus === "paid" ? "text-green-600" : "text-amber-600"}`}>{o.paymentStatus}</span></div>
             </div>
@@ -2195,7 +2195,7 @@ export function AdminPage() {
       {[
         { label: "Store Name", value: "EnvyEnhance", desc: "Shown in the header and emails" },
         { label: "Support Email", value: "hello@envyenhance.com", desc: "Customers will see this address" },
-        { label: "Currency", value: "BDT (৳)", desc: "Bangladeshi Taka" },
+        { label: "Currency", value: "BDT (Tk)", desc: "Bangladeshi Taka" },
         { label: "Payment Methods", value: "bKash, Nagad, Cash on Delivery", desc: "Enabled at checkout" },
       ].map(({ label, value, desc }) => (
         <div key={label} className="bg-white border rounded-2xl p-5 flex items-start justify-between gap-4">
@@ -2225,7 +2225,7 @@ export function AdminPage() {
             className="px-4 py-2 rounded-xl text-sm font-semibold text-white"
             style={{ background: "#e05c9a" }}
           >
-            {shipmentSaved ? "Saved ✓" : "Save"}
+            {shipmentSaved ? "Saved ?" : "Save"}
           </button>
         </div>
         {shipmentDate && (
@@ -2242,7 +2242,7 @@ export function AdminPage() {
   );
 
 
-// ─── Returns Tab ─────────────────────────────────────────────────────────────
+// ??? Returns Tab ?????????????????????????????????????????????????????????????
 function ReturnsTab() {
   const [returns, setReturns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -2281,7 +2281,7 @@ function ReturnsTab() {
     completed: "bg-emerald-100 text-emerald-700 border border-emerald-200",
   };
   const statusIcons: Record<string, string> = {
-    requested: "🕐", approved: "✅", rejected: "❌", completed: "✔️",
+    requested: "?", approved: "?", rejected: "?", completed: "??",
   };
 
   if (loading) return (
@@ -2298,7 +2298,7 @@ function ReturnsTab() {
       </div>
       {returns.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="text-4xl mb-3">📦</div>
+          <div className="text-4xl mb-3">?</div>
           <p className="text-sm text-muted-foreground">No return requests yet.</p>
         </div>
       ) : (
@@ -2312,11 +2312,11 @@ function ReturnsTab() {
                 <div className="flex items-center justify-between px-4 py-3 bg-muted/40 border-b">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-semibold text-sm">Return #{ret.id}</span>
-                    <span className="text-muted-foreground text-xs">·</span>
+                    <span className="text-muted-foreground text-xs">?</span>
                     <span className="text-xs text-muted-foreground">Order #{ret.orderId}</span>
                     {ret.customerName && (
                       <>
-                        <span className="text-muted-foreground text-xs">·</span>
+                        <span className="text-muted-foreground text-xs">?</span>
                         <span className="text-xs text-muted-foreground">{ret.customerName}</span>
                       </>
                     )}
@@ -2341,8 +2341,8 @@ function ReturnsTab() {
                               <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
                             </div>
                             <div className="text-right shrink-0">
-                              <p className="text-sm font-semibold">৳{(item.price * item.quantity).toLocaleString()}</p>
-                              <p className="text-xs text-muted-foreground">৳{item.price} each</p>
+                              <p className="text-sm font-semibold">Tk{(item.price * item.quantity).toLocaleString()}</p>
+                              <p className="text-xs text-muted-foreground">Tk{item.price} each</p>
                             </div>
                           </div>
                         ))}
@@ -2353,12 +2353,12 @@ function ReturnsTab() {
                     {ret.orderTotal != null && (
                       <div className="flex items-center gap-1.5 bg-muted/40 rounded-lg px-3 py-1.5">
                         <span className="text-muted-foreground">Order total</span>
-                        <span className="font-semibold">৳{Number(ret.orderTotal).toLocaleString()}</span>
+                        <span className="font-semibold">Tk{Number(ret.orderTotal).toLocaleString()}</span>
                       </div>
                     )}
                     {deliveredAt && (
                       <div className="flex items-center gap-1.5 bg-green-50 text-green-700 rounded-lg px-3 py-1.5">
-                        <span>📦 Delivered</span>
+                        <span>? Delivered</span>
                         <span className="font-medium">{deliveredAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
                       </div>
                     )}
@@ -2380,18 +2380,18 @@ function ReturnsTab() {
                   {ret.refundAmount != null && ret.status === "completed" && (
                     <div className="bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3 flex items-center justify-between">
                       <span className="text-xs font-medium text-emerald-700">Refund issued</span>
-                      <span className="text-lg font-bold text-emerald-700">৳{Number(ret.refundAmount).toLocaleString()}</span>
+                      <span className="text-lg font-bold text-emerald-700">Tk{Number(ret.refundAmount).toLocaleString()}</span>
                     </div>
                   )}
                   {ret.status === "requested" && (
                     <div className="flex gap-2 pt-1">
                       <button onClick={() => updateStatus(ret.id, "approved")} disabled={updatingId === ret.id}
                         className="flex-1 text-sm font-medium bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors disabled:opacity-50">
-                        ✅ Approve Return
+                        ? Approve Return
                       </button>
                       <button onClick={() => { const note = prompt("Rejection reason?"); if (note) updateStatus(ret.id, "rejected", note); }} disabled={updatingId === ret.id}
                         className="flex-1 text-sm font-medium bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50">
-                        ❌ Reject
+                        ? Reject
                       </button>
                     </div>
                   )}
@@ -2399,7 +2399,7 @@ function ReturnsTab() {
                     <div className="space-y-2 pt-1">
                       <p className="text-xs text-muted-foreground">Enter refund amount to mark as completed</p>
                       <div className="flex gap-2">
-                        <input type="number" placeholder="Refund amount (৳)" min="0"
+                        <input type="number" placeholder="Refund amount (Tk)" min="0"
                           value={refundInputs[ret.id] ?? ""}
                           onChange={(e) => setRefundInputs(prev => ({ ...prev, [ret.id]: e.target.value }))}
                           className="flex-1 text-sm border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400" />
@@ -2421,7 +2421,7 @@ function ReturnsTab() {
   );
 }
 
-// ─── Affiliates Tab ───────────────────────────────────────────────────────────
+// ??? Affiliates Tab ???????????????????????????????????????????????????????????
 function AffiliatesTab() {
   const [affiliates, setAffiliates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -2513,7 +2513,7 @@ function AffiliatesTab() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search by name, email, or code…"
+          placeholder="Search by name, email, or code?"
           className="pl-10"
           value={searchQ}
           onChange={e => setSearchQ(e.target.value)}
@@ -2533,7 +2533,7 @@ function AffiliatesTab() {
           <div className="flex gap-2">
             <button onClick={handleCreate} disabled={saving}
               className="text-sm bg-accent text-white px-4 py-2 rounded-full hover:bg-accent/90 transition-colors">
-              {saving ? "Creating…" : "Create Affiliate"}
+              {saving ? "Creating?" : "Create Affiliate"}
             </button>
             <button onClick={() => setShowForm(false)} className="text-sm text-muted-foreground hover:text-foreground">Cancel</button>
           </div>
@@ -2566,14 +2566,14 @@ function AffiliatesTab() {
                         </div>
                       </td>
                       <td className="py-3 pr-4">{a.totalOrders}</td>
-                      <td className="py-3 pr-4 font-semibold">৳{Number(a.totalSales).toLocaleString()}</td>
-                      <td className="py-3 pr-4 text-green-600 font-semibold">৳{Number(a.totalCommission ?? 0).toLocaleString()}</td>
-                      <td className="py-3 pr-4">—</td>
+                      <td className="py-3 pr-4 font-semibold">Tk{Number(a.totalSales).toLocaleString()}</td>
+                      <td className="py-3 pr-4 text-green-600 font-semibold">Tk{Number(a.totalCommission ?? 0).toLocaleString()}</td>
+                      <td className="py-3 pr-4">-</td>
                       <td className="py-3">
                         <div className="flex gap-1">
                           <button onClick={() => handleSaveEdit(a.id)} disabled={saving}
                             className="text-xs px-2 py-1 rounded bg-green-100 text-green-700 hover:bg-green-200 flex items-center gap-1">
-                            <Save className="h-3 w-3" />{saving ? "…" : "Save"}
+                            <Save className="h-3 w-3" />{saving ? "?" : "Save"}
                           </button>
                           <button onClick={() => setEditingId(null)}
                             className="text-xs px-2 py-1 rounded bg-muted text-muted-foreground hover:bg-muted/80">
@@ -2593,8 +2593,8 @@ function AffiliatesTab() {
                       </td>
                       <td className="py-3 pr-4">{a.commissionRate}%</td>
                       <td className="py-3 pr-4">{a.totalOrders}</td>
-                      <td className="py-3 pr-4 font-semibold">৳{Number(a.totalSales).toLocaleString()}</td>
-                      <td className="py-3 pr-4 text-green-600 font-semibold">৳{Number(a.totalCommission ?? 0).toLocaleString()}</td>
+                      <td className="py-3 pr-4 font-semibold">Tk{Number(a.totalSales).toLocaleString()}</td>
+                      <td className="py-3 pr-4 text-green-600 font-semibold">Tk{Number(a.totalCommission ?? 0).toLocaleString()}</td>
                       <td className="py-3 pr-4">
                         <button onClick={() => toggleAffiliate(a.id)}
                           className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${a.isActive ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}>
@@ -2635,7 +2635,7 @@ function AffiliatesTab() {
   );
 }
 
-// ─── Cashouts Tab (inside Affiliates) ────────────────────────────────────────
+// ??? Cashouts Tab (inside Affiliates) ????????????????????????????????????????
 function CashoutsSection() {
   const [cashouts, setCashouts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -2683,9 +2683,9 @@ function CashoutsSection() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-semibold text-sm">{co.affiliateName} <span className="text-muted-foreground font-normal">({co.affiliateEmail})</span></p>
-                      <p className="text-xs text-muted-foreground">Code: {co.affiliateCode} · {new Date(co.createdAt).toLocaleDateString()}</p>
+                      <p className="text-xs text-muted-foreground">Code: {co.affiliateCode} ? {new Date(co.createdAt).toLocaleDateString()}</p>
                     </div>
-                    <p className="font-bold text-lg">৳{Number(co.amount).toLocaleString()}</p>
+                    <p className="font-bold text-lg">Tk{Number(co.amount).toLocaleString()}</p>
                   </div>
                   <div className="flex gap-2">
                     <Button size="sm" className="flex-1 rounded-full bg-green-600 hover:bg-green-700" onClick={() => handleAction(co.id, "approved")}>Approve</Button>
@@ -2705,10 +2705,10 @@ function CashoutsSection() {
                 <div key={co.id} className="border rounded-xl p-3 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium">{co.affiliateName}</p>
-                    <p className="text-xs text-muted-foreground">{new Date(co.createdAt).toLocaleDateString()} {co.note && `· ${co.note}`}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(co.createdAt).toLocaleDateString()} {co.note && `? ${co.note}`}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold">৳{Number(co.amount).toLocaleString()}</p>
+                    <p className="font-semibold">Tk{Number(co.amount).toLocaleString()}</p>
                     <div className="flex flex-col items-end gap-1">
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${co.status === "approved" ? "bg-green-100 text-green-700" : co.status === "paid" ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-600"}`}>{co.status}</span>
                 {co.status === "approved" && (
@@ -2726,7 +2726,7 @@ function CashoutsSection() {
   );
 }
 
-// ─── Blog Tab ────────────────────────────────────────────────────────────────
+// ??? Blog Tab ????????????????????????????????????????????????????????????????
 function BlogTab() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -2828,7 +2828,7 @@ function BlogTab() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search posts by title, category, or excerpt…"
+          placeholder="Search posts by title, category, or excerpt?"
           className="pl-10"
           value={searchQ}
           onChange={e => setSearchQ(e.target.value)}
@@ -2862,12 +2862,12 @@ function BlogTab() {
             </div>
             <div className="space-y-1 sm:col-span-2">
               <Label className="text-xs">Cover Image URL</Label>
-              <Input placeholder="https://…" value={form.image}
+              <Input placeholder="https://?" value={form.image}
                 onChange={e => setForm(f => ({ ...f, image: e.target.value }))} />
             </div>
             <div className="space-y-1 sm:col-span-2">
               <Label className="text-xs">Excerpt *</Label>
-              <Textarea placeholder="Short description shown in listing…" value={form.excerpt} rows={2}
+              <Textarea placeholder="Short description shown in listing?" value={form.excerpt} rows={2}
                 onChange={e => setForm(f => ({ ...f, excerpt: e.target.value }))} />
             </div>
             <div className="space-y-1 sm:col-span-2">
@@ -2885,7 +2885,7 @@ function BlogTab() {
           <div className="flex gap-2">
             <button onClick={handleSave} disabled={saving}
               className="flex items-center gap-1.5 text-sm bg-accent text-white px-4 py-2 rounded-full hover:bg-accent/90 transition-colors">
-              <Save className="h-4 w-4" />{saving ? "Saving…" : editingPost ? "Save Changes" : "Publish Post"}
+              <Save className="h-4 w-4" />{saving ? "Saving?" : editingPost ? "Save Changes" : "Publish Post"}
             </button>
             <button onClick={() => { setShowForm(false); setEditingPost(null); }}
               className="text-sm text-muted-foreground hover:text-foreground">Cancel</button>
@@ -2942,7 +2942,7 @@ function BlogTab() {
   );
 }
 
-// ─── Audit Logs Tab ───────────────────────────────────────────────────────────
+// ??? Audit Logs Tab ???????????????????????????????????????????????????????????
 function AuditLogsTab() {
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -2979,7 +2979,7 @@ function AuditLogsTab() {
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-muted-foreground">
                   by <span className="font-medium text-foreground">{log.adminEmail ?? log.adminId?.slice(0, 8)}</span>
-                  {log.targetType && <> · {log.targetType} #{log.targetId}</>}
+                  {log.targetType && <> ? {log.targetType} #{log.targetId}</>}
                 </p>
                 {(log.after || log.before) && (
                 <p className="text-xs text-muted-foreground mt-0.5">
@@ -2999,7 +2999,7 @@ function AuditLogsTab() {
   );
 }
 
-// ─── Q&A Tab ──────────────────────────────────────────────────────────────────
+// ??? Q&A Tab ??????????????????????????????????????????????????????????????????
 function QATab() {
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -3052,7 +3052,7 @@ function QATab() {
       </div>
       {questions.length === 0 ? (
         <div className="text-center py-10 text-muted-foreground">
-          <p className="text-2xl mb-2">✅</p>
+          <p className="text-2xl mb-2">?</p>
           <p className="font-medium">All questions answered!</p>
           <p className="text-sm">No pending product questions.</p>
         </div>
@@ -3062,7 +3062,7 @@ function QATab() {
             <div key={q.id} className="bg-card border rounded-xl p-5 space-y-3">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs text-muted-foreground mb-1">{q.userName} · Product #{q.productId} · {new Date(q.createdAt).toLocaleDateString()}</p>
+                  <p className="text-xs text-muted-foreground mb-1">{q.userName} ? Product #{q.productId} ? {new Date(q.createdAt).toLocaleDateString()}</p>
                   <p className="font-medium text-sm">{q.question}</p>
                 </div>
                 <button onClick={() => deleteQuestion(q.id)} className="text-muted-foreground hover:text-destructive transition-colors shrink-0">
@@ -3072,7 +3072,7 @@ function QATab() {
               {answeringId === q.id ? (
                 <div className="space-y-2">
                   <Textarea
-                    placeholder="Write your answer…"
+                    placeholder="Write your answer?"
                     value={answerText}
                     onChange={e => setAnswerText(e.target.value)}
                     rows={3} maxLength={1000}
@@ -3081,7 +3081,7 @@ function QATab() {
                   <div className="flex gap-2">
                     <button onClick={() => submitAnswer(q.id)} disabled={saving || answerText.trim().length < 2}
                       className="text-xs bg-accent text-white px-4 py-1.5 rounded-full hover:bg-accent/90 transition-colors disabled:opacity-50">
-                      {saving ? "Posting…" : "Post Answer"}
+                      {saving ? "Posting?" : "Post Answer"}
                     </button>
                     <button onClick={() => { setAnsweringId(null); setAnswerText(""); }}
                       className="text-xs text-muted-foreground hover:text-foreground">Cancel</button>
@@ -3101,7 +3101,7 @@ function QATab() {
   );
 }
 
-// ─── Bulk Import Tab ──────────────────────────────────────────────────────────
+// ??? Bulk Import Tab ??????????????????????????????????????????????????????????
 function BulkImportTab() {
   const [csvText, setCsvText] = useState("");
   const [result, setResult] = useState<any>(null);
@@ -3109,18 +3109,18 @@ function BulkImportTab() {
   const [error, setError] = useState("");
 
   const TEMPLATE = `name,price,discountPrice,category,stock,description,images,keyBenefits,mainIngredients,bestFor,texture,ingredients
-"Skin Aqua Super Moisture Gel SPF50+",1450,,Sunscreens,50,"A Japanese water gel sunscreen with SPF50+ PA++++. Triple Hyaluronic Acid complex for intense moisture while protecting from UV rays.","https://example.com/img1.jpg|https://example.com/img2.jpg","Maximum SPF50+ PA++++ protection|Triple Hyaluronic Acid for deep hydration|Lightweight no white cast|Sweat and water resistant","💧 Sodium Hyaluronate (Hyaluronic Acid)|🧬 Hydrolyzed Collagen|🌿 Arginine|☀️ Ethylhexyl Methoxycinnamate","Dry skin|Oily skin|All skin types","Ultra-light watery gel that melts into skin instantly"`;
+"Skin Aqua Super Moisture Gel SPF50+",1450,,Sunscreens,50,"A Japanese water gel sunscreen with SPF50+ PA++++. Triple Hyaluronic Acid complex for intense moisture while protecting from UV rays.","https://example.com/img1.jpg|https://example.com/img2.jpg","Maximum SPF50+ PA++++ protection|Triple Hyaluronic Acid for deep hydration|Lightweight no white cast|Sweat and water resistant","? Sodium Hyaluronate (Hyaluronic Acid)|? Hydrolyzed Collagen|? Arginine|?? Ethylhexyl Methoxycinnamate","Dry skin|Oily skin|All skin types","Ultra-light watery gel that melts into skin instantly"`;
 
   const FORMAT_NOTES = [
     { field: "name", note: "Product name (required)" },
     { field: "price", note: "Price in BDT, numbers only (required)" },
-    { field: "discountPrice", note: "Sale price — leave empty if no discount" },
+    { field: "discountPrice", note: "Sale price - leave empty if no discount" },
     { field: "category", note: "Category name (required)" },
     { field: "stock", note: "Stock quantity" },
     { field: "description", note: "Full product description" },
     { field: "images", note: "Image URLs separated by |" },
     { field: "keyBenefits", note: "Benefits separated by | (e.g. Deep hydration|Brightening)" },
-    { field: "mainIngredients", note: "Ingredients with emoji separated by | (e.g. 💧 Hyaluronic Acid|🌿 Niacinamide)" },
+    { field: "mainIngredients", note: "Ingredients with emoji separated by | (e.g. ? Hyaluronic Acid|? Niacinamide)" },
     { field: "bestFor", note: "Skin types separated by | (e.g. Dry skin|Oily skin)" },
     { field: "texture", note: "Texture description (single line)" },
     { field: "ingredients", note: "Full INCI ingredients list (single line)" },
@@ -3181,7 +3181,7 @@ function BulkImportTab() {
           rows={8}
           value={csvText}
           onChange={e => setCsvText(e.target.value)}
-          placeholder="Paste your CSV content here…"
+          placeholder="Paste your CSV content here?"
         />
       </div>
 
@@ -3193,7 +3193,7 @@ function BulkImportTab() {
           {result.errorDetails?.length > 0 && (
             <ul className="mt-2 space-y-1">
               {result.errorDetails.map((e: string, i: number) => (
-                <li key={i} className="text-xs text-red-600">• {e}</li>
+                <li key={i} className="text-xs text-red-600">? {e}</li>
               ))}
             </ul>
           )}
@@ -3202,7 +3202,7 @@ function BulkImportTab() {
 
       <Button onClick={handleImport} disabled={loading || !csvText.trim()} className="rounded-full gap-2">
         <Upload className="h-4 w-4" />
-        {loading ? "Importing…" : "Import Products"}
+        {loading ? "Importing?" : "Import Products"}
       </Button>
     </div>
   );
@@ -3307,7 +3307,7 @@ function BulkImportTab() {
           <div className="space-y-3 py-2">
             <p className="text-sm text-muted-foreground">Provide a reason for cancellation (optional). This will be visible to the customer.</p>
             <Textarea
-              placeholder="e.g. Item out of stock, customer requested cancellation…"
+              placeholder="e.g. Item out of stock, customer requested cancellation?"
               className="rounded-xl resize-none text-sm"
               rows={3}
               value={cancelModal?.reason ?? ""}

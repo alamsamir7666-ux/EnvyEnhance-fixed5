@@ -58,7 +58,7 @@ export function PhotoReviewForm({ productId, onSuccess, onCancel }: PhotoReviewF
         method: "POST",
         credentials: "include",
         body: formData,
-        // Do NOT set Content-Type — browser sets multipart boundary automatically
+        // Do NOT set Content-Type - browser sets multipart boundary automatically
       });
 
       const data = await r.json();
@@ -113,7 +113,7 @@ export function PhotoReviewForm({ productId, onSuccess, onCancel }: PhotoReviewF
           <span className="ml-1 text-xs">({comment.trim().length}/1000)</span>
         </label>
         <Textarea
-          placeholder="Share your honest experience with this product…"
+          placeholder="Share your honest experience with this product?"
           value={comment}
           onChange={(e) => setComment(e.target.value.slice(0, 1000))}
           rows={4}
@@ -167,7 +167,7 @@ export function PhotoReviewForm({ productId, onSuccess, onCancel }: PhotoReviewF
           className="flex-1"
         >
           {submitting ? (
-            <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Submitting…</>
+            <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Submitting?</>
           ) : (
             "Submit Review"
           )}

@@ -15,10 +15,10 @@ export function LoyaltyBanner() {
         <p className="font-medium text-foreground">
           {data.points} Loyalty Points
           <span className="text-muted-foreground font-normal ml-1.5">
-            = ৳{data.takaValue} discount
+            = Tk{data.takaValue} discount
           </span>
         </p>
-        <p className="text-xs text-muted-foreground">Earn 1 point per ৳100 spent</p>
+        <p className="text-xs text-muted-foreground">Earn 1 point per Tk100 spent</p>
       </div>
       <Link href="/loyalty" className="text-xs text-accent hover:underline whitespace-nowrap flex items-center gap-1">
         <Gift className="h-3.5 w-3.5" />

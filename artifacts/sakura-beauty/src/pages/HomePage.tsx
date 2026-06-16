@@ -295,7 +295,7 @@ export function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl mx-auto text-center">
             {[
-              { icon: BadgeCheck, title: "Genuine Japanese Brands", desc: "Every product is sourced directly from trusted Japanese brands. What you see is exactly what you get — real, verified, authentic." },
+              { icon: BadgeCheck, title: "Genuine Japanese Brands", desc: "Every product is sourced directly from trusted Japanese brands. What you see is exactly what you get - real, verified, authentic." },
               { icon: ShieldCheck, title: "Fair & Honest Pricing", desc: "No markup gimmicks. We keep prices fair and affordable for Bangladesh without compromising on authenticity." },
               { icon: HandHeart, title: "Delivered with Responsibility", desc: "We take full responsibility for delivering authenticity to your doorstep. Your trust is our most important product." },
             ].map(({ icon: Icon, title, desc }) => (

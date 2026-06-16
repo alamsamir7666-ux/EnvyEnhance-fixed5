@@ -38,7 +38,7 @@ export default function ReferralPage() {
     if (navigator.share) {
       navigator.share({
         title: "Join EnvyEnhance",
-        text: "Use my referral link and get ৳100 off your first order!",
+        text: "Use my referral link and get Tk100 off your first order!",
         url: data.shareUrl,
       });
     } else {
@@ -63,7 +63,7 @@ export default function ReferralPage() {
       <PageBreadcrumb crumbs={[{ label: "Refer & Earn", icon: <Users className="h-3 w-3" /> }]} className="mb-4" />
       <h1 className="font-serif text-3xl mb-2">Refer & Earn</h1>
       <p className="text-muted-foreground text-sm mb-8">
-        Share your unique link. Your friend gets ৳100 off. You earn 100 loyalty points.
+        Share your unique link. Your friend gets Tk100 off. You earn 100 loyalty points.
       </p>
 
       {/* Stats */}
@@ -119,7 +119,7 @@ export default function ReferralPage() {
       <ol className="space-y-3">
         {[
           "Share your unique link with friends",
-          "They sign up and get ৳100 off their first order",
+          "They sign up and get Tk100 off their first order",
           "When they complete their first purchase, you earn 100 loyalty points",
           "Redeem your points for discounts on future orders",
         ].map((step, i) => (

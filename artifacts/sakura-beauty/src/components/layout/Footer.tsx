@@ -72,7 +72,7 @@ export function Footer() {
             
           </div>
           <p className="text-gray-800 dark:text-zinc-200 text-sm text-gray-700 dark:text-zinc-300 text-gray-700 dark:text-zinc-300 leading-relaxed">
-            EnvyEnhance brings you premium Japanese and other countries skincare, haircare, and body essentials. Get authentic products, best quality, and a smooth beauty experience — made to elevate your everyday glow. Discover beauty with us!
+            EnvyEnhance brings you premium Japanese and other countries skincare, haircare, and body essentials. Get authentic products, best quality, and a smooth beauty experience - made to elevate your everyday glow. Discover beauty with us!
           </p>
         </div>
 
@@ -112,7 +112,7 @@ export function Footer() {
                   });
                   if (r.ok) {
                     input.value = "";
-                    alert("Thank you for subscribing! 🌸");
+                    alert("Thank you for subscribing! ?");
                   }
                 } catch {}
               }}

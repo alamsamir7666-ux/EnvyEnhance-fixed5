@@ -134,9 +134,9 @@ export function TrackOrderPage() {
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium truncate">{item.productName}</p>
-                        <p className="text-xs text-muted-foreground">Qty: {item.quantity} × ৳{Number(item.price).toLocaleString()}</p>
+                        <p className="text-xs text-muted-foreground">Qty: {item.quantity} ? Tk{Number(item.price).toLocaleString()}</p>
                       </div>
-                      <p className="text-sm font-semibold shrink-0">৳{(item.price * item.quantity).toLocaleString()}</p>
+                      <p className="text-sm font-semibold shrink-0">Tk{(item.price * item.quantity).toLocaleString()}</p>
                     </div>
                   ))}
                 </div>
@@ -145,13 +145,13 @@ export function TrackOrderPage() {
                     {order.subtotal != null && (
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Subtotal</span>
-                        <span>৳{Number(order.subtotal).toLocaleString()}</span>
+                        <span>Tk{Number(order.subtotal).toLocaleString()}</span>
                       </div>
                     )}
                     {order.discountAmount > 0 && (
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Discount</span>
-                        <span className="text-green-600">-৳{Number(order.discountAmount).toLocaleString()}</span>
+                        <span className="text-green-600">-Tk{Number(order.discountAmount).toLocaleString()}</span>
                       </div>
                     )}
                     {order.subtotal != null && (
@@ -160,13 +160,13 @@ export function TrackOrderPage() {
                         <span>
                           {(Number(order.totalAmount) - Number(order.subtotal) + Number(order.discountAmount ?? 0)) === 0
                             ? <span className="text-green-600">Free</span>
-                            : `৳${(Number(order.totalAmount) - Number(order.subtotal) + Number(order.discountAmount ?? 0)).toLocaleString()}`}
+                            : `Tk${(Number(order.totalAmount) - Number(order.subtotal) + Number(order.discountAmount ?? 0)).toLocaleString()}`}
                         </span>
                       </div>
                     )}
                     <div className="flex justify-between text-sm font-semibold border-t pt-1.5 mt-1.5">
                       <span>Total</span>
-                      <span>৳{Number(order.totalAmount).toLocaleString()}</span>
+                      <span>Tk{Number(order.totalAmount).toLocaleString()}</span>
                     </div>
                   </div>
                 )}

@@ -5,7 +5,7 @@ import { Instagram, ExternalLink } from "lucide-react";
  * Instagram Feed Component
  *
  * PRODUCTION SETUP:
- * 1. Go to developers.facebook.com → Create App → Add Instagram Basic Display product
+ * 1. Go to developers.facebook.com ? Create App ? Add Instagram Basic Display product
  * 2. Get a long-lived access token for your Instagram account
  * 3. Add VITE_INSTAGRAM_TOKEN=... to .env
  * 4. Use the Instagram Basic Display API to fetch real posts:
@@ -18,19 +18,19 @@ import { Instagram, ExternalLink } from "lucide-react";
 const INSTAGRAM_HANDLE = "@envyenhance";
 const INSTAGRAM_URL = "https://instagram.com/envyenhance";
 
-// Curated placeholder images — replace with real Instagram API data
+// Curated placeholder images - replace with real Instagram API data
 const PLACEHOLDER_POSTS = [
   {
     id: "1", type: "IMAGE",
     url: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80&fm=webp",
     permalink: INSTAGRAM_URL,
-    caption: "Morning skincare ritual 🌸 Our Vitamin C Serum brightens and protects all day. #JapaneseSkincare",
+    caption: "Morning skincare ritual ? Our Vitamin C Serum brightens and protects all day. #JapaneseSkincare",
   },
   {
     id: "2", type: "IMAGE",
     url: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&q=80&fm=webp",
     permalink: INSTAGRAM_URL,
-    caption: "Hydration is everything ✨ New Hyaluronic Acid Moisturiser now in stock. #SkincareRoutine",
+    caption: "Hydration is everything ? New Hyaluronic Acid Moisturiser now in stock. #SkincareRoutine",
   },
   {
     id: "3", type: "IMAGE",
@@ -42,19 +42,19 @@ const PLACEHOLDER_POSTS = [
     id: "4", type: "IMAGE",
     url: "https://images.unsplash.com/photo-1607006344380-b6775a0824a7?w=400&q=80&fm=webp",
     permalink: INSTAGRAM_URL,
-    caption: "SPF every single day ☀️ Your future self will thank you. #SunscreenEveryDay #EnvyEnhance",
+    caption: "SPF every single day ?? Your future self will thank you. #SunscreenEveryDay #EnvyEnhance",
   },
   {
     id: "5", type: "IMAGE",
     url: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&q=80&fm=webp",
     permalink: INSTAGRAM_URL,
-    caption: "Unboxing day 📦 So excited to share our newest Japanese imports. Link in bio! #Haul",
+    caption: "Unboxing day ? So excited to share our newest Japanese imports. Link in bio! #Haul",
   },
   {
     id: "6", type: "IMAGE",
     url: "https://images.unsplash.com/photo-1576426863848-c21f53c60b19?w=400&q=80&fm=webp",
     permalink: INSTAGRAM_URL,
-    caption: "Night routine essentials 🌙 Retinol + rich moisturiser = waking up with better skin. #NightRoutine",
+    caption: "Night routine essentials ? Retinol + rich moisturiser = waking up with better skin. #NightRoutine",
   },
 ];
 

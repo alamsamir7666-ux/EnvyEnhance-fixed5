@@ -14,7 +14,7 @@ import { updateSEO } from "@/lib/seo";
 import { ComparisonBar, ComparisonDrawer, useComparison } from "@/components/ui/ProductComparison";
 import { PageBreadcrumb } from "@/components/ui/PageBreadcrumb";
 
-// ── Constants ──────────────────────────────────────────────────────────────
+// ?? Constants ??????????????????????????????????????????????????????????????
 const INITIAL_LOAD = 10;
 const LOAD_MORE_BATCH = 4;
 const FETCH_LIMIT = 50;
@@ -29,7 +29,7 @@ const SORT_OPTIONS = [
 
 const PER_PAGE_OPTIONS = ["12", "24", "36", "48"];
 
-// ── Lazy card ──────────────────────────────────────────────────────────────
+// ?? Lazy card ??????????????????????????????????????????????????????????????
 function LazyProductCard({ product, backContext }: { product: any; backContext?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -70,7 +70,7 @@ function LazyProductCard({ product, backContext }: { product: any; backContext?:
   );
 }
 
-// ── Sort helper ────────────────────────────────────────────────────────────
+// ?? Sort helper ????????????????????????????????????????????????????????????
 function sortProducts(products: any[], sort: string) {
   const arr = [...products];
   switch (sort) {
@@ -82,7 +82,7 @@ function sortProducts(products: any[], sort: string) {
   }
 }
 
-// ── Main page ──────────────────────────────────────────────────────────────
+// ?? Main page ??????????????????????????????????????????????????????????????
 export function ProductsPage() {
   const [search, setSearch] = useState("");
   const [minRating, setMinRating] = useState(0);
@@ -106,7 +106,7 @@ export function ProductsPage() {
   const activeCategory = params.get("category") ?? "";
   const urlSearch = params.get("q") ?? "";
 
-  // Pre-fill search from URL ?q= only once on mount — prevents infinite re-render loop
+  // Pre-fill search from URL ?q= only once on mount - prevents infinite re-render loop
   // when urlSearch in deps would keep re-triggering as the user types
   const urlSearchApplied = useRef(false);
   useEffect(() => {
@@ -115,13 +115,13 @@ export function ProductsPage() {
       setSearch(urlSearch);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // intentionally empty — only run once on mount
+  }, []); // intentionally empty - only run once on mount
 
   const { data: dbCategories } = useListCategories({
     query: { staleTime: 60_000, queryKey: getListCategoriesQueryKey() },
   });
 
-  // Reset pagination when category changes — do NOT reset search text so
+  // Reset pagination when category changes - do NOT reset search text so
   // users can search across a newly selected category without losing their query
   useEffect(() => {
     setApiPage(1); setVisibleCount(perPage); setAllProducts([]);
@@ -135,7 +135,7 @@ export function ProductsPage() {
     const catTitle = activeCategory
       ? activeCategory.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()) : "";
     updateSEO({
-      title: activeCategory ? `${catTitle} – Skincare Products` : "Shop All Skincare Products",
+      title: activeCategory ? `${catTitle} - Skincare Products` : "Shop All Skincare Products",
       description: "Browse authentic Japanese skincare products in Bangladesh.",
     });
   }, [activeCategory]);
@@ -194,7 +194,7 @@ export function ProductsPage() {
     <>
     <div className="min-h-screen bg-background">
 
-      {/* ── Page header ── breadcrumb only */}
+      {/* ?? Page header ?? breadcrumb only */}
       <div className="bg-muted/30 border-b py-3">
         <div className="container mx-auto px-4">
           <PageBreadcrumb crumbs={breadcrumbs} />
@@ -203,7 +203,7 @@ export function ProductsPage() {
 
       <div className="container mx-auto px-4 py-6">
 
-        {/* ── Screenshot-style filter bar ────────────────────── */}
+        {/* ?? Screenshot-style filter bar ?????????????????????? */}
         <div className="bg-[#fdf0f2]/60 border border-pink-100 rounded-2xl px-4 py-3 mb-6">
           <div className="flex flex-wrap items-center gap-3">
 
@@ -343,7 +343,7 @@ export function ProductsPage() {
           )}
         </div>
 
-        {/* ── Active filter chips ────────────────────────────── */}
+        {/* ?? Active filter chips ?????????????????????????????? */}
         {(activeCategory || minRating > 0) && (
           <div className="flex flex-wrap gap-2 mb-5">
             {activeCategory && (
@@ -361,7 +361,7 @@ export function ProductsPage() {
           </div>
         )}
 
-        {/* ── Product grid ───────────────────────────────────── */}
+        {/* ?? Product grid ????????????????????????????????????? */}
         {isLoading && allProducts.length === 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {Array.from({ length: Math.min(perPage, 12) }).map((_, i) => (
@@ -423,11 +423,11 @@ export function ProductsPage() {
                   className="rounded-full px-8 min-w-[160px]"
                 >
                   {isLoadingMore
-                    ? <><Loader2 className="h-4 w-4 animate-spin mr-2" />Loading…</>
+                    ? <><Loader2 className="h-4 w-4 animate-spin mr-2" />Loading?</>
                     : "Load More Products"}
                 </Button>
               ) : allProducts.length > INITIAL_LOAD ? (
-                <p className="text-sm text-muted-foreground py-4">✓ All {totalFromAPI} products shown</p>
+                <p className="text-sm text-muted-foreground py-4">? All {totalFromAPI} products shown</p>
               ) : null}
             </div>
           </>

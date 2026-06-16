@@ -113,7 +113,7 @@ export function ProfilePage() {
                           <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[order.orderStatus] ?? "bg-muted"}`}>
                             {order.orderStatus}
                           </span>
-                          <p className="text-sm font-medium mt-1">৳{order.totalAmount.toLocaleString()}</p>
+                          <p className="text-sm font-medium mt-1">Tk{order.totalAmount.toLocaleString()}</p>
                         </div>
                       </div>
                     </div>
