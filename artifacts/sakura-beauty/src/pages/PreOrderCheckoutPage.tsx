@@ -1,30 +1,40 @@
 import { useState } from "react";
-import { useSearch } from "wouter";
+import { useSearch, useLocation } from "wouter";
+import { useListAddresses, getListAddressesQueryKey } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, Package, Truck, CheckCircle2, ShoppingBag } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CheckCircle2, Tag, MapPin, ChevronDown, ShoppingBag, CreditCard, Truck } from "lucide-react";
 import { Link } from "wouter";
+import { useUser } from "@clerk/react";
 import { PageBreadcrumb } from "@/components/ui/PageBreadcrumb";
 
 const API = import.meta.env.VITE_API_BASE_URL ?? "";
+type PaymentMethod = "bkash" | "nagad";
 
 export function PreOrderCheckoutPage() {
   const searchStr = useSearch();
+  const [, setLocation] = useLocation();
   const params = new URLSearchParams(searchStr);
+  const { user } = useUser();
 
   const productId = Number(params.get("productId") ?? "0");
   const productName = decodeURIComponent(params.get("name") ?? "");
   const productImage = decodeURIComponent(params.get("image") ?? "");
   const originalPrice = Number(params.get("price") ?? "0");
   const discountedPrice = Math.round(originalPrice * 0.95 * 100) / 100;
-  const shipmentDate = params.get("shipmentDate") ?? "";
   const savings = Math.round((originalPrice - discountedPrice) * 100) / 100;
+  const shipmentDate = localStorage.getItem("nextShipmentDate") ?? "";
 
-  const [address, setAddress] = useState({ fullName: "", phone: "", street: "", city: "", district: "", postalCode: "" });
-  const [paymentMethod, setPaymentMethod] = useState<"bkash" | "nagad">("bkash");
-  const [senderNumber, setSenderNumber] = useState("");
-  const [transactionId, setTransactionId] = useState("");
+  const { data: savedAddresses = [] } = useListAddresses({ query: { retry: false, queryKey: getListAddressesQueryKey() } });
+
+  const [address, setAddress] = useState({ fullName: user?.fullName ?? "", phone: "", street: "", city: "", district: "", postalCode: "" });
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [showAddressPicker, setShowAddressPicker] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("bkash");
+  const [bkashNumber, setBkashNumber] = useState("");
   const [whatsappPhone, setWhatsappPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -43,14 +53,20 @@ export function PreOrderCheckoutPage() {
     return `${diff + 2}-${diff + 5} days`;
   }
 
+  function applyAddress(addr: any) {
+    setAddress({ fullName: addr.fullName ?? "", phone: addr.phone ?? "", street: addr.street ?? "", city: addr.city ?? "", district: addr.district ?? "", postalCode: addr.postalCode ?? "" });
+    setSelectedAddressId(addr.id);
+    setShowAddressPicker(false);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     if (!address.fullName || !address.phone || !address.street || !address.city) {
       setError("Please fill in all required address fields."); return;
     }
-    if (!senderNumber.trim()) {
-      setError("Please enter your bKash/Nagad sending number."); return;
+    if (!bkashNumber.trim()) {
+      setError(`Please enter your ${paymentMethod === "bkash" ? "bKash" : "Nagad"} sending number.`); return;
     }
     setLoading(true);
     try {
@@ -60,7 +76,8 @@ export function PreOrderCheckoutPage() {
         body: JSON.stringify({
           productId, quantity: 1,
           shippingAddress: { fullName: address.fullName, phone: address.phone, street: address.street, city: address.city, district: address.district, postalCode: address.postalCode || null },
-          paymentMethod, senderNumber, transactionId: transactionId || null, whatsappPhone: whatsappPhone || null,
+          paymentMethod, senderNumber: bkashNumber,
+          whatsappPhone: whatsappPhone || null,
         }),
       });
       const data = await res.json();
@@ -82,22 +99,10 @@ export function PreOrderCheckoutPage() {
             <p className="text-muted-foreground">Your pre-order for <strong>{productName}</strong> has been placed.</p>
           </div>
           <div className="bg-muted/30 rounded-2xl p-5 text-left space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Tracking ID</span>
-              <span className="font-mono font-semibold">{success.trackingId}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Delivery paid</span>
-              <span className="font-semibold">৳{success.deliveryCharge}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Product payment</span>
-              <span className="font-semibold">Cash on delivery</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Expected delivery</span>
-              <span className="font-semibold">{getDaysUntilShipment()}</span>
-            </div>
+            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Tracking ID</span><span className="font-mono font-semibold">{success.trackingId}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Delivery paid</span><span className="font-semibold">৳{success.deliveryCharge}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Product price</span><span className="font-semibold">Cash on delivery</span></div>
+            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Expected delivery</span><span className="font-semibold">{getDaysUntilShipment()}</span></div>
           </div>
           <p className="text-sm text-muted-foreground">You will receive a WhatsApp notification when your product arrives in Bangladesh.</p>
           <div className="flex gap-3">
@@ -111,90 +116,126 @@ export function PreOrderCheckoutPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-lg">
-        <PageBreadcrumb crumbs={[{ label: "Products", href: "/products", icon: <ShoppingBag className="h-3 w-3" /> }, { label: "Pre-Order" }]} className="mb-4" />
-        <Link href={`/products/${productId}`}>
-          <Button variant="ghost" size="sm" className="mb-6 gap-1 text-muted-foreground"><ChevronLeft className="h-4 w-4" /> Back</Button>
-        </Link>
-        <h1 className="font-serif text-2xl font-medium mb-6">Pre-Order Checkout</h1>
-
-        <div className="bg-muted/30 rounded-2xl p-4 mb-6 flex gap-4">
-          {productImage && <img src={productImage} alt={productName} className="w-16 h-16 rounded-xl object-cover shrink-0" />}
-          <div className="flex-1 min-w-0">
-            <p className="font-medium text-sm leading-tight mb-1">{productName}</p>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-lg font-semibold">৳{discountedPrice.toLocaleString()}</span>
-              <span className="text-sm text-muted-foreground line-through">৳{originalPrice.toLocaleString()}</span>
-              <Badge className="bg-green-100 text-green-700 border-green-200 text-xs">5% off</Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">You save ৳{savings.toLocaleString()}</p>
-          </div>
+      <div className="bg-muted/30 border-b py-10">
+        <div className="container mx-auto px-4">
+          <PageBreadcrumb crumbs={[{ label: "Products", href: "/products", icon: <ShoppingBag className="h-3 w-3" /> }, { label: "Pre-Order", icon: <CreditCard className="h-3 w-3" /> }]} className="mb-3" />
+          <h1 className="font-serif text-4xl font-medium">Pre-Order Checkout</h1>
         </div>
+      </div>
 
-        <div className="bg-accent/10 border border-accent/20 rounded-xl px-4 py-3 mb-6 flex items-center gap-3">
-          <Truck className="h-5 w-5 text-accent shrink-0" />
-          <div>
-            <p className="text-sm font-medium">Estimated delivery: {getDaysUntilShipment()}</p>
-            <p className="text-xs text-muted-foreground">Product price paid on delivery (COD)</p>
-          </div>
-        </div>
+      <div className="container mx-auto px-4 py-8">
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div className="lg:col-span-2 space-y-8">
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <h2 className="font-medium mb-3 flex items-center gap-2"><Package className="h-4 w-4" /> Shipping Address</h2>
-            <div className="space-y-3">
-              <Input placeholder="Full name *" value={address.fullName} onChange={e => setAddress(a => ({ ...a, fullName: e.target.value }))} required className="rounded-xl" />
-              <Input placeholder="Phone number *" value={address.phone} onChange={e => setAddress(a => ({ ...a, phone: e.target.value }))} required className="rounded-xl" />
-              <Input placeholder="Street address *" value={address.street} onChange={e => setAddress(a => ({ ...a, street: e.target.value }))} required className="rounded-xl" />
-              <div className="grid grid-cols-2 gap-3">
-                <Input placeholder="City *" value={address.city} onChange={e => setAddress(a => ({ ...a, city: e.target.value }))} required className="rounded-xl" />
-                <Input placeholder="District" value={address.district} onChange={e => setAddress(a => ({ ...a, district: e.target.value }))} className="rounded-xl" />
+              {/* Delivery Address */}
+              <div className="bg-card border rounded-xl p-6">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="font-medium text-lg">Delivery Address</h2>
+                  {(savedAddresses as any[]).length > 0 && (
+                    <button type="button" onClick={() => setShowAddressPicker(!showAddressPicker)} className="flex items-center gap-1.5 text-sm text-accent hover:text-accent/80 font-medium transition-colors">
+                      <MapPin className="h-4 w-4" /> Saved addresses
+                      <ChevronDown className={`h-3.5 w-3.5 transition-transform ${showAddressPicker ? "rotate-180" : ""}`} />
+                    </button>
+                  )}
+                </div>
+                {showAddressPicker && (savedAddresses as any[]).length > 0 && (
+                  <div className="mb-5 space-y-2">
+                    {(savedAddresses as any[]).map((addr: any) => (
+                      <button key={addr.id} type="button" onClick={() => applyAddress(addr)}
+                        className={`w-full text-left px-4 py-3 rounded-xl border transition-all text-sm ${selectedAddressId === addr.id ? "border-primary bg-primary/5" : "border-border hover:border-foreground/30 hover:bg-muted/30"}`}>
+                        <p className="font-medium">{addr.fullName}</p>
+                        <p className="text-muted-foreground text-xs mt-0.5">{addr.street}, {addr.city}{addr.district ? `, ${addr.district}` : ""}{addr.phone ? ` · ${addr.phone}` : ""}</p>
+                      </button>
+                    ))}
+                    <p className="text-xs text-muted-foreground pl-1">Or enter a new address below</p>
+                  </div>
+                )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="sm:col-span-2"><Label>Full Name *</Label><Input value={address.fullName} onChange={e => setAddress(a => ({ ...a, fullName: e.target.value }))} required className="mt-1.5" /></div>
+                  <div><Label>Phone *</Label><Input value={address.phone} onChange={e => setAddress(a => ({ ...a, phone: e.target.value }))} required className="mt-1.5" placeholder="01XXXXXXXXX" /></div>
+                  <div><Label>Postal Code</Label><Input value={address.postalCode} onChange={e => setAddress(a => ({ ...a, postalCode: e.target.value }))} className="mt-1.5" /></div>
+                  <div className="sm:col-span-2"><Label>Street Address *</Label><Input value={address.street} onChange={e => setAddress(a => ({ ...a, street: e.target.value }))} required className="mt-1.5" placeholder="House, Road, Area" /></div>
+                  <div><Label>City *</Label><Input value={address.city} onChange={e => setAddress(a => ({ ...a, city: e.target.value }))} required className="mt-1.5" /></div>
+                  <div><Label>District</Label><Input value={address.district} onChange={e => setAddress(a => ({ ...a, district: e.target.value }))} className="mt-1.5" /></div>
+                </div>
+              </div>
+
+              {/* WhatsApp notification */}
+              <div className="bg-card border rounded-xl p-6">
+                <h2 className="font-medium text-lg mb-3">WhatsApp Notification (Optional)</h2>
+                <Input value={whatsappPhone} onChange={e => setWhatsappPhone(e.target.value)} placeholder="01XXXXXXXXX" className="mt-1.5" />
+                <p className="text-xs text-muted-foreground mt-1.5">We will notify you on WhatsApp when your product arrives in Bangladesh</p>
+              </div>
+
+              {/* Payment */}
+              <div className="bg-card border rounded-xl p-6">
+                <h2 className="font-medium text-lg mb-5">Payment Method</h2>
+                <p className="text-sm text-muted-foreground mb-4">Pay only the delivery charge now. Product price paid on delivery (COD).</p>
+                <div className="grid grid-cols-2 gap-3 mb-5">
+                  {(["bkash", "nagad"] as PaymentMethod[]).map((method) => (
+                    <button type="button" key={method} onClick={() => setPaymentMethod(method)}
+                      className={`border rounded-xl py-3 px-4 text-sm font-medium transition-all ${paymentMethod === method ? "border-primary bg-primary/5 text-foreground" : "border-border text-muted-foreground hover:border-foreground/50"}`}>
+                      <div className="text-lg mb-1">{method === "bkash" ? "📱" : "📲"}</div>
+                      {method === "bkash" ? "bKash" : "Nagad"}
+                    </button>
+                  ))}
+                </div>
+                <div className="bg-muted/30 rounded-lg p-4 space-y-3 text-sm">
+                  <p className="font-medium">{paymentMethod === "bkash" ? "bKash" : "Nagad"} Payment Instructions</p>
+                  <p className="text-muted-foreground">
+                    1. Send ৳{deliveryCharge} to our {paymentMethod === "bkash" ? "bKash" : "Nagad"} number: <strong>01636575741</strong><br />
+                    2. Use "Send Money" option<br />
+                    3. Your pre-order will be confirmed automatically after payment
+                  </p>
+                  <div>
+                    <Label>{paymentMethod === "bkash" ? "bKash" : "Nagad"} Number *</Label>
+                    <Input className="mt-1.5" value={bkashNumber} onChange={e => setBkashNumber(e.target.value)} placeholder="Your sending number" required />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Order Summary */}
+            <div>
+              <div className="bg-card border rounded-xl p-6 sticky top-24 space-y-5">
+                <h2 className="font-medium text-lg">Order Summary</h2>
+
+                {/* Product */}
+                <div className="flex gap-3">
+                  {productImage && <img src={productImage} alt={productName} className="w-14 h-14 rounded-xl object-cover shrink-0" />}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium line-clamp-2">{productName}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-sm font-semibold">৳{discountedPrice.toLocaleString()}</span>
+                      <span className="text-xs text-muted-foreground line-through">৳{originalPrice.toLocaleString()}</span>
+                      <Badge className="bg-green-100 text-green-700 border-green-200 text-xs">5% off</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Delivery estimate */}
+                <div className="flex items-center gap-2 text-sm bg-accent/10 rounded-lg px-3 py-2">
+                  <Truck className="h-4 w-4 text-accent shrink-0" />
+                  <span>Estimated delivery: <strong>{getDaysUntilShipment()}</strong></span>
+                </div>
+
+                <div className="border-t pt-4 space-y-2 text-sm">
+                  <div className="flex justify-between"><span className="text-muted-foreground">Delivery charge</span><span>৳{deliveryCharge}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Product price (৳{discountedPrice.toLocaleString()})</span><span className="text-muted-foreground">COD</span></div>
+                  <div className="flex justify-between font-semibold text-base pt-2 border-t"><span>Pay Now</span><span>৳{deliveryCharge}</span></div>
+                </div>
+
+                {error && <p className="text-sm text-destructive text-center">{error}</p>}
+
+                <Button type="submit" disabled={loading} className="w-full rounded-full" size="lg">
+                  {loading ? "Placing Pre-Order..." : `Confirm Pre-Order — Pay ৳${deliveryCharge}`}
+                </Button>
+
+                <p className="text-xs text-center text-muted-foreground">You save ৳{savings.toLocaleString()} with 5% pre-order discount</p>
               </div>
             </div>
           </div>
-
-          <div>
-            <h2 className="font-medium mb-2">WhatsApp for Shipment Notification</h2>
-            <Input placeholder="01XXXXXXXXX (optional)" value={whatsappPhone} onChange={e => setWhatsappPhone(e.target.value)} className="rounded-xl" />
-            <p className="text-xs text-muted-foreground mt-1">We will notify you on WhatsApp when your order ships</p>
-          </div>
-
-          <div>
-            <h2 className="font-medium mb-3">Pay Delivery Charge Only</h2>
-            <div className="bg-muted/30 rounded-xl p-4 mb-3 space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Delivery ({address.city ? (isDhaka ? "Dhaka" : "Outside Dhaka") : "Dhaka"})</span>
-                <span className="font-semibold">৳{deliveryCharge}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Product price (৳{discountedPrice.toLocaleString()})</span>
-                <span className="text-muted-foreground">Cash on delivery</span>
-              </div>
-            </div>
-            <div className="flex gap-3 mb-3">
-              {(["bkash", "nagad"] as const).map(m => (
-                <button key={m} type="button" onClick={() => setPaymentMethod(m)}
-                  style={{ background: paymentMethod === m ? "#e05c9a" : "transparent", color: paymentMethod === m ? "#fff" : "inherit", border: `2px solid ${paymentMethod === m ? "#e05c9a" : "#d1d5db"}`, borderRadius: 999, padding: "8px 20px", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
-                  {m === "bkash" ? "bKash" : "Nagad"}
-                </button>
-              ))}
-            </div>
-            <div className="bg-pink-50 border border-pink-200 rounded-xl px-4 py-3 mb-3">
-              <p className="text-sm font-medium text-pink-800">Send ৳{deliveryCharge} to:</p>
-              <p className="text-lg font-bold text-pink-900">{paymentMethod === "bkash" ? "01XXXXXXXXX" : "01XXXXXXXXX"}</p>
-              <p className="text-xs text-pink-600">{paymentMethod === "bkash" ? "bKash" : "Nagad"} merchant number</p>
-            </div>
-            <div className="space-y-3">
-              <Input placeholder={`Your ${paymentMethod === "bkash" ? "bKash" : "Nagad"} number *`} value={senderNumber} onChange={e => setSenderNumber(e.target.value)} required className="rounded-xl" />
-              <Input placeholder="Transaction ID (optional)" value={transactionId} onChange={e => setTransactionId(e.target.value)} className="rounded-xl" />
-            </div>
-          </div>
-
-          {error && <p className="text-sm text-destructive">{error}</p>}
-
-          <Button type="submit" disabled={loading} className="w-full rounded-full h-12 text-base font-semibold" style={{ background: "#e05c9a", color: "#fff" }}>
-            {loading ? "Placing Pre-Order..." : `Confirm Pre-Order — Pay ৳${deliveryCharge}`}
-          </Button>
         </form>
       </div>
     </div>

@@ -215,7 +215,18 @@ function ProductCardInner({
             )}
           </div>
 
-          {/* Add to Bag button */}
+          {/* Add to Bag / Pre-Order button */}
+          {(product as any).productStatus === "pre_order" ? (
+            <Link href={`/pre-order-checkout?productId=${product.id}&name=${encodeURIComponent(product.name)}&image=${encodeURIComponent((product.images as string[])[0] ?? "")}&price=${product.discountPrice ?? product.price}`}>
+              <Button
+                size="sm"
+                className="w-full mt-1 rounded-xl text-xs font-medium"
+                style={{ background: "#3b82f6", color: "#fff" }}
+              >
+                🚢 Pre-Order — 5% Off
+              </Button>
+            </Link>
+          ) : (
           <Button
             size="sm"
             className={`w-full mt-1 rounded-xl text-xs font-medium transition-all duration-200 ${
