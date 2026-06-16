@@ -344,7 +344,7 @@ export function CheckoutPage() {
                       className={`border rounded-xl py-3 px-4 text-sm font-medium transition-all ${paymentMethod === method ? "border-primary bg-primary/5 text-foreground" : "border-border text-muted-foreground hover:border-foreground/50"}`}
                     >
                       <div className="text-lg mb-1">
-                        {method === "bkash" ? "?" : method === "nagad" ? "?" : "?"}
+                        {method === "bkash" ? "bK" : method === "nagad" ? "NG" : "COD"}
                       </div>
                       {method === "bkash" ? "bKash" : method === "nagad" ? "Nagad" : "Cash on Delivery"}
                     </button>
