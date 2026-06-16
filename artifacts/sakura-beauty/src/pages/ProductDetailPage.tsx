@@ -650,7 +650,7 @@ export function ProductDetailPage() {
                 <p style={{ fontWeight: 700, fontSize: 18, marginBottom: 4, color: '#111' }}>Back in Stock Soon!</p>
                 <p style={{ color: '#6b7280', fontSize: 14 }}>Get notified the moment this product is available again.</p>
               </div>
-              <button onClick={() => setShowStockSheet(false)} style={{ background: '#f3f4f6', border: 'none', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', fontSize: 16 }}>?</button>
+              <button onClick={() => setShowStockSheet(false)} style={{ background: '#f3f4f6', border: 'none', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', fontSize: 16 }}>✕</button>
             </div>
             <StockAlertButton productId={product.id} productName={product.name} sheetMode />
           </div>

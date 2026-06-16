@@ -241,7 +241,7 @@ export function CheckoutPage() {
                         <p className="font-medium">{addr.fullName}</p>
                         <p className="text-muted-foreground text-xs mt-0.5">
                           {addr.street}, {addr.city}{addr.district ? `, ${addr.district}` : ""}
-                          {addr.phone ? ` ? ${addr.phone}` : ""}
+                          {addr.phone ? ` 📞 ${addr.phone}` : ""}
                         </p>
                         {addr.isDefault && (
                           <span className="inline-block mt-1 text-xs bg-accent/10 text-accent px-2 py-0.5 rounded-full font-medium">Default</span>
