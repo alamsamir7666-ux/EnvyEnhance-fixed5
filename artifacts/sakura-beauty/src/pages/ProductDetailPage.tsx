@@ -327,7 +327,7 @@ export function ProductDetailPage() {
                 </button>
               ) : (product as any).productStatus === "pre_order" ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-sm font-medium">
-                  🚢 Pre-order available — Ships in 20-23 days
+                  🚢 Pre-order — 5% discount + Ships in 20-23 days
                 </span>
               ) : product.stock <= 3 ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-600 text-sm font-semibold animate-pulse">
@@ -355,13 +355,13 @@ export function ProductDetailPage() {
                 </button>
               </div>
               {(product as any).productStatus === "pre_order" ? (
-                <Link href={`/pre-order-checkout?productId=${product.id}&name=${encodeURIComponent(product.name)}&image=${encodeURIComponent((product.images as string[])[0] ?? "")}&price=${product.discountPrice ?? product.price}&shipmentDate=${encodeURIComponent(localStorage.getItem("nextShipmentDate") ?? "")}`} className="flex-1">
+                <Link href={`/pre-order-checkout?productId=${product.id}&name=${encodeURIComponent(product.name)}&image=${encodeURIComponent((product.images as string[])[0] ?? "")}&price=${product.discountPrice ?? product.price}&qty=${qty}&shipmentDate=${encodeURIComponent(localStorage.getItem("nextShipmentDate") ?? "")}`} className="flex-1">
                   <Button
                     className="w-full rounded-full"
                     size="lg"
                     style={{ background: "#3b82f6", color: "#fff" }}
                   >
-                    <ShoppingBag className="h-4 w-4 mr-2" /> Pre-Order — 5% Off
+                    <ShoppingBag className="h-4 w-4 mr-2" /> Pre-Order Now
                   </Button>
                 </Link>
               ) : (

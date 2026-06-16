@@ -21,6 +21,7 @@ export function PreOrderCheckoutPage() {
   const { user } = useUser();
 
   const productId = Number(params.get("productId") ?? "0");
+  const quantity = Number(params.get("qty") ?? "1");
   const productName = decodeURIComponent(params.get("name") ?? "");
   const productImage = decodeURIComponent(params.get("image") ?? "");
   const originalPrice = Number(params.get("price") ?? "0");
@@ -74,7 +75,7 @@ export function PreOrderCheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          productId, quantity: 1,
+          productId, quantity,
           shippingAddress: { fullName: address.fullName, phone: address.phone, street: address.street, city: address.city, district: address.district, postalCode: address.postalCode || null },
           paymentMethod, senderNumber: bkashNumber,
           whatsappPhone: whatsappPhone || null,
