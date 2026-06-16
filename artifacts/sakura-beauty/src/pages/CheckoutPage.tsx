@@ -314,7 +314,7 @@ export function CheckoutPage() {
                   />
                   <div className="flex-1">
                     <label htmlFor="giftWrap" className="font-medium cursor-pointer flex items-center gap-2">
-                       Gift Wrapping
+                       🎁 Gift Wrapping
                       <span className="text-sm text-muted-foreground font-normal">+Tk50</span>
                     </label>
                     <p className="text-sm text-muted-foreground mt-0.5">Beautiful gift packaging with a handwritten card</p>
@@ -423,7 +423,7 @@ export function CheckoutPage() {
                   </div>
                   {giftWrap && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground"> Gift Wrapping</span>
+                      <span className="text-muted-foreground">🎁 Gift Wrapping</span>
                       <span>Tk50</span>
                     </div>
                   )}
