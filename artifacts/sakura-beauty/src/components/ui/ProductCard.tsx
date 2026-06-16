@@ -183,11 +183,11 @@ function ProductCardInner({
           </div>
           <div className="flex items-center gap-2">
             <span className="font-semibold text-sm">
-              Tk{displayPrice.toLocaleString()}
+              {"৳"}{displayPrice.toLocaleString()}
             </span>
             {product.discountPrice && (
               <span className="text-xs text-muted-foreground line-through">
-                Tk{product.price.toLocaleString()}
+                {"৳"}{product.price.toLocaleString()}
               </span>
             )}
           </div>
@@ -198,7 +198,7 @@ function ProductCardInner({
               style={{ background: "#3b82f6", color: "#fff" }}
               onClick={handlePreOrder}
             >
-              Pre-Order Now
+              {"🚢"} Pre-Order Now
             </Button>
           ) : (
             <Button
