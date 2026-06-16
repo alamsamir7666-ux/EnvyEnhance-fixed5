@@ -25,10 +25,10 @@ const returnBadgeColors: Record<string, string> = {
 };
 
 const returnBadgeLabels: Record<string, string> = {
-  requested: "🔄 Return Requested",
-  approved:  "✅ Return Approved",
-  rejected:  "❌ Return Rejected",
-  completed: "💰 Refund Completed",
+  requested: " Return Requested",
+  approved:  " Return Approved",
+  rejected:  " Return Rejected",
+  completed: " Refund Completed",
 };
 
 function CopyTrackingButton({ trackingId }: { trackingId: string }) {
@@ -69,7 +69,7 @@ export function OrdersPage() {
     if (!isGuest) return;
     try {
       const raw = JSON.parse(localStorage.getItem("sakura_guest_orders") ?? "[]");
-      setGuestTrackingIds(raw.map((o: any) => typeof o === "string" 🔍 { trackingId: o } : o));
+      setGuestTrackingIds(raw.map((o: any) => typeof o === "string" ? { trackingId: o } : o));
     } catch { setGuestTrackingIds([]); }
   }, [isGuest]);
   const [returnsMap, setReturnsMap] = useState<Record<number, any>>({});
@@ -143,7 +143,7 @@ export function OrdersPage() {
                         {item.productImage && (
                           <img src={item.productImage} alt={item.productName} className="h-8 w-8 rounded-md object-cover border shrink-0" />
                         )}
-                        <p className="text-xs text-muted-foreground truncate flex-1">{item.productName} × {item.quantity}</p>
+                        <p className="text-xs text-muted-foreground truncate flex-1">{item.productName}  {item.quantity}</p>
                         <p className="text-xs font-medium shrink-0">Tk{(item.price * item.quantity).toLocaleString()}</p>
                       </div>
                     ))}
