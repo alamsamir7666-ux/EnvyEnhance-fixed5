@@ -302,7 +302,7 @@ export function CheckoutPage() {
                 </div>
               )}
 
-              {/* Gift Wrapping */}
+              {/* 🎁 Gift Wrapping */}
               <div className="bg-card border rounded-xl p-6">
                 <div className="flex items-start gap-3">
                   <input
@@ -314,7 +314,7 @@ export function CheckoutPage() {
                   />
                   <div className="flex-1">
                     <label htmlFor="giftWrap" className="font-medium cursor-pointer flex items-center gap-2">
-                      🎁 Gift Wrapping
+                       Gift Wrapping
                       <span className="text-sm text-muted-foreground font-normal">+Tk50</span>
                     </label>
                     <p className="text-sm text-muted-foreground mt-0.5">Beautiful gift packaging with a handwritten card</p>
@@ -343,10 +343,12 @@ export function CheckoutPage() {
                       onClick={() => setPaymentMethod(method)}
                       className={`border rounded-xl py-3 px-4 text-sm font-medium transition-all ${paymentMethod === method ? "border-primary bg-primary/5 text-foreground" : "border-border text-muted-foreground hover:border-foreground/50"}`}
                     >
-                      <div className="text-xs font-bold mb-1 bg-pink-100 text-pink-700 rounded px-1">
-                        {method === "bkash" ? "bKash" : method === "nagad" ? "Nagad" : "COD"}
+                      <div className="text-lg font-bold mb-1">
+                        {method === "bkash" ? "📱" : method === "nagad" ? "📲" : "💵"}
                       </div>
-                      {method === "bkash" ? "bKash" : method === "nagad" ? "Nagad" : "Cash on Delivery"}
+                      <div className="text-xs font-semibold">
+                        {method === "bkash" ? "bKash" : method === "nagad" ? "Nagad" : "Cash on Delivery"}
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -421,7 +423,7 @@ export function CheckoutPage() {
                   </div>
                   {giftWrap && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">🎁 Gift Wrapping</span>
+                      <span className="text-muted-foreground"> Gift Wrapping</span>
                       <span>Tk50</span>
                     </div>
                   )}
