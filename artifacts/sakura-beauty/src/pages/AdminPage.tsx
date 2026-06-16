@@ -1482,7 +1482,7 @@ export function AdminPage() {
                               <div>
                                 {(o.giftWrap === "true" || (o.giftWrap as any) === true) && (
                                   <div className="mb-3 p-2 bg-pink-50 border border-pink-200 rounded-lg">
-                                    <p className="text-xs font-semibold text-pink-600 uppercase tracking-wider mb-1">? Gift Wrapping</p>
+                                    <p className="text-xs font-semibold text-pink-600 uppercase tracking-wider mb-1">Gift Wrapping</p>
                                     {o.giftMessage && <p className="text-sm text-gray-700">{o.giftMessage}</p>}
                                   </div>
                                 )}
@@ -2281,7 +2281,7 @@ function ReturnsTab() {
     completed: "bg-emerald-100 text-emerald-700 border border-emerald-200",
   };
   const statusIcons: Record<string, string> = {
-    requested: "?", approved: "?", rejected: "?", completed: "??",
+    requested: "...", approved: "OK", rejected: "X", completed: "Done",
   };
 
   if (loading) return (
@@ -2573,7 +2573,7 @@ function AffiliatesTab() {
                         <div className="flex gap-1">
                           <button onClick={() => handleSaveEdit(a.id)} disabled={saving}
                             className="text-xs px-2 py-1 rounded bg-green-100 text-green-700 hover:bg-green-200 flex items-center gap-1">
-                            <Save className="h-3 w-3" />{saving ? "?" : "Save"}
+                            <Save className="h-3 w-3" />{saving ? "..." : "Save"}
                           </button>
                           <button onClick={() => setEditingId(null)}
                             className="text-xs px-2 py-1 rounded bg-muted text-muted-foreground hover:bg-muted/80">
