@@ -598,7 +598,7 @@ export function AdminPage() {
       fetch(`${API}/api/admin/dashboard`, { headers: { Authorization: `Bearer ${token}` } })
         .then(r => r.json())
         .then(data => {
-          setDashStats({ totalSales: data.totalSales ?? 0, totalOrders: data.totalOrders ?? 0, pendingOrders: data.pendingOrders ?? 0, deliveredOrders: (data.totalOrders - data.pendingOrders) ?? 0 });
+          setDashStats({ totalSales: data.totalSales ?? 0, totalOrders: data.totalOrders ?? 0, pendingOrders: data.pendingOrders ?? 0, deliveredOrders: data.totalOrders != null && data.pendingOrders != null ? (data.totalOrders - data.pendingOrders) : 0 });
         })
         .catch(() => {})
     );
