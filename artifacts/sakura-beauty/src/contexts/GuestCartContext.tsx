@@ -48,7 +48,7 @@ export function GuestCartProvider({ children }: { children: ReactNode }) {
       if (existing) {
         return prev.map((i) =>
           i.productId === item.productId
-            🔍 { ...i, quantity: i.quantity + item.quantity }
+            ? { ...i, quantity: i.quantity + item.quantity }
             : i
         );
       }
@@ -65,7 +65,7 @@ export function GuestCartProvider({ children }: { children: ReactNode }) {
       setItems((prev) => prev.filter((i) => i.productId !== productId));
     } else {
       setItems((prev) =>
-        prev.map((i) => (i.productId === productId 🔍 { ...i, quantity } : i))
+        prev.map((i) => (i.productId === productId ? { ...i, quantity } : i))
       );
     }
   }, []);

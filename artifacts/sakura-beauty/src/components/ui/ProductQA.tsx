@@ -137,7 +137,7 @@ export function ProductQA({ productId }: { productId: number }) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground">{item.question}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{item.userName} 🔍 {new Date(item.createdAt).toLocaleDateString()}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{item.userName} ? {new Date(item.createdAt).toLocaleDateString()}</p>
                   {item.answer && (
                     <div className="mt-3 pl-3 border-l-2 border-accent/40">
                       <p className="text-xs font-semibold text-accent mb-1">Official Answer</p>

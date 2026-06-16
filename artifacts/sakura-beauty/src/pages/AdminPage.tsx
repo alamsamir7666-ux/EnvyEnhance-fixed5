@@ -108,7 +108,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
   function updateMainIngredient(idx: number, field: "name" | "icon", value: string) {
     setForm(f => ({
       ...f,
-      mainIngredients: f.mainIngredients.map((ing, i) => i === idx 🔍 { ...ing, [field]: value } : ing),
+      mainIngredients: f.mainIngredients.map((ing, i) => i === idx ? { ...ing, [field]: value } : ing),
     }));
   }
 
@@ -1069,7 +1069,7 @@ export function AdminPage() {
             </div>
             <div className="divide-y">
               {orders.slice(0, 5).map((o) => {
-                const cfg = statusConfig[o.orderStatus] ?🔍 { color: "bg-gray-100 text-gray-600", icon: AlertCircle };
+                const cfg = statusConfig[o.orderStatus] ?? { color: "bg-gray-100 text-gray-600", icon: AlertCircle };
                 const StatusIcon = cfg.icon;
                 return (
                   <div key={o.id} className="flex items-center gap-4 px-5 py-3">
@@ -1398,7 +1398,7 @@ export function AdminPage() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {filteredOrders.map((o) => {
-                  const cfg = statusConfig[o.orderStatus] ?🔍 { color: "bg-gray-100 text-gray-600 border-gray-200", icon: AlertCircle };
+                  const cfg = statusConfig[o.orderStatus] ?? { color: "bg-gray-100 text-gray-600 border-gray-200", icon: AlertCircle };
                   const StatusIcon = cfg.icon;
                   const isExpanded = expandedOrderId === o.id;
                   const addr = (o as any).shippingAddress as { fullName?: string; street?: string; line1?: string; city?: string; district?: string; phone?: string } | null;
@@ -2269,7 +2269,7 @@ function ReturnsTab() {
       });
       if (r.ok) {
         const updated = await r.json();
-        setReturns(prev => prev.map(ret => ret.id === id 🔍 { ...ret, ...updated } : ret));
+        setReturns(prev => prev.map(ret => ret.id === id ? { ...ret, ...updated } : ret));
       }
     } finally { setUpdatingId(null); }
   }
@@ -2659,7 +2659,7 @@ function CashoutsSection() {
     });
     if (r.ok) {
       const updated = await r.json();
-      setCashouts(prev => prev.map(c => c.id === id 🔍 { ...c, ...updated } : c));
+      setCashouts(prev => prev.map(c => c.id === id ? { ...c, ...updated } : c));
     }
   }
 
@@ -2683,7 +2683,7 @@ function CashoutsSection() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-semibold text-sm">{co.affiliateName} <span className="text-muted-foreground font-normal">({co.affiliateEmail})</span></p>
-                      <p className="text-xs text-muted-foreground">Code: {co.affiliateCode} 🔍 {new Date(co.createdAt).toLocaleDateString()}</p>
+                      <p className="text-xs text-muted-foreground">Code: {co.affiliateCode} ? {new Date(co.createdAt).toLocaleDateString()}</p>
                     </div>
                     <p className="font-bold text-lg">Tk{Number(co.amount).toLocaleString()}</p>
                   </div>
@@ -3062,7 +3062,7 @@ function QATab() {
             <div key={q.id} className="bg-card border rounded-xl p-5 space-y-3">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs text-muted-foreground mb-1">{q.userName} ? Product #{q.productId} 🔍 {new Date(q.createdAt).toLocaleDateString()}</p>
+                  <p className="text-xs text-muted-foreground mb-1">{q.userName} ? Product #{q.productId} ? {new Date(q.createdAt).toLocaleDateString()}</p>
                   <p className="font-medium text-sm">{q.question}</p>
                 </div>
                 <button onClick={() => deleteQuestion(q.id)} className="text-muted-foreground hover:text-destructive transition-colors shrink-0">
@@ -3311,7 +3311,7 @@ function BulkImportTab() {
               className="rounded-xl resize-none text-sm"
               rows={3}
               value={cancelModal?.reason ?? ""}
-              onChange={e => setCancelModal(m => m 🔍 { ...m, reason: e.target.value } : m)}
+              onChange={e => setCancelModal(m => m ? { ...m, reason: e.target.value } : m)}
             />
           </div>
           <DialogFooter className="gap-2">

@@ -23,7 +23,7 @@ async function request<T = unknown>(url: string, config: RequestConfig = {}): Pr
   }
 
   const token = await getToken();
-  const authHeader: Record<string, string> = token 🔍 { Authorization: `Bearer ${token}` } : {};
+  const authHeader: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
 
   const res = await fetch(fullUrl, {
     method,
