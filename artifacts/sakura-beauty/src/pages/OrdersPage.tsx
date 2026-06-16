@@ -25,10 +25,10 @@ const returnBadgeColors: Record<string, string> = {
 };
 
 const returnBadgeLabels: Record<string, string> = {
-  requested: " Return Requested",
-  approved:  " Return Approved",
-  rejected:  " Return Rejected",
-  completed: " Refund Completed",
+  requested: "🔄 Return Requested",
+  approved:  "✅ Return Approved",
+  rejected:  "❌ Return Rejected",
+  completed: "💰 Refund Completed",
 };
 
 function CopyTrackingButton({ trackingId }: { trackingId: string }) {
