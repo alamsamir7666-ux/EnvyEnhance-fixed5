@@ -1809,7 +1809,7 @@ export function AdminPage() {
                           )}
                           <p className="text-gray-400">{new Date(o.updatedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</p>
                           {(o as any).orderStatus === "cancelled" && (o as any).cancellationReason && (
-                            <p className="text-red-400 text-xs mt-0.5 max-w-[120px] truncate" title={(o as any).cancellationReason}>🔍 {(o as any).cancellationReason}</p>
+                            <p className="text-red-400 text-xs mt-0.5 max-w-[120px] truncate" title={(o as any).cancellationReason}>⚠️ {(o as any).cancellationReason}</p>
                           )}
                         </div>
                       </td>
@@ -3193,7 +3193,7 @@ function BulkImportTab() {
           {result.errorDetails?.length > 0 && (
             <ul className="mt-2 space-y-1">
               {result.errorDetails.map((e: string, i: number) => (
-                <li key={i} className="text-xs text-red-600">🔍 {e}</li>
+                <li key={i} className="text-xs text-red-600">• {e}</li>
               ))}
             </ul>
           )}
