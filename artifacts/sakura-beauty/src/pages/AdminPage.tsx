@@ -1177,7 +1177,7 @@ export function AdminPage() {
         </Button>
       </div>
 
-      {productsLoading ? (
+      {productsLoading && productsPage === 1 ? (
         <div className="space-y-3">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-16 rounded-xl" />)}</div>
       ) : (
         <div className="bg-white rounded-2xl border overflow-hidden">
