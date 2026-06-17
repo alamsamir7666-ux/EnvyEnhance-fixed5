@@ -369,7 +369,7 @@ export function ProductDetailPage() {
                   className={`flex-1 rounded-full transition-all duration-200 ${justAdded ? "bg-green-600 hover:bg-green-600" : ""}`}
                   size="lg"
                   onClick={handleAddToCart}
-                  disabled={product.stock === 0 || addToCart.isPending}
+                  disabled={product.stock === 0 || (product as any).productStatus === "out_of_stock" || (product as any).productStatus === "pre_order" || addToCart.isPending}
                 >
                   {justAdded ? (<><Check className="h-4 w-4 mr-2" /> Added to Bag</>) : (<><ShoppingBag className="h-4 w-4 mr-2" /> Add to Bag</>)}
                 </Button>
