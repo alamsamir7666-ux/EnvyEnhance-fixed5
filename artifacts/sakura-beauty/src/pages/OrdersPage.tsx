@@ -94,16 +94,17 @@ export function OrdersPage() {
 
   const [preOrders, setPreOrders] = useState<any[]>([]);
   useEffect(() => {
-    if (isGuest) return;
-    getToken().then(token =>
+    if (!isLoaded || isGuest) return;
+    getToken().then(token => {
+      if (!token) return;
       fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/pre-orders/my`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(r => r.json())
         .then(d => { if (Array.isArray(d)) setPreOrders(d); })
-        .catch(() => {})
-    );
-  }, [isGuest]);
+        .catch(() => {});
+    });
+  }, [isLoaded, isGuest]);
 
   if (isGuest) {
     if (isLoading) {
