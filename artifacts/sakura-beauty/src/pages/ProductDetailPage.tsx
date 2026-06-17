@@ -321,7 +321,7 @@ export function ProductDetailPage() {
             </div>
 
             <div className="flex items-center gap-2 mb-4">
-              {(product as any).productStatus === "out_of_stock" || product.stock === 0 && (product as any).productStatus !== "pre_order" ? (
+              {((product as any).productStatus === "out_of_stock" || (product.stock === 0 && (product as any).productStatus !== "pre_order")) ? (
                 <button onClick={() => setShowStockSheet(true)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
                   🔔 Out of stock — Notify me
                 </button>
