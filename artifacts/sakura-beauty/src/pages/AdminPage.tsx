@@ -1455,7 +1455,9 @@ export function AdminPage() {
                         <td className="px-4 py-3.5">
                           <span className="text-xs bg-gray-100 px-2 py-1 rounded-lg font-medium text-gray-600 capitalize">{o.paymentMethod}</span>
                         </td>
-                        <td className="px-4 py-3.5">
+                        <td className="px-4 py-3.5"></td>
+                        <td className="px-4 py-3.5 text-right font-semibold text-gray-800">Tk{(Number(o.discountedPrice) * Number(o.quantity) + Number(o.deliveryCharge)).toLocaleString()}</td>
+                        <td className="px-4 py-3.5 text-right" onClick={e => e.stopPropagation()}>
                           <select
                             value={o.status}
                             onClick={e => e.stopPropagation()}
@@ -1476,8 +1478,6 @@ export function AdminPage() {
                             ))}
                           </select>
                         </td>
-                        <td className="px-4 py-3.5 text-right font-semibold text-gray-800">Tk{(Number(o.discountedPrice) * Number(o.quantity) + Number(o.deliveryCharge)).toLocaleString()}</td>
-                        <td className="px-4 py-3.5"></td>
                       </tr>
                       {isPreExpanded && (
                         <tr key={`pre-${o.id}-expanded`} className="bg-blue-50/40">
