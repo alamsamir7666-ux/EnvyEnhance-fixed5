@@ -708,6 +708,10 @@ export function AdminPage() {
   }, [activeTab, fetchCoupons]);
 
   useEffect(() => {
+    if (activeTab === "orders") fetchAdminPreOrders();
+  }, [activeTab]);
+
+  useEffect(() => {
     if (activeTab === "monthly") fetchMonthlyRecords();
   }, [activeTab, fetchMonthlyRecords]);
 
