@@ -366,7 +366,7 @@ export function ProductDetailPage() {
                 </Link>
               ) : ((product as any).productStatus === "out_of_stock" || (product.stock === 0 && (product as any).productStatus !== "pre_order")) ? (
                 <Button
-                  className="flex-1 rounded-full bg-black text-white cursor-not-allowed"
+                  className="flex-1 rounded-full cursor-not-allowed" style={{ background: "#000", color: "#fff" }}
                   size="lg"
                   disabled
                 >
