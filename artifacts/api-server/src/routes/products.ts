@@ -218,7 +218,7 @@ router.get("/products", async (req, res) => {
     const minRating = req.query.minRating ? Number(req.query.minRating) : null;
 
     const pageNum = Math.max(1, parseInt(page));
-    const limitNum = Math.min(50, Math.max(1, parseInt(limit)));
+    const limitNum = Math.min(200, Math.max(1, parseInt(limit)));
     const offset = (pageNum - 1) * limitNum;
 
     const conditions = [];

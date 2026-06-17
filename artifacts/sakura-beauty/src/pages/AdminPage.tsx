@@ -569,7 +569,16 @@ export function AdminPage() {
   const closeCdg = () => setCdg(d=>({...d,open:false}));
   const qc = useQueryClient();
   const { getToken } = useAuth();
-  const { data: productsData, isLoading: productsLoading } = useListProducts({ limit: 200 });
+  const [productsPage, setProductsPage] = useState(1);
+  const { data: productsData, isLoading: productsLoading } = useListProducts({ limit: 25, page: productsPage });
+  const [allProducts, setAllProducts] = useState<any[]>([]);
+  const productsHasMore = productsData ? allProducts.length < (productsData.total ?? 0) : false;
+  useEffect(() => {
+    if (productsData?.products) {
+      if (productsPage === 1) setAllProducts(productsData.products);
+      else setAllProducts(prev => [...prev, ...productsData.products]);
+    }
+  }, [productsData, productsPage]);
   const [orders, setOrders] = useState<any[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [ordersPage, setOrdersPage] = useState(1);
@@ -738,7 +747,7 @@ export function AdminPage() {
     fetchMonthlyRecords();
   }
 
-  const products = productsData?.products ?? [];
+  const products = allProducts;
 
   const filteredProducts = useMemo(
     () => products.filter(p =>
@@ -1244,7 +1253,14 @@ export function AdminPage() {
                     </td>
                   </tr>
                 ))}
-                {filteredProducts.length === 0 && (
+                {productsHasMore && (
+                <div className="flex justify-center py-4">
+                  <Button onClick={() => setProductsPage(p => p + 1)} disabled={productsLoading} className="rounded-xl bg-pink-500 hover:bg-pink-600 text-white">
+                    {productsLoading ? "Loading..." : "Load More Products"}
+                  </Button>
+                </div>
+              )}
+              {filteredProducts.length === 0 && (
                   <tr><td colSpan={6} className="text-center text-gray-400 py-12">No products found</td></tr>
                 )}
               </tbody>
