@@ -807,7 +807,7 @@ export function AdminPage() {
   const filteredOrders = useMemo(
     () => {
       const preOrdersMapped = adminPreOrders.map((o: any) => ({ ...o, _type: "preorder", orderStatus: o.status }));
-      const allOrders = [...orders, ...preOrdersMapped];
+      const allOrders = [...orders, ...preOrdersMapped].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       return allOrders.filter(o => {
         return !orderSearch ||
           String(o.id).includes(orderSearch) ||
@@ -1434,45 +1434,84 @@ export function AdminPage() {
               <tbody className="divide-y divide-gray-50">
                 {filteredOrders.map((o) => {
                 if ((o as any)._type === "preorder") {
+                  const isPreExpanded = expandedOrderId === `pre-${o.id}`;
                   return (
-                    <tr key={`pre-${o.id}`} className="hover:bg-blue-50/30 transition-colors">
-                      <td className="px-4 py-3.5">
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-xs font-bold bg-blue-100 text-blue-700 rounded-full px-2 py-0.5 w-fit">PRE-ORDER</span>
-                          <span className="text-xs font-mono text-gray-500">{o.trackingId}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <p className="font-medium text-gray-800 text-xs">{o.shippingAddress?.fullName ?? "Guest"}</p>
-                        <p className="text-xs text-gray-400">{o.whatsappPhone ?? o.shippingAddress?.phone}</p>
-                      </td>
-                      <td className="px-4 py-3.5 text-xs text-gray-500">{new Date(o.createdAt).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" })}</td>
-                      <td className="px-4 py-3.5">
-                        <span className="text-xs font-medium capitalize">{o.paymentMethod}</span>
-                        <p className={`text-xs ${o.paymentStatus === "paid" ? "text-green-600" : "text-amber-500"}`}>{o.paymentStatus}</p>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <select
-                          value={o.status}
-                          onChange={async e => {
-                            const token = await getToken();
-                            await fetch(`${API}/api/pre-orders/${o.id}/status`, {
-                              method: "POST",
-                              headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                              body: JSON.stringify({ status: e.target.value }),
-                            });
-                            fetchAdminPreOrders();
-                          }}
-                          className="text-xs border rounded-lg px-2 py-1 bg-white"
-                        >
-                          {["pending","confirmed","arrived_in_bd","shipped","delivered","cancelled"].map(s => (
-                            <option key={s} value={s}>{s === "arrived_in_bd" ? "Arrived in BD" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-4 py-3.5 text-right font-semibold text-xs">Tk{(Number(o.discountedPrice) * Number(o.quantity) + Number(o.deliveryCharge)).toLocaleString()}</td>
-                      <td className="px-4 py-3.5"></td>
-                    </tr>
+                    <Fragment key={`pre-${o.id}`}>
+                      <tr className="hover:bg-blue-50/30 transition-colors cursor-pointer" onClick={() => setExpandedOrderId(isPreExpanded ? null : `pre-${o.id}` as any)}>
+                        <td className="px-4 py-3.5">
+                          <div className="flex items-center gap-1.5">
+                            <ChevronDown className={`h-3.5 w-3.5 text-blue-400 transition-transform shrink-0 ${isPreExpanded ? "rotate-180" : ""}`} />
+                            <div>
+                              <span className="text-xs font-bold bg-blue-100 text-blue-700 rounded-full px-2 py-0.5">PRE-ORDER</span>
+                              <p className="text-xs font-mono text-gray-500 mt-0.5">{o.trackingId}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3.5">
+                          <p className="font-medium text-gray-800 text-xs">{o.shippingAddress?.fullName ?? "Guest"}</p>
+                          <p className="text-xs text-gray-400">{o.whatsappPhone ?? o.shippingAddress?.phone}</p>
+                        </td>
+                        <td className="px-4 py-3.5 text-xs text-gray-500">{new Date(o.createdAt).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" })}</td>
+                        <td className="px-4 py-3.5">
+                          <span className="text-xs bg-gray-100 px-2 py-1 rounded-lg font-medium text-gray-600 capitalize">{o.paymentMethod}</span>
+                        </td>
+                        <td className="px-4 py-3.5">
+                          <select
+                            value={o.status}
+                            onClick={e => e.stopPropagation()}
+                            onChange={async e => {
+                              e.stopPropagation();
+                              const token = await getToken();
+                              await fetch(`${API}/api/pre-orders/${o.id}/status`, {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                                body: JSON.stringify({ status: e.target.value }),
+                              });
+                              fetchAdminPreOrders();
+                            }}
+                            className="text-xs border rounded-lg px-2 py-1 bg-white"
+                          >
+                            {["pending","confirmed","arrived_in_bd","shipped","delivered","cancelled"].map(s => (
+                              <option key={s} value={s}>{s === "arrived_in_bd" ? "Arrived in BD" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                            ))}
+                          </select>
+                        </td>
+                        <td className="px-4 py-3.5 text-right font-semibold text-gray-800">Tk{(Number(o.discountedPrice) * Number(o.quantity) + Number(o.deliveryCharge)).toLocaleString()}</td>
+                        <td className="px-4 py-3.5"></td>
+                      </tr>
+                      {isPreExpanded && (
+                        <tr key={`pre-${o.id}-expanded`} className="bg-blue-50/40">
+                          <td colSpan={7} className="px-8 py-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
+                              <div>
+                                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                  <MapPin className="h-3.5 w-3.5" /> Shipping Address
+                                </p>
+                                <p className="font-medium text-gray-800">{o.shippingAddress?.fullName}</p>
+                                <p className="text-gray-500 text-xs">{o.shippingAddress?.street}</p>
+                                <p className="text-gray-500 text-xs">{o.shippingAddress?.city}{o.shippingAddress?.district ? `, ${o.shippingAddress.district}` : ""}</p>
+                                {o.shippingAddress?.phone && <p className="text-gray-500 text-xs mt-0.5">📞 {o.shippingAddress.phone}</p>}
+                                {o.whatsappPhone && <p className="text-gray-500 text-xs mt-0.5">💬 WhatsApp: {o.whatsappPhone}</p>}
+                              </div>
+                              <div>
+                                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Product</p>
+                                <p className="text-xs text-gray-600">{o.productName} × {o.quantity}</p>
+                                <p className="text-xs text-gray-500 mt-1">Price: Tk{Number(o.discountedPrice).toLocaleString()}</p>
+                                <p className="text-xs text-gray-500">Delivery: Tk{Number(o.deliveryCharge).toLocaleString()}</p>
+                                <p className="text-xs font-semibold text-gray-700 mt-1">Total: Tk{(Number(o.discountedPrice) * Number(o.quantity) + Number(o.deliveryCharge)).toLocaleString()}</p>
+                              </div>
+                              <div>
+                                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Payment Info</p>
+                                <p className="text-xs text-gray-600 capitalize">Method: {o.paymentMethod}</p>
+                                <p className={`text-xs capitalize ${o.paymentStatus === "paid" ? "text-green-600" : "text-amber-600"}`}>Status: {o.paymentStatus}</p>
+                                {o.senderNumber && <p className="text-xs text-gray-500 mt-1">From: <span className="font-mono">{o.senderNumber}</span></p>}
+                                {o.transactionId && <p className="text-xs text-gray-500 font-mono mt-1">TxID: {o.transactionId}</p>}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
                   );
                 }
                   const cfg = statusConfig[o.orderStatus] ?? { color: "bg-gray-100 text-gray-600 border-gray-200", icon: AlertCircle };
