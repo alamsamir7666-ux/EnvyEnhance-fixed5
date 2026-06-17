@@ -60,7 +60,7 @@ const navItems = [
   { id: "auditlogs",  label: "Audit Logs",       icon: Activity },
   { id: "qa",         label: "Q&A",              icon: HelpCircle },
   { id: "bulkimport", label: "Bulk Import",      icon: Upload },
-  { id: "preorders",  label: "Pre-Orders",        icon: Package2 },
+
   { id: "settings",   label: "Settings",         icon: Settings },
 ];
 
@@ -580,6 +580,15 @@ export function AdminPage() {
     }
   }, [productsData, productsPage]);
   const [orders, setOrders] = useState<any[]>([]);
+  const [adminPreOrders, setAdminPreOrders] = useState<any[]>([]);
+  const fetchAdminPreOrders = async () => {
+    try {
+      const token = await getToken();
+      const res = await fetch(`${API}/api/pre-orders`, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      if (Array.isArray(data)) setAdminPreOrders(data);
+    } catch {}
+  };
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [ordersPage, setOrdersPage] = useState(1);
   const [ordersHasMore, setOrdersHasMore] = useState(false);
@@ -603,6 +612,7 @@ export function AdminPage() {
 
   useEffect(() => {
     fetchOrders(1);
+    fetchAdminPreOrders();
     getToken().then(token =>
       fetch(`${API}/api/admin/dashboard`, { headers: { Authorization: `Bearer ${token}` } })
         .then(r => r.json())
@@ -1414,6 +1424,48 @@ export function AdminPage() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {filteredOrders.map((o) => {
+                if ((o as any)._type === "preorder") {
+                  return (
+                    <tr key={`pre-${o.id}`} className="hover:bg-blue-50/30 transition-colors">
+                      <td className="px-4 py-3.5">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-xs font-bold bg-blue-100 text-blue-700 rounded-full px-2 py-0.5 w-fit">PRE-ORDER</span>
+                          <span className="text-xs font-mono text-gray-500">{o.trackingId}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <p className="font-medium text-gray-800 text-xs">{o.shippingAddress?.fullName ?? "Guest"}</p>
+                        <p className="text-xs text-gray-400">{o.whatsappPhone ?? o.shippingAddress?.phone}</p>
+                      </td>
+                      <td className="px-4 py-3.5 text-xs text-gray-500">{new Date(o.createdAt).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" })}</td>
+                      <td className="px-4 py-3.5">
+                        <span className="text-xs font-medium capitalize">{o.paymentMethod}</span>
+                        <p className={`text-xs ${o.paymentStatus === "paid" ? "text-green-600" : "text-amber-500"}`}>{o.paymentStatus}</p>
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <select
+                          value={o.status}
+                          onChange={async e => {
+                            const token = await getToken();
+                            await fetch(`${API}/api/pre-orders/${o.id}/status`, {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                              body: JSON.stringify({ status: e.target.value }),
+                            });
+                            fetchAdminPreOrders();
+                          }}
+                          className="text-xs border rounded-lg px-2 py-1 bg-white"
+                        >
+                          {["pending","confirmed","arrived_in_bd","shipped","delivered","cancelled"].map(s => (
+                            <option key={s} value={s}>{s === "arrived_in_bd" ? "Arrived in BD" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="px-4 py-3.5 text-right font-semibold text-xs">Tk{(Number(o.discountedPrice) * Number(o.quantity) + Number(o.deliveryCharge)).toLocaleString()}</td>
+                      <td className="px-4 py-3.5"></td>
+                    </tr>
+                  );
+                }
                   const cfg = statusConfig[o.orderStatus] ?? { color: "bg-gray-100 text-gray-600 border-gray-200", icon: AlertCircle };
                   const StatusIcon = cfg.icon;
                   const isExpanded = expandedOrderId === o.id;
@@ -1460,7 +1512,7 @@ export function AdminPage() {
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              {["pending","confirmed","processing","shipped","delivered","cancelled"].map(s => (
+                              {["pending","confirmed","processing","shipped","arrived_in_bd","delivered","cancelled"].map(s => (
                                 <SelectItem key={s} value={s} className="text-xs capitalize">{s}</SelectItem>
                               ))}
                             </SelectContent>
@@ -3235,7 +3287,7 @@ function BulkImportTab() {
     reviews:    <ReviewsTab />,
     coupons:    <CouponsTab />,
     monthly:    <MonthlyHistoryTab />,
-    preorders:  <PreOrdersTab />,
+
     settings:   <SettingsTab />,
     returns:    <ReturnsTab />,
     affiliates: <AffiliatesTab />,

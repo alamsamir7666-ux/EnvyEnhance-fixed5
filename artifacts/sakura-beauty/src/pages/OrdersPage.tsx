@@ -92,6 +92,19 @@ export function OrdersPage() {
     );
   }, []);
 
+  const [preOrders, setPreOrders] = useState<any[]>([]);
+  useEffect(() => {
+    if (isGuest) return;
+    getToken().then(token =>
+      fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/pre-orders/my`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(r => r.json())
+        .then(d => { if (Array.isArray(d)) setPreOrders(d); })
+        .catch(() => {})
+    );
+  }, [isGuest]);
+
   if (isGuest) {
     if (isLoading) {
       return (
@@ -264,6 +277,33 @@ export function OrdersPage() {
           )}
         </div>
       </div>
-    </div>
+    {preOrders.length > 0 && (
+      <div className="container mx-auto px-4 pb-10">
+        <h2 className="font-serif text-xl font-medium mb-4 mt-6">Pre-Orders ({preOrders.length})</h2>
+        <div className="space-y-3">
+          {preOrders.map((o: any) => (
+            <div key={o.id} className="bg-card border rounded-2xl p-5 shadow-sm">
+              <div className="flex items-start gap-3">
+                {o.productImage && <img src={o.productImage} alt={o.productName} className="h-14 w-14 rounded-xl object-cover" />}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-bold bg-blue-100 text-blue-700 rounded-full px-2 py-0.5">PRE-ORDER</span>
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${o.status === "shipped" ? "bg-indigo-100 text-indigo-700" : o.status === "pending" ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-700"}`}>{o.status}</span>
+                  </div>
+                  <p className="font-medium text-sm truncate">{o.productName}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{o.trackingId}</p>
+                  <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                    <span>Qty: {o.quantity}</span>
+                    <span>Tk{Number(o.discountedPrice) * Number(o.quantity)}</span>
+                    <span>+Tk{o.deliveryCharge} delivery</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
   );
 }
