@@ -801,14 +801,19 @@ export function AdminPage() {
   }, []);
 
   const filteredOrders = useMemo(
-    () => orders.filter(o => {
-      return !orderSearch ||
-        String(o.id).includes(orderSearch) ||
-        o.orderStatus.toLowerCase().includes(orderSearch.toLowerCase()) ||
-        ((o as any).userName ?? "").toLowerCase().includes(orderSearch.toLowerCase()) ||
-        ((o as any).userEmail ?? "").toLowerCase().includes(orderSearch.toLowerCase());
-    }),
-    [orders, orderSearch]
+    () => {
+      const preOrdersMapped = adminPreOrders.map((o: any) => ({ ...o, _type: "preorder", orderStatus: o.status }));
+      const allOrders = [...orders, ...preOrdersMapped];
+      return allOrders.filter(o => {
+        return !orderSearch ||
+          String(o.id).includes(orderSearch) ||
+          ((o as any).orderStatus ?? "").toLowerCase().includes(orderSearch.toLowerCase()) ||
+          ((o as any).status ?? "").toLowerCase().includes(orderSearch.toLowerCase()) ||
+          ((o as any).userName ?? "").toLowerCase().includes(orderSearch.toLowerCase()) ||
+          ((o as any).userEmail ?? "").toLowerCase().includes(orderSearch.toLowerCase());
+      });
+    },
+    [orders, adminPreOrders, orderSearch]
   );
 
   function handleDeleteProduct(id: number) {
