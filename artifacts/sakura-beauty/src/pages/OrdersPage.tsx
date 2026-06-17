@@ -228,13 +228,46 @@ export function OrdersPage() {
         <div className="container mx-auto px-4">
           <PageBreadcrumb crumbs={[{ label: "My Orders", icon: <Package2 className="h-3 w-3" /> }]} className="mb-3" />
           <h1 className="font-serif text-4xl font-medium">My Orders</h1>
-          <p className="text-muted-foreground mt-1 text-sm">{orders.length} order{orders.length !== 1 ? "s" : ""}</p>
+          <p className="text-muted-foreground mt-1 text-sm">{(orders?.length ?? 0) + preOrders.length} order{((orders?.length ?? 0) + preOrders.length) !== 1 ? "s" : ""}</p>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8 max-w-3xl">
         <div className="space-y-4">
-          {orders.map((order, index) => { const rank = orders.length - index; return (
+          {[...(orders ?? []).map((o: any) => ({ ...o, _type: "order" })), ...preOrders.map((o: any) => ({ ...o, _type: "preorder" }))]
+              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+              .map((order, index) => {
+                if ((order as any)._type === "preorder") {
+                  return (
+                    <div key={`pre-${order.id}`} className="bg-card border rounded-xl p-5 shadow-sm">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-bold bg-blue-100 text-blue-700 rounded-full px-2 py-0.5">PRE-ORDER</span>
+                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status === "arrived_in_bd" ? "bg-purple-100 text-purple-700" : order.status === "shipped" ? "bg-indigo-100 text-indigo-700" : order.status === "delivered" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-800"}`}>
+                              {order.status === "arrived_in_bd" ? "Arrived in BD" : order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground font-mono">{order.trackingId}</p>
+                          <p className="text-xs text-muted-foreground mt-1">{new Date(order.createdAt).toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" })}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">Tk{(Number(order.discountedPrice) * Number(order.quantity) + Number(order.deliveryCharge)).toLocaleString()}</p>
+                          <p className="text-xs text-muted-foreground capitalize">{order.paymentMethod}</p>
+                        </div>
+                      </div>
+                      <div className="mt-3 flex items-center gap-3">
+                        {order.productImage && <img src={order.productImage} className="h-12 w-12 rounded-lg object-cover" />}
+                        <div>
+                          <p className="text-sm font-medium">{order.productName}</p>
+                          <p className="text-xs text-muted-foreground">Qty: {order.quantity}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+                const rank = (orders ?? []).length - (orders ?? []).findIndex((o: any) => o.id === order.id);
+                return (
             <Link key={order.id} href={`/orders/${order.id}?rank=${rank}`}>
               <div className="bg-card border rounded-xl p-5 hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-start justify-between">
@@ -277,33 +310,7 @@ export function OrdersPage() {
           )}
         </div>
       </div>
-    {preOrders.length > 0 && (
-      <div className="container mx-auto px-4 pb-10">
-        <h2 className="font-serif text-xl font-medium mb-4 mt-6">Pre-Orders ({preOrders.length})</h2>
-        <div className="space-y-3">
-          {preOrders.map((o: any) => (
-            <div key={o.id} className="bg-card border rounded-2xl p-5 shadow-sm">
-              <div className="flex items-start gap-3">
-                {o.productImage && <img src={o.productImage} alt={o.productName} className="h-14 w-14 rounded-xl object-cover" />}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-bold bg-blue-100 text-blue-700 rounded-full px-2 py-0.5">PRE-ORDER</span>
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${o.status === "shipped" ? "bg-indigo-100 text-indigo-700" : o.status === "pending" ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-700"}`}>{o.status}</span>
-                  </div>
-                  <p className="font-medium text-sm truncate">{o.productName}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{o.trackingId}</p>
-                  <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                    <span>Qty: {o.quantity}</span>
-                    <span>Tk{Number(o.discountedPrice) * Number(o.quantity)}</span>
-                    <span>+Tk{o.deliveryCharge} delivery</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )}
+
   </div>
   );
 }
