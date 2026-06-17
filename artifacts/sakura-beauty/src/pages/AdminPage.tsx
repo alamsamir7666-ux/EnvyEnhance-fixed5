@@ -364,7 +364,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                     <div key={i} className="relative">
                       <img src={url.trim()} className="h-16 w-16 object-cover rounded-lg border" />
                       <button type="button" className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center"
-                        onClick={() => setForm(f => ({ ...f, images: String(f.images).split(",").filter((_, j) => j !== i).join(", ") }))}>?</button>
+                        onClick={() => setForm(f => ({ ...f, images: String(f.images).split(",").filter((_, j) => j !== i).join(", ") }))}>×</button>
                     </div>
                   ))}
                 </div>

@@ -259,7 +259,7 @@ export function CheckoutPage() {
                   </div>
                   <div>
                     <Label htmlFor="phone">Phone *</Label>
-                    <Input id="phone" value={address.phone} onChange={e => setAddress(a => ({ ...a, phone: e.target.value }))} required className="mt-1.5" placeholder="01636575741X" />
+                    <Input id="phone" value={address.phone} onChange={e => setAddress(a => ({ ...a, phone: e.target.value }))} required className="mt-1.5" placeholder="01XXXXXXXXX" />
                   </div>
                   <div>
                     <Label htmlFor="postalCode">Postal Code</Label>
