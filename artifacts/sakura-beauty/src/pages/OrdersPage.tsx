@@ -242,7 +242,8 @@ export function OrdersPage() {
                   const preIdx = preOrders.findIndex((p: any) => p.id === order.id);
                   const preNum = preOrders.length - preIdx;
                   return (
-                    <div key={`pre-${order.id}`} className="bg-card border rounded-xl p-5 shadow-sm">
+                    <Link href={`/pre-orders/${order.trackingId}`}>
+                    <div key={`pre-${order.id}`} className="bg-card border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="flex items-center gap-2 mb-1">

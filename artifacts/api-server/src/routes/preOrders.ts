@@ -55,6 +55,15 @@ router.get("/pre-orders", async (req, res) => {
   } catch { res.status(500).json({ error: "Failed to fetch pre-orders" }); }
 });
 
+router.get("/pre-orders/track/:trackingId", async (req, res) => {
+  try {
+    const { trackingId } = req.params;
+    const [order] = await db.select().from(preOrdersTable).where(eq(preOrdersTable.trackingId, trackingId)).limit(1);
+    if (!order) { res.status(404).json({ error: "Not found" }); return; }
+    res.json(order);
+  } catch { res.status(500).json({ error: "Failed" }); }
+});
+
 router.get("/pre-orders/my", async (req, res) => {
   try {
     const userId = getAuth(req)?.userId;

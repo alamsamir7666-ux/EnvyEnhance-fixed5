@@ -34,6 +34,7 @@ import { CheckoutPage } from "./pages/CheckoutPage";
 import { PreOrderCheckoutPage } from "./pages/PreOrderCheckoutPage";
 import { OrdersPage } from "./pages/OrdersPage";
 import { OrderDetailPage } from "./pages/OrderDetailPage";
+import { PreOrderDetailPage } from "./pages/PreOrderDetailPage";
 import { WishlistPage } from "./pages/WishlistPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { TrackOrderPage } from "./pages/TrackOrderPage";
@@ -389,6 +390,7 @@ function ClerkProviderWithRoutes() {
         <Route path="/pre-order-checkout" component={PreOrderCheckoutPage} />
                 <Route path="/orders" component={OrdersPage} />
                 <Route path="/orders/:id" component={OrderDetailPage} />
+                <Route path="/pre-orders/:id" component={PreOrderDetailPage} />
                 <Route path="/wishlist" component={WishlistPage} />
                 <Route path="/profile">
                   {() => <ProtectedRoute component={ProfilePage} />}
