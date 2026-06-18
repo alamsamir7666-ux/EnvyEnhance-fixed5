@@ -25,7 +25,7 @@ router.post("/pre-orders", async (req, res) => {
     const trackingId = generateTrackingId();
     await db.insert(preOrdersTable).values({
       trackingId,
-      userId: (req as any).auth?.userId ?? "guest",
+      userId: getAuth(req)?.userId ?? "guest",
       productId: Number(productId),
       productName: product.name,
       productImage: ((product.images as string[]) ?? [])[0] ?? "",
