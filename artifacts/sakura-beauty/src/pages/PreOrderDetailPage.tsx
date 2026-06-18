@@ -122,7 +122,12 @@ export function PreOrderDetailPage() {
               <div className="h-9 w-9 rounded-full bg-red-100 flex items-center justify-center shrink-0">
                 <span className="text-red-600 text-lg">⚠️</span>
               </div>
-              <p className="font-medium text-red-700 text-sm">This pre-order has been cancelled</p>
+              <div>
+                <p className="font-medium text-red-700 text-sm">This pre-order has been cancelled</p>
+                {order.cancellationReason && (
+                  <p className="text-sm text-red-600 mt-1">Reason: {order.cancellationReason}</p>
+                )}
+              </div>
             </div>
           </div>
         )}

@@ -75,8 +75,15 @@ router.get("/pre-orders/my", async (req, res) => {
 
 router.post("/pre-orders/:id/status", async (req, res) => {
   try {
-    const { status } = req.body;
-    const [order] = await db.update(preOrdersTable).set({ status, updatedAt: new Date() }).where(eq(preOrdersTable.id, Number(req.params.id))).returning();
+    const { status, cancellationReason } = req.body;
+    const [current] = await db.select().from(preOrdersTable).where(eq(preOrdersTable.id, Number(req.params.id))).limit(1);
+    if (!current) { res.status(404).json({ error: "Not found" }); return; }
+    if (current.status === "delivered" || current.status === "cancelled") {
+      res.status(400).json({ error: "Cannot change status of delivered or cancelled pre-orders" }); return;
+    }
+    const updateData: any = { status, updatedAt: new Date() };
+    if (status === "cancelled" && cancellationReason) updateData.cancellationReason = cancellationReason;
+    const [order] = await db.update(preOrdersTable).set(updateData).where(eq(preOrdersTable.id, Number(req.params.id))).returning();
     res.json(order);
   } catch { res.status(500).json({ error: "Failed" }); }
 });

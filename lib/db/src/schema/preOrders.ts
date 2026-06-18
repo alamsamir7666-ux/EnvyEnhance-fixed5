@@ -23,6 +23,7 @@ export const preOrdersTable = pgTable("pre_orders", {
   paymentStatus: text("payment_status").notNull().default("pending_verification"),
   status: text("status").notNull().default("pending"),
   notifiedAt: timestamp("notified_at"),
+  cancellationReason: text("cancellation_reason"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
