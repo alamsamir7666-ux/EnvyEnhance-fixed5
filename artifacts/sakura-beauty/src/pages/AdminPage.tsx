@@ -1515,6 +1515,12 @@ export function AdminPage() {
                                 <p className={`text-xs capitalize ${o.paymentStatus === "paid" ? "text-green-600" : "text-amber-600"}`}>Status: {o.paymentStatus}</p>
                                 {o.senderNumber && <p className="text-xs text-gray-500 mt-1">From: <span className="font-mono">{o.senderNumber}</span></p>}
                                 {o.transactionId && <p className="text-xs text-gray-500 font-mono mt-1">TxID: {o.transactionId}</p>}
+                                {o.status === "cancelled" && o.cancellationReason && (
+                                  <div className="mt-2 bg-red-50 border border-red-200 rounded-lg p-2">
+                                    <p className="text-xs font-semibold text-red-600">Cancel Reason:</p>
+                                    <p className="text-xs text-red-500 mt-0.5">{o.cancellationReason}</p>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </td>
