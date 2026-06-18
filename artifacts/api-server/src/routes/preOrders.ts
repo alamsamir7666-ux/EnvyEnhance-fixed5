@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { getAuth } from "@clerk/express";
 import { db } from "@workspace/db";
 import { preOrdersTable, productsTable } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
@@ -56,7 +57,7 @@ router.get("/pre-orders", async (req, res) => {
 
 router.get("/pre-orders/my", async (req, res) => {
   try {
-    const userId = (req as any).auth?.userId;
+    const userId = getAuth(req)?.userId;
     if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
     const orders = await db.select().from(preOrdersTable).where(eq(preOrdersTable.userId, userId));
     res.json(orders);
