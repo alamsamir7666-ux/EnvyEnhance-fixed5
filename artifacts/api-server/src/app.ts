@@ -86,13 +86,7 @@ app.use(cookieParser());
 app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 
 // ─── Clerk middleware ─────────────────────────────────────────────────────────
-app.use(
-  clerkMiddleware((req) => ({
-    publishableKey: getClerkProxyHost(req)
-      ? publishableKeyFromHost(getClerkProxyHost(req) ?? "", process.env.CLERK_PUBLISHABLE_KEY)
-      : process.env.CLERK_PUBLISHABLE_KEY,
-  })),
-);
+app.use(clerkMiddleware({ publishableKey: process.env.CLERK_PUBLISHABLE_KEY }));
 
 // ─── Rate Limiting ───────────────────────────────────────────────────────────
 app.use("/api", apiLimiter);
