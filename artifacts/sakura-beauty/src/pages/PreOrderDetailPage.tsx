@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CheckCircle2, Circle, Package, Ship, Truck, Home, ChevronLeft, XCircle, Loader2 } from "lucide-react";
+import { CheckCircle2, Circle, Package, Anchor, Truck, Home, ChevronLeft, XCircle, Loader2 } from "lucide-react";
 import { Link } from "wouter";
 import { PageBreadcrumb } from "@/components/ui/PageBreadcrumb";
 
@@ -134,7 +134,7 @@ export function PreOrderDetailPage() {
               {PRE_STEPS.map((step, i) => {
                 const done = i < currentStep;
                 const active = i === currentStep;
-                const icons = [Circle, CheckCircle2, Ship, Truck, Home];
+                const icons = [Circle, CheckCircle2, Anchor, Truck, Home];
                 const Icon = icons[Math.min(i, icons.length - 1)];
                 return (
                   <div key={step} className="flex-1 flex flex-col items-center relative">
