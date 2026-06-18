@@ -57,7 +57,7 @@ export function PreOrderDetailPage() {
       const r = await fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/pre-orders/${order.id}/status`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ status: "cancelled" }),
+        body: JSON.stringify({ status: "cancelled", cancellationReason: cancelReason.trim() }),
       });
       if (!r.ok) { setCancelError("Failed to cancel."); return; }
       setCancelOpen(false);
