@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CheckCircle2, Tag, MapPin, ChevronDown, ShoppingBag, CreditCard, Truck } from "lucide-react";
 import { Link } from "wouter";
-import { useUser } from "@clerk/react";
+import { useUser, useAuth } from "@clerk/react";
 import { PageBreadcrumb } from "@/components/ui/PageBreadcrumb";
 
 const API = import.meta.env.VITE_API_BASE_URL ?? "";
@@ -19,6 +19,7 @@ export function PreOrderCheckoutPage() {
   const [, setLocation] = useLocation();
   const params = new URLSearchParams(searchStr);
   const { user } = useUser();
+  const { getToken } = useAuth();
 
   const productId = Number(params.get("productId") ?? "0");
   const quantity = Number(params.get("qty") ?? "1");
