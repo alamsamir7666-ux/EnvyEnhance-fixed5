@@ -939,7 +939,7 @@ export function AdminPage() {
             {label}
             {id === "orders" && ordersTotal > 0 && (
               <span className="ml-auto bg-pink-100 text-pink-600 text-xs font-semibold px-2 py-0.5 rounded-full">
-                {ordersTotal}
+                {ordersTotal + adminPreOrders.length}
               </span>
             )}
             {id === "archived" && archivedTotal > 0 && (
