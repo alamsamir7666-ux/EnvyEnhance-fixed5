@@ -1465,11 +1465,17 @@ export function AdminPage() {
                             onClick={e => e.stopPropagation()}
                             onChange={async e => {
                               e.stopPropagation();
+                              const newStatus = e.target.value;
+                              let cancellationReason: string | undefined;
+                              if (newStatus === "cancelled") {
+                                const reason = window.prompt("Enter cancellation reason (optional):");
+                                cancellationReason = reason ?? undefined;
+                              }
                               const token = await getToken();
                               await fetch(`${API}/api/pre-orders/${o.id}/status`, {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                                body: JSON.stringify({ status: e.target.value }),
+                                body: JSON.stringify({ status: newStatus, cancellationReason }),
                               });
                               fetchAdminPreOrders();
                             }}
