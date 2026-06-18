@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { ordersTable, usersTable, productsTable, affiliatesTable } from "@workspace/db";
+import { ordersTable, usersTable, productsTable, affiliatesTable, preOrdersTable } from "@workspace/db";
 import { eq, desc, sql, and, lt, or, not, inArray } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth";
 import { sendOrderStatusUpdate } from "../lib/email";
@@ -248,8 +248,21 @@ router.get("/admin/orders/archived", requireAdmin, async (req: any, res) => {
         )),
     ]);
 
+    const TWO_DAYS_AGO2 = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+    const archivedPreOrders = await db.select()
+      .from(preOrdersTable)
+      .where(and(
+        or(
+          eq(preOrdersTable.status, "delivered"),
+          eq(preOrdersTable.status, "cancelled")
+        ),
+        lt(preOrdersTable.updatedAt, TWO_DAYS_AGO2)
+      ))
+      .orderBy(desc(preOrdersTable.updatedAt));
+
     res.json({
       orders: orders.map(formatOrderWithUser),
+      preOrders: archivedPreOrders,
       total: Number(total),
       page: pageNum,
       hasMore: offset + limit < Number(total),

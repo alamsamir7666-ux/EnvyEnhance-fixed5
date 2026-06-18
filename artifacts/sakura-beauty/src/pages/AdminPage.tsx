@@ -646,6 +646,7 @@ export function AdminPage() {
   const [reviewSearch, setReviewSearch] = useState("");
   const [couponSearch, setCouponSearch] = useState("");
   const [archivedOrders, setArchivedOrders] = useState<any[]>([]);
+  const [archivedPreOrders, setArchivedPreOrders] = useState<any[]>([]);
   const [archivedPage, setArchivedPage] = useState(1);
   const [archivedHasMore, setArchivedHasMore] = useState(false);
   const [archivedTotal, setArchivedTotal] = useState(0);
@@ -780,6 +781,7 @@ export function AdminPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
       setArchivedOrders(prev => append ? [...prev, ...data.orders] : data.orders);
+      if (Array.isArray(data.preOrders)) setArchivedPreOrders(data.preOrders);
       setArchivedHasMore(data.hasMore);
       setArchivedTotal(data.total);
       setArchivedPage(page);
@@ -1884,7 +1886,7 @@ export function AdminPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {archivedOrders.map((o) => {
+                {[...archivedOrders, ...archivedPreOrders.map((o: any) => ({ ...o, _type: "preorder", orderStatus: o.status }))].sort((a,b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map((o) => {
                   const sAddr = (o as any).shippingAddress as { fullName?: string } | null;
                   return (
                     <tr key={o.id} className="hover:bg-gray-50/60 transition-colors">
