@@ -71,9 +71,10 @@ export function PreOrderCheckoutPage() {
     }
     setLoading(true);
     try {
+      const token = await getToken();
       const res = await fetch(API + "/api/pre-orders", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify({
           productId, quantity,
           shippingAddress: { fullName: address.fullName, phone: address.phone, street: address.street, city: address.city, district: address.district, postalCode: address.postalCode || null },
