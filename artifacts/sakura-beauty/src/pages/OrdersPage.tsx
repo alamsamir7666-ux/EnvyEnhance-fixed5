@@ -239,18 +239,25 @@ export function OrdersPage() {
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .map((order, index) => {
                 if ((order as any)._type === "preorder") {
+                  const preIdx = preOrders.findIndex((p: any) => p.id === order.id);
+                  const preNum = preOrders.length - preIdx;
                   return (
                     <div key={`pre-${order.id}`} className="bg-card border rounded-xl p-5 shadow-sm">
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="flex items-center gap-2 mb-1">
+                            <p className="font-medium">Pre-Order #{preNum}</p>
                             <span className="text-xs font-bold bg-blue-100 text-blue-700 rounded-full px-2 py-0.5">PRE-ORDER</span>
                             <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status === "arrived_in_bd" ? "bg-purple-100 text-purple-700" : order.status === "shipped" ? "bg-indigo-100 text-indigo-700" : order.status === "delivered" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-800"}`}>
                               {order.status === "arrived_in_bd" ? "Arrived in BD" : order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                             </span>
                           </div>
-                          <p className="text-xs text-muted-foreground font-mono">{order.trackingId}</p>
-                          <p className="text-xs text-muted-foreground mt-1">{new Date(order.createdAt).toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" })}</p>
+                          <p className="text-xs text-muted-foreground">{new Date(order.createdAt).toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" })}</p>
+                          <div className="flex items-center mt-1 gap-1">
+                            <span className="text-xs text-muted-foreground font-mono">{order.trackingId}</span>
+                            <CopyTrackingButton trackingId={order.trackingId} />
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1">🚢 Expected delivery: 5-8 days after arrival</p>
                         </div>
                         <div className="text-right">
                           <p className="font-semibold">Tk{(Number(order.discountedPrice) * Number(order.quantity) + Number(order.deliveryCharge)).toLocaleString()}</p>
@@ -259,10 +266,13 @@ export function OrdersPage() {
                       </div>
                       <div className="mt-3 flex items-center gap-3">
                         {order.productImage && <img src={order.productImage} className="h-12 w-12 rounded-lg object-cover" />}
-                        <div>
+                        <div className="flex-1">
                           <p className="text-sm font-medium">{order.productName}</p>
                           <p className="text-xs text-muted-foreground">Qty: {order.quantity}</p>
                         </div>
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                          View details <ArrowRight className="h-3 w-3" />
+                        </span>
                       </div>
                     </div>
                   );
