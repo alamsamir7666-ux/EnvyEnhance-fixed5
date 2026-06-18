@@ -88,10 +88,9 @@ app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 // ─── Clerk middleware ─────────────────────────────────────────────────────────
 app.use(
   clerkMiddleware((req) => ({
-    publishableKey: publishableKeyFromHost(
-      getClerkProxyHost(req) ?? "",
-      process.env.CLERK_PUBLISHABLE_KEY,
-    ),
+    publishableKey: getClerkProxyHost(req)
+      ? publishableKeyFromHost(getClerkProxyHost(req) ?? "", process.env.CLERK_PUBLISHABLE_KEY)
+      : process.env.CLERK_PUBLISHABLE_KEY,
   })),
 );
 
