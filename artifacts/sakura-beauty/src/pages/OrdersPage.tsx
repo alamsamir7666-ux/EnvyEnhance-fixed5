@@ -281,11 +281,12 @@ export function OrdersPage() {
                             <p className="text-sm">Estimated Delivery: 5-8 days after arrival</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-start gap-1">
                           {["Awaiting Arrival","Ready for Shipping","Delivered"].map((label, i) => {
-                            const stepDone = isCancelled ? false : preStepIdx >= (i === 0 ? 2 : i === 1 ? 3 : 4);
+                            const thresholds = [1, 3, 4];
+                            const stepDone = isCancelled ? false : preStepIdx >= thresholds[i];
                             return (
-                              <div key={label} className="flex-1">
+                              <div key={label} className="flex-1 flex flex-col">
                                 <div className={`h-1 rounded-full ${stepDone ? "bg-foreground" : "bg-border"}`} />
                                 <p className={`text-[10px] mt-1 text-center ${isCancelled ? "line-through text-muted-foreground" : stepDone ? "text-foreground" : "text-muted-foreground"}`}>{label}</p>
                               </div>
