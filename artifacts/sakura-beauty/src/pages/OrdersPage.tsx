@@ -239,40 +239,65 @@ export function OrdersPage() {
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .map((order, index) => {
                 if ((order as any)._type === "preorder") {
-                  const preIdx = preOrders.findIndex((p: any) => p.id === order.id);
-                  const preNum = preOrders.length - preIdx;
+                  const preIdx2 = preOrders.findIndex((p: any) => p.id === order.id);
+                  const preNum2 = preOrders.length - preIdx2;
+                  const preTotal = Number(order.discountedPrice) * Number(order.quantity) + Number(order.deliveryCharge);
+                  const preStepIdx = ["pending","confirmed","arrived_in_bd","shipped","delivered"].indexOf(order.status);
+                  const isCancelled = order.status === "cancelled";
                   return (
                     <Link key={`pre-${order.id}`} href={`/pre-orders/${order.trackingId}`}>
                     <div className="bg-card border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <p className="font-medium">Pre-Order #{preNum}</p>
-                            <span className="text-xs font-bold bg-blue-100 text-blue-700 rounded-full px-2 py-0.5">PRE-ORDER</span>
-                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status === "arrived_in_bd" ? "bg-purple-100 text-purple-700" : order.status === "shipped" ? "bg-indigo-100 text-indigo-700" : order.status === "delivered" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-800"}`}>
-                              {order.status === "arrived_in_bd" ? "Arrived in BD" : order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                            </span>
-                          </div>
-                          <p className="text-xs text-muted-foreground">{new Date(order.createdAt).toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" })}</p>
-                          <div className="flex items-center mt-1 gap-1">
-                            <span className="text-xs text-muted-foreground font-mono">{order.trackingId}</span>
-                            <CopyTrackingButton trackingId={order.trackingId} />
-                          </div>
-                          <p className="text-xs text-muted-foreground mt-1">🚢 Expected delivery: 5-8 days after arrival</p>
-                        </div>
+                      <div className="flex items-start justify-between mb-3">
+                        <p className="font-semibold text-lg">Pre-Order #{preNum2}</p>
                         <div className="text-right">
-                          <p className="font-semibold">Tk{(Number(order.discountedPrice) * Number(order.quantity) + Number(order.deliveryCharge)).toLocaleString()}</p>
-                          <p className="text-xs text-muted-foreground capitalize">{order.paymentMethod}</p>
+                          <p className="text-xs text-muted-foreground">Current Total:</p>
+                          <p className="font-semibold text-lg">Tk {preTotal.toLocaleString()}</p>
                         </div>
                       </div>
-                      <div className="mt-3 flex items-center gap-3">
-                        {order.productImage && <img src={order.productImage} className="h-12 w-12 rounded-lg object-cover" />}
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">{order.productName}</p>
-                          <p className="text-xs text-muted-foreground">Qty: {order.quantity}</p>
+
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-xs font-bold bg-blue-100 text-blue-700 rounded-full px-2.5 py-1">PRE-ORDER</span>
+                        <span className={`text-xs font-bold rounded-full px-2.5 py-1 ${isCancelled ? "bg-red-100 text-red-700" : order.status === "arrived_in_bd" ? "bg-purple-100 text-purple-700" : order.status === "shipped" ? "bg-indigo-100 text-indigo-700" : order.status === "delivered" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-800"}`}>
+                          {isCancelled ? "✕ CANCELLED" : order.status === "arrived_in_bd" ? "Arrived in BD" : order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-sm mb-1">
+                        <p className="text-muted-foreground">Order Date: <span className="text-foreground">{new Date(order.createdAt).toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" })}</span></p>
+                        <p className="text-muted-foreground">Payment: <span className="text-foreground capitalize">{order.paymentMethod}</span></p>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 mb-4">
+                        <p className="text-sm text-muted-foreground">Tracking ID:</p>
+                        <span className="text-sm font-mono bg-muted px-1.5 py-0.5 rounded">{order.trackingId}</span>
+                        <CopyTrackingButton trackingId={order.trackingId} />
+                      </div>
+
+                      <div className="bg-muted/40 rounded-xl p-4 mb-4">
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className="text-2xl">🚢</span>
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">Delivery Information</p>
+                            <p className="text-sm">Estimated Delivery: 5-8 days after arrival</p>
+                          </div>
                         </div>
-                        <span className="text-xs text-muted-foreground flex items-center gap-1">
-                          View details <ArrowRight className="h-3 w-3" />
+                        <div className="flex items-center gap-1">
+                          {["Awaiting Arrival","Ready for Shipping","Delivered"].map((label, i) => {
+                            const stepDone = isCancelled ? false : preStepIdx >= (i === 0 ? 2 : i === 1 ? 3 : 4);
+                            return (
+                              <div key={label} className="flex-1">
+                                <div className={`h-1 rounded-full ${stepDone ? "bg-foreground" : "bg-border"}`} />
+                                <p className={`text-[10px] mt-1 text-center ${isCancelled ? "line-through text-muted-foreground" : stepDone ? "text-foreground" : "text-muted-foreground"}`}>{label}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        {order.productImage && <img src={order.productImage} className="h-10 w-10 rounded-lg object-cover" />}
+                        <span className="text-sm font-medium flex items-center gap-1 ml-auto">
+                          View Details <ArrowRight className="h-3.5 w-3.5" />
                         </span>
                       </div>
                     </div>
