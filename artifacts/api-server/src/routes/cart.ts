@@ -23,7 +23,7 @@ async function buildCart(userId: string) {
         ? Number(product.discountPrice)
         : originalPrice;
 
-    subtotal += originalPrice * cart.quantity;
+    subtotal += discountedPrice * cart.quantity;
     if (product.discountPrice != null) {
       discount += (originalPrice - discountedPrice) * cart.quantity;
     }
@@ -54,7 +54,7 @@ async function buildCart(userId: string) {
     };
   });
 
-  return { items: mapped, subtotal, discount, total: subtotal - discount };
+  return { items: mapped, subtotal, discount, total: subtotal };
 }
 
 router.get("/cart", requireAuth, async (req: any, res) => {
