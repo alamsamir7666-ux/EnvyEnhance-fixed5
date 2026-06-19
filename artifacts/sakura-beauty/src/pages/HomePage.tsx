@@ -38,7 +38,7 @@ const categoryBgs: Record<string, string> = {
 
 function CollectionSliderSkeleton() {
   return (
-    <section className="py-16 bg-muted/20">
+    <section className="pt-16 pb-8 bg-muted/20">
       <div className="container mx-auto px-4">
         <div className="flex items-end justify-between mb-8">
           <div className="space-y-2">
@@ -61,7 +61,7 @@ function HomePageSkeleton() {
     <div className="min-h-screen">
 
       <CollectionSliderSkeleton />
-      <section className="py-16 bg-background">
+      <section className="pt-8 pb-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="flex items-end justify-between mb-10">
             <div className="space-y-2">
@@ -88,7 +88,7 @@ function CollectionSlider() {
   if (!categories.length) return null;
 
   return (
-    <section className="py-16 bg-muted/20">
+    <section className="pt-16 pb-8 bg-muted/20">
       <div className="container mx-auto px-4">
         <div className="flex items-end justify-between mb-8">
           <div>
@@ -224,7 +224,7 @@ export function HomePage() {
       <CollectionSlider />
 
       {/* Featured Rituals */}
-      <section className="py-16 bg-background">
+      <section className="pt-8 pb-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="flex items-end justify-between mb-10">
             <div>
