@@ -265,7 +265,7 @@ export function OrdersPage() {
 
                       <div className="flex items-center justify-between text-sm mb-1">
                         <p className="text-muted-foreground">Order Date: <span className="text-foreground">{new Date(order.createdAt).toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" })}</span></p>
-                        <p className="text-muted-foreground">Payment: <span className="text-foreground capitalize">{order.paymentMethod}</span></p>
+                        <p className="text-muted-foreground flex items-center gap-1">Payment: {order.paymentMethod === "bkash" ? <span className="flex items-center gap-1 text-foreground"><img src={BKASH_ICON} className="h-4 w-4 inline" />bKash</span> : <span className="text-foreground capitalize">{order.paymentMethod}</span>}</p>
                       </div>
 
                       <div className="flex items-center gap-1.5 mb-4">
