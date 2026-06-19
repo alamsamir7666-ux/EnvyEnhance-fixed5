@@ -49,7 +49,7 @@ const socials = [
   },
   {
     label: "TikTok",
-    href: "https://vm.tiktok.com/ZS9NEJSpfe1kL-PqAvs/",
+    href: "https://www.tiktok.com/@envyenhance",
     icon: TikTokIcon,
     color: "hover:bg-black",
   },
