@@ -294,9 +294,17 @@ export function OrdersPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between">
-                        {order.productImage && <img src={order.productImage} className="h-10 w-10 rounded-lg object-cover" />}
-                        <span className="text-sm font-medium flex items-center gap-1 ml-auto">
+                      <div className="flex items-center justify-between pt-1">
+                        <a
+                          href="https://wa.me/8801636575741"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={e => e.stopPropagation()}
+                          className="text-sm text-muted-foreground flex items-center gap-1 hover:text-foreground"
+                        >
+                          Contact Support
+                        </a>
+                        <span className="text-sm font-medium bg-muted px-3 py-1.5 rounded-full flex items-center gap-1">
                           View Details <ArrowRight className="h-3.5 w-3.5" />
                         </span>
                       </div>
