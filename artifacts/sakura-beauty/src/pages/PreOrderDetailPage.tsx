@@ -135,7 +135,7 @@ export function PreOrderDetailPage() {
         {order.status !== "cancelled" && (
           <div className="bg-card border rounded-xl p-6">
             <h2 className="font-medium mb-6">Pre-Order Progress</h2>
-            <div className="flex items-center gap-0">
+            <div className="flex items-start gap-0">
               {PRE_STEPS.map((step, i) => {
                 const done = i < currentStep;
                 const active = i === currentStep;
@@ -146,10 +146,12 @@ export function PreOrderDetailPage() {
                     {i < PRE_STEPS.length - 1 && (
                       <div className={`absolute top-5 left-1/2 w-full h-0.5 ${done ? "bg-accent" : "bg-border"}`} />
                     )}
-                    <div className={`relative z-10 h-10 w-10 rounded-full flex items-center justify-center border-2 transition-colors ${done ? "bg-accent border-accent text-white" : active ? "bg-background border-primary" : "bg-background border-border text-muted-foreground"}`}>
+                    <div className={`relative z-10 h-10 w-10 rounded-full flex items-center justify-center border-2 transition-colors shrink-0 ${done ? "bg-accent border-accent text-white" : active ? "bg-background border-primary" : "bg-background border-border text-muted-foreground"}`}>
                       {done ? <CheckCircle2 className="h-5 w-5 text-white" /> : <Icon className="h-5 w-5" />}
                     </div>
-                    <p className={`text-xs mt-2 text-center leading-tight max-w-[70px] mx-auto ${active ? "font-medium" : "text-muted-foreground"}`}>{PRE_STEP_LABELS[i]}</p>
+                    <div className="h-8 flex items-start justify-center mt-2 w-full px-0.5">
+                      <p className={`text-xs text-center leading-tight ${active ? "font-medium" : "text-muted-foreground"}`}>{PRE_STEP_LABELS[i]}</p>
+                    </div>
                   </div>
                 );
               })}
