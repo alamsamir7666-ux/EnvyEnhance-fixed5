@@ -149,7 +149,7 @@ export function PreOrderDetailPage() {
                     <div className={`relative z-10 h-10 w-10 rounded-full flex items-center justify-center border-2 transition-colors ${done ? "bg-accent border-accent text-white" : active ? "bg-background border-primary" : "bg-background border-border text-muted-foreground"}`}>
                       {done ? <CheckCircle2 className="h-5 w-5 text-white" /> : <Icon className="h-5 w-5" />}
                     </div>
-                    <p className={`text-xs mt-2 text-center leading-tight w-16 ${active ? "font-medium" : "text-muted-foreground"}`}>{PRE_STEP_LABELS[i]}</p>
+                    <p className={`text-xs mt-2 text-center leading-tight max-w-[70px] mx-auto ${active ? "font-medium" : "text-muted-foreground"}`}>{PRE_STEP_LABELS[i]}</p>
                   </div>
                 );
               })}
