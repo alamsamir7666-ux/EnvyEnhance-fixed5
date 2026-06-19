@@ -6,6 +6,7 @@ import { useAuth, useUser } from "@clerk/react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Package2, ArrowRight, Copy, Check } from "lucide-react";
+import { BKASH_ICON, SHIP_ICON } from "@/lib/preorderIcons";
 
 const statusColors: Record<string, string> = {
   pending:          "bg-yellow-100 text-yellow-800",
@@ -275,7 +276,7 @@ export function OrdersPage() {
 
                       <div className="bg-muted/40 rounded-xl p-4 mb-4">
                         <div className="flex items-center gap-3 mb-3">
-                          <span className="text-2xl">🚢</span>
+                          <img src={SHIP_ICON} className="h-8 w-8 rounded" />
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Delivery Information</p>
                             <p className="text-sm">Estimated Delivery: 5-8 days after arrival</p>
