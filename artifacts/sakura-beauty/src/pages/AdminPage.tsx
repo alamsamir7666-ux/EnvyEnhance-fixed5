@@ -1460,12 +1460,7 @@ export function AdminPage() {
                         <td className="px-4 py-3.5"></td>
                         <td className="px-4 py-3.5 text-right font-semibold text-gray-800">Tk{(Number(o.discountedPrice) * Number(o.quantity) + Number(o.deliveryCharge)).toLocaleString()}</td>
                         <td className="px-4 py-3.5 text-right" onClick={e => e.stopPropagation()}>
-                          <select
-                            value={o.status}
-                            onClick={e => e.stopPropagation()}
-                            onChange={async e => {
-                              e.stopPropagation();
-                              const newStatus = e.target.value;
+                          <Select value={o.status} onValueChange={async (newStatus) => {
                               let cancellationReason: string | undefined;
                               if (newStatus === "cancelled") {
                                 const reason = window.prompt("Enter cancellation reason (optional):");
@@ -1478,14 +1473,16 @@ export function AdminPage() {
                                 body: JSON.stringify({ status: newStatus, cancellationReason }),
                               });
                               fetchAdminPreOrders();
-                            }}
-                            className={`w-34 text-xs border rounded-lg px-2 py-1 h-8 border-gray-200 ${(o.status === "delivered" || o.status === "cancelled") ? "bg-gray-100 text-gray-400 cursor-not-allowed opacity-50" : "bg-white"}`}
-                            disabled={o.status === "delivered" || o.status === "cancelled"}
-                          >
-                            {["pending","confirmed","arrived_in_bd","shipped","delivered","cancelled"].map(s => (
-                              <option key={s} value={s}>{s === "arrived_in_bd" ? "Arrived in BD" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
-                            ))}
-                          </select>
+                            }} disabled={o.status === "delivered" || o.status === "cancelled"}>
+                            <SelectTrigger className={`w-34 text-xs h-8 rounded-lg border-gray-200 ${(o.status === "delivered" || o.status === "cancelled") ? "opacity-50 cursor-not-allowed" : ""}`}>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {["pending","confirmed","arrived_in_bd","shipped","delivered","cancelled"].map(s => (
+                                <SelectItem key={s} value={s} className="text-xs">{s === "arrived_in_bd" ? "Arrived in BD" : s.charAt(0).toUpperCase() + s.slice(1)}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </td>
                       </tr>
                       {isPreExpanded && (
