@@ -1575,7 +1575,7 @@ export function AdminPage() {
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              {["pending","confirmed","processing","shipped","delivered","cancelled"].map(s => (
+                              {["pending","confirmed","arrived_in_bd","processing","shipped","delivered","cancelled"].map(s => (
                                 <SelectItem key={s} value={s} className="text-xs capitalize">{s}</SelectItem>
                               ))}
                             </SelectContent>
