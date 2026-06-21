@@ -1482,8 +1482,8 @@ export function AdminPage() {
                             className={`text-xs border rounded-lg px-2 py-1 ${(o.status === "delivered" || o.status === "cancelled") ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white"}`}
                             disabled={o.status === "delivered" || o.status === "cancelled"}
                           >
-                            {["pending","confirmed","shipped","delivered","cancelled"].map(s => (
-                              <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                            {["pending","confirmed","arrived_in_bd","shipped","delivered","cancelled"].map(s => (
+                              <option key={s} value={s}>{s === "arrived_in_bd" ? "Arrived in BD" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
                             ))}
                           </select>
                         </td>
