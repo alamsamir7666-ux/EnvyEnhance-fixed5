@@ -1457,7 +1457,16 @@ export function AdminPage() {
                         <td className="px-4 py-3.5">
                           <span className="text-xs bg-gray-100 px-2 py-1 rounded-lg font-medium text-gray-600 capitalize">{o.paymentMethod}</span>
                         </td>
-                        <td className="px-4 py-3.5"></td>
+                        <td className="px-4 py-3.5">
+                          <span className={`flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full text-xs font-medium border ${
+                            o.status === "delivered" ? "bg-green-50 text-green-700 border-green-200" :
+                            o.status === "cancelled" ? "bg-red-50 text-red-700 border-red-200" :
+                            o.status === "shipped" ? "bg-blue-50 text-blue-700 border-blue-200" :
+                            o.status === "arrived_in_bd" ? "bg-purple-50 text-purple-700 border-purple-200" :
+                            o.status === "confirmed" ? "bg-emerald-50 text-emerald-700 border-emerald-200" :
+                            "bg-yellow-50 text-yellow-700 border-yellow-200"
+                          }`}>{o.status === "arrived_in_bd" ? "Arrived in BD" : o.status.charAt(0).toUpperCase() + o.status.slice(1)}</span>
+                        </td>
                         <td className="px-4 py-3.5 text-right font-semibold text-gray-800">Tk{(Number(o.discountedPrice) * Number(o.quantity) + Number(o.deliveryCharge)).toLocaleString()}</td>
                         <td className="px-4 py-3.5 text-right" onClick={e => e.stopPropagation()}>
                           <Select value={o.status} onValueChange={async (newStatus) => {
