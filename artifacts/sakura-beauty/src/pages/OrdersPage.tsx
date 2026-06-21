@@ -284,7 +284,7 @@ export function OrdersPage() {
                         </div>
                         <div className="flex items-start gap-1">
                           {["Awaiting Arrival","Ready for Shipping","Delivered"].map((label, i) => {
-                            const thresholds = [1, 3, 4];
+                            const thresholds = [1, 2, 4];
                             const stepDone = isCancelled ? false : preStepIdx >= thresholds[i];
                             return (
                               <div key={label} className="flex-1 flex flex-col">
