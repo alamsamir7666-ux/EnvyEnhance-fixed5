@@ -398,7 +398,7 @@ export function ProductDetailPage() {
             <ul className="space-y-1.5">
               {(product as ExtendedProduct).keyBenefits.map((b: string, i: number) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="mt-0.5 shrink-0 h-4 w-4 rounded-full bg-accent/15 text-accent flex items-center justify-center text-[10px] font-bold">?</span>
+                  <span className="mt-0.5 shrink-0 h-4 w-4 rounded-full bg-accent/15 text-accent flex items-center justify-center text-[10px] font-bold">✓</span>
                   {b}
                 </li>
               ))}
