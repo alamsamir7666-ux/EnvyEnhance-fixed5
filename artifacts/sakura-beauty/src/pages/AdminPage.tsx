@@ -1479,7 +1479,7 @@ export function AdminPage() {
                               });
                               fetchAdminPreOrders();
                             }}
-                            className={`text-xs border rounded-lg px-2 py-1 ${(o.status === "delivered" || o.status === "cancelled") ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white"}`}
+                            className={`w-34 text-xs border rounded-lg px-2 py-1 h-8 border-gray-200 ${(o.status === "delivered" || o.status === "cancelled") ? "bg-gray-100 text-gray-400 cursor-not-allowed opacity-50" : "bg-white"}`}
                             disabled={o.status === "delivered" || o.status === "cancelled"}
                           >
                             {["pending","confirmed","arrived_in_bd","shipped","delivered","cancelled"].map(s => (
