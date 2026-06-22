@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "wouter";
 import { useAuth } from "@clerk/react";
 import { Button } from "@/components/ui/button";
+import { BKASH_ICON, NAGAD_ICON } from "@/lib/preorderIcons";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -180,7 +181,7 @@ export function PreOrderDetailPage() {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Method</span>
-                <span className="capitalize">{order.paymentMethod}</span>
+                <span className="flex items-center gap-1 capitalize">{order.paymentMethod === "bkash" && <img src={BKASH_ICON} className="h-4 w-4 rounded-sm" />}{order.paymentMethod === "nagad" && <img src={NAGAD_ICON} className="h-4 w-4 rounded-sm" />}{order.paymentMethod === "bkash" ? "bKash" : order.paymentMethod === "nagad" ? "Nagad" : order.paymentMethod}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Status</span>

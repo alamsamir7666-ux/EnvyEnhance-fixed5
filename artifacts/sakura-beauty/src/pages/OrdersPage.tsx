@@ -6,7 +6,7 @@ import { useAuth, useUser } from "@clerk/react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Package2, ArrowRight, Copy, Check } from "lucide-react";
-import { BKASH_ICON, SHIP_ICON } from "@/lib/preorderIcons";
+import { BKASH_ICON, NAGAD_ICON, SHIP_ICON } from "@/lib/preorderIcons";
 
 const statusColors: Record<string, string> = {
   pending:          "bg-yellow-100 text-yellow-800",
@@ -265,7 +265,7 @@ export function OrdersPage() {
 
                       <div className="flex items-center justify-between text-sm mb-1">
                         <p className="text-muted-foreground">Order Date: <span className="text-foreground">{new Date(order.createdAt).toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" })}</span></p>
-                        <p className="text-muted-foreground flex items-center gap-1">Payment: {order.paymentMethod === "bkash" ? <span className="flex items-center gap-1 text-foreground"><img src={BKASH_ICON} className="h-4 w-4 inline" />bKash</span> : <span className="text-foreground capitalize">{order.paymentMethod}</span>}</p>
+                        <p className="text-muted-foreground flex items-center gap-1">Payment: {order.paymentMethod === "bkash" ? <span className="flex items-center gap-1 text-foreground"><img src={BKASH_ICON} className="h-4 w-4 inline" />bKash</span> : order.paymentMethod === "nagad" ? <span className="flex items-center gap-1 text-foreground"><img src={NAGAD_ICON} className="h-4 w-4 inline rounded-sm" />Nagad</span> : <span className="text-foreground capitalize">{order.paymentMethod}</span>}</p>
                       </div>
 
                       <div className="flex items-center gap-1.5 mb-4">
