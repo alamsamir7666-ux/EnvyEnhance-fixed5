@@ -191,22 +191,12 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                 <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue placeholder="Not on homepage" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">Not on homepage</SelectItem>
-                  <SelectItem value="top">Top Section</SelectItem>
-                  <SelectItem value="bottom">Below Section</SelectItem>
+                  <SelectItem value="trending">Trending</SelectItem>
+                  <SelectItem value="new_arrivals">New Arrivals</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-2 flex items-center gap-2">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={false}
-                  onChange={() => {}}
-                  className="w-4 h-4 accent-pink-500"
-                />
 
-              </label>
-            </div>
             <div>
               <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Price (Tk) *</Label>
               <Input type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required className="mt-1.5 rounded-xl" placeholder="1500" />
@@ -1240,7 +1230,7 @@ export function AdminPage() {
                             ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
                             : "bg-blue-50 text-blue-600 border border-blue-200"
                         }`}>
-                          {(p as any).homepageTag === "trending" ? "Top Section" : "Below Section"}
+                          {(p as any).homepageTag === "trending" ? "Trending" : "New Arrivals"}
                         </span>
                       ) : (
                         <span className="text-xs text-gray-400">-</span>
