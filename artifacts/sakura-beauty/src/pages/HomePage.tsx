@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { ProductCardSkeleton, ProductGridSkeleton } from "@/components/ui/ProductCardSkeleton";
-import { useGetFeaturedProducts, useListCategories, getListCategoriesQueryKey } from "@workspace/api-client-react";
+import { useListProducts, useListCategories, getListCategoriesQueryKey } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePageContext } from "@/contexts/PageContext";
 import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
@@ -152,9 +152,11 @@ function CollectionSlider() {
 const PAGE_SIZE = 4;
 
 export function HomePage() {
-  const { data: featured, isLoading: featuredLoading } = useGetFeaturedProducts();
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [activeTab, setActiveTab] = useState<"trending" | "new_arrivals">("trending");
   const { setPageReady } = usePageContext();
+  const { data: trendingData, isLoading: trendingLoading } = useListProducts({ homepageTag: "trending", limit: 22 } as any);
+  const { data: newArrivalsData, isLoading: newArrivalsLoading } = useListProducts({ homepageTag: "new_arrivals", limit: 22 } as any);
+  const featuredLoading = trendingLoading || newArrivalsLoading;
   const recentlyViewed = useRecentlyViewed();
   const [heroSearch, setHeroSearch] = useState("");
   const [, navigate] = useLocation();
@@ -169,14 +171,9 @@ export function HomePage() {
 
   if (featuredLoading) return <HomePageSkeleton />;
 
-  type FeaturedProduct = typeof featured extends (infer T)[] | undefined ? T : never;
-  const sorted = [...(featured ?? [])].sort((a, b) => {
-    const aTop = (a as FeaturedProduct & { homepageSection?: string }).homepageSection === "top" ? 0 : 1;
-    const bTop = (b as FeaturedProduct & { homepageSection?: string }).homepageSection === "top" ? 0 : 1;
-    return aTop - bTop;
-  });
-  const visible = sorted.slice(0, visibleCount);
-  const hasMore = visibleCount < sorted.length;
+  const trendingProducts = trendingData?.products ?? [];
+  const newArrivalsProducts = newArrivalsData?.products ?? [];
+  const activeProducts = activeTab === "trending" ? trendingProducts : newArrivalsProducts;
 
   return (
     <div className="min-h-screen">
@@ -223,40 +220,39 @@ export function HomePage() {
       {/* Collection Cards Slider */}
       <CollectionSlider />
 
-      {/* Featured Rituals */}
+      {/* J-Beauty Glow Section */}
       <section className="pt-8 pb-16 bg-background">
         <div className="container mx-auto px-4">
-          <div className="flex items-end justify-between mb-10">
-            <div>
-              <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">Curated for you</p>
-              <h2 className="font-serif text-4xl font-medium">Featured Rituals</h2>
-            </div>
+          <div className="flex items-end justify-between mb-6">
+            <h2 className="font-serif text-3xl font-medium">Discover Your J-Beauty Glow</h2>
             <Link href="/products">
               <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
                 View all <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
             </Link>
           </div>
-          {sorted.length === 0 ? (
-            <p className="text-center text-muted-foreground py-10">No featured products yet. Check back soon!</p>
+
+          {/* Tabs */}
+          <div className="flex gap-2 mb-8">
+            <button
+              onClick={() => setActiveTab("trending")}
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === "trending" ? "bg-foreground text-background" : "bg-muted text-muted-foreground hover:text-foreground"}`}
+            >Trending</button>
+            <button
+              onClick={() => setActiveTab("new_arrivals")}
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === "new_arrivals" ? "bg-foreground text-background" : "bg-muted text-muted-foreground hover:text-foreground"}`}
+            >New Arrivals</button>
+          </div>
+
+          {activeProducts.length === 0 ? (
+            <p className="text-center text-muted-foreground py-10">No products here yet. Check back soon!</p>
           ) : (
             <>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-                {visible.map((product) => (
-                  <ProductCard key={product.id} product={product} backContext="featured" />
+                {activeProducts.map((product) => (
+                  <ProductCard key={product.id} product={product as any} backContext="featured" />
                 ))}
               </div>
-              {hasMore && (
-                <div className="flex justify-center mt-10">
-                  <Button
-                    variant="outline"
-                    className="rounded-full px-8 border-accent text-accent hover:bg-accent hover:text-white transition-colors"
-                    onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                  >
-                    Show More <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              )}
             </>
           )}
         </div>

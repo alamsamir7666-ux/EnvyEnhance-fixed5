@@ -87,8 +87,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
     mainIngredients: (product?.mainIngredients ?? []) as { name: string; icon: string }[],
     bestFor: (product?.bestFor ?? []).join("\n"),
     texture: product?.texture ?? "",
-    isFeatured: product?.isFeatured ?? false,
-    homepageSection: product?.homepageSection ?? "",
+    homepageTag: product?.homepageTag ?? "",
   });
 
   const [newIngName, setNewIngName] = useState("");
@@ -124,8 +123,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
       mainIngredients: form.mainIngredients,
       bestFor: form.bestFor.split("\n").map((s: string) => s.trim()).filter(Boolean),
       texture: form.texture || null,
-      isFeatured: form.isFeatured,
-      homepageSection: form.homepageSection || null,
+      homepageTag: form.homepageTag || null,
       price: parseFloat(String(form.price)),
       discountPrice: form.discountPrice ? parseFloat(String(form.discountPrice)) : undefined,
       stock: parseInt(String(form.stock)),
@@ -189,7 +187,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
             </div>
             <div>
               <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Homepage Section</Label>
-              <Select value={form.homepageSection || "none"} onValueChange={v => setForm(f => ({ ...f, homepageSection: v === "none" ? "" : v }))}>
+              <Select value={form.homepageTag || "none"} onValueChange={v => setForm(f => ({ ...f, homepageTag: v === "none" ? "" : v }))}>
                 <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue placeholder="Not on homepage" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">Not on homepage</SelectItem>
@@ -202,11 +200,11 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={form.isFeatured}
-                  onChange={e => setForm(f => ({ ...f, isFeatured: e.target.checked }))}
+                  checked={false}
+                  onChange={() => {}}
                   className="w-4 h-4 accent-pink-500"
                 />
-                <span className="text-sm font-medium">Mark as Featured</span>
+
               </label>
             </div>
             <div>
@@ -1226,7 +1224,7 @@ export function AdminPage() {
                         )}
                         <div>
                           <p className="font-medium text-gray-800">{p.name}</p>
-                          {p.isFeatured && (
+                          {false && (
                             <span className="text-xs bg-pink-50 text-pink-500 border border-pink-200 px-1.5 py-0.5 rounded-md font-medium">Featured</span>
                           )}
                         </div>
@@ -1236,13 +1234,13 @@ export function AdminPage() {
                       <span className="capitalize text-gray-500 text-xs bg-gray-100 px-2.5 py-1 rounded-full font-medium">{p.category}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      {(p as any).homepageSection ? (
+                      {(p as any).homepageTag ? (
                         <span className={`text-xs px-2.5 py-1 rounded-full font-medium capitalize ${
-                          (p as any).homepageSection === "top"
+                          (p as any).homepageTag === "trending"
                             ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
                             : "bg-blue-50 text-blue-600 border border-blue-200"
                         }`}>
-                          {(p as any).homepageSection === "top" ? "Top Section" : "Below Section"}
+                          {(p as any).homepageTag === "trending" ? "Top Section" : "Below Section"}
                         </span>
                       ) : (
                         <span className="text-xs text-gray-400">-</span>

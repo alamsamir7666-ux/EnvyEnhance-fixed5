@@ -47,8 +47,8 @@ function toProduct(
     images: p.images as string[],
     averageRating: avgRating,
     reviewCount,
-    isFeatured: p.isFeatured,
-    homepageSection: p.homepageSection,
+    homepageTag: p.homepageTag,
+
     createdAt: p.createdAt.toISOString(),
     productStatus: (p as any).productStatus ?? "in_stock",
   };
@@ -87,7 +87,7 @@ router.get("/products/featured", async (_req, res) => {
     const products = await db
       .select()
       .from(productsTable)
-      .where(eq(productsTable.isFeatured, true))
+      .where(eq(productsTable.homepageTag, "trending"))
       .limit(8);
 
     const statsMap = await fetchReviewStats(products.map((p) => p.id));
@@ -107,12 +107,12 @@ router.get("/products/homepage", async (_req, res) => {
       db
         .select()
         .from(productsTable)
-        .where(eq(productsTable.homepageSection, "top"))
+        .where(eq(productsTable.homepageTag, "trending"))
         .orderBy(desc(productsTable.createdAt)),
       db
         .select()
         .from(productsTable)
-        .where(eq(productsTable.homepageSection, "bottom"))
+        .where(eq(productsTable.homepageTag, "new_arrivals"))
         .orderBy(desc(productsTable.createdAt)),
     ]);
 
@@ -285,8 +285,7 @@ router.post("/products", requireAdmin, async (req: any, res) => {
       description,
       ingredients,
       images,
-      isFeatured,
-      homepageSection,
+      homepageTag,
       keyBenefits,
       mainIngredients,
       bestFor,
@@ -339,8 +338,7 @@ router.post("/products", requireAdmin, async (req: any, res) => {
         videoUrl: req.body.videoUrl ?? null,
         texture: texture ?? null,
         images: images ?? [],
-        isFeatured: isFeatured ?? false,
-        homepageSection: homepageSection || null,
+        homepageTag: homepageTag || null,
       })
       .returning();
     res.status(201).json(toProduct(p, 0, 0));
@@ -365,8 +363,7 @@ router.put("/products/:id", requireAdmin, async (req: any, res) => {
       description,
       ingredients,
       images,
-      isFeatured,
-      homepageSection,
+      homepageTag,
       keyBenefits,
       mainIngredients,
       bestFor,
@@ -499,8 +496,7 @@ router.post("/products/:id/duplicate", requireAdmin, async (req: any, res) => {
         bestFor: original.bestFor,
         texture: original.texture,
         images: original.images,
-        isFeatured: false,
-        homepageSection: null,
+        homepageTag: null,
       })
       .returning();
 

@@ -26,8 +26,7 @@ export const productsTable = pgTable("products", {
   bestFor: jsonb("best_for").$type<string[]>().notNull().default([]),
   texture: text("texture"),
   images: jsonb("images").$type<string[]>().notNull().default([]),
-  isFeatured: boolean("is_featured").notNull().default(false),
-  homepageSection: text("homepage_section"),
+  homepageTag: text("homepage_tag"),  // "trending" | "new_arrivals" | null
   createdAt: timestamp("created_at").defaultNow().notNull(),
   videoUrl: text("video_url"),
   productStatus: text("product_status").notNull().default("in_stock"),
