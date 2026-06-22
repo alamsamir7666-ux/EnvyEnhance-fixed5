@@ -226,6 +226,8 @@ router.get("/products", async (req, res) => {
     if (search) conditions.push(ilike(productsTable.name, `%${search}%`));
     if (minPrice) conditions.push(gte(productsTable.price, minPrice));
     if (maxPrice) conditions.push(lte(productsTable.price, maxPrice));
+    const homepageTagFilter = req.query.homepageTag as string | undefined;
+    if (homepageTagFilter) conditions.push(eq((productsTable as any).homepageTag, homepageTagFilter));
 
     const where = conditions.length > 0 ? and(...conditions) : undefined;
 
@@ -396,10 +398,8 @@ router.put("/products/:id", requireAdmin, async (req: any, res) => {
     if (req.body.videoUrl !== undefined) updates.videoUrl = req.body.videoUrl;
     if (texture !== undefined) updates.texture = texture ?? null;
     if (images !== undefined) updates.images = images;
-    if (isFeatured !== undefined) updates.isFeatured = isFeatured;
+    if (homepageTag !== undefined) updates.homepageTag = homepageTag || null;
     if (req.body.productStatus !== undefined) updates.productStatus = req.body.productStatus;
-    if (homepageSection !== undefined)
-      updates.homepageSection = homepageSection || null;
     updates.updatedAt = new Date();
 
     // Fetch old stock to detect restock
