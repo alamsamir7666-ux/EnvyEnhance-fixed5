@@ -384,7 +384,7 @@ export function ProductsPage() {
               {sortedProducts.map(product => (
                 <LazyProductCard key={product.id} product={product} backContext={activeCategory || undefined} />
               ))}
-              {isLoadingMore && Array.from({ length: Math.min(perPage, 8) }).map((_, i) => (
+              {isFetching && Array.from({ length: Math.min(perPage, 8) }).map((_, i) => (
                 <div key={`sk-${i}`} className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col animate-pulse">
                   <div className="aspect-square w-full bg-muted" />
                   <div className="p-4 flex flex-col gap-2">
