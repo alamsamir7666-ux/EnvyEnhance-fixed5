@@ -90,9 +90,7 @@ export function ProductsPage() {
   const [perPage, setPerPage] = useState(24);
   const [showFilterPanel, setShowFilterPanel] = useState(false);
 
-  const [apiPage, setApiPage] = useState(1);
-  const [visibleCount, setVisibleCount] = useState(perPage);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [allProducts, setAllProducts] = useState<Record<string, unknown>[]>([]);
   const [totalFromAPI, setTotalFromAPI] = useState(0);
 
@@ -124,11 +122,11 @@ export function ProductsPage() {
   // Reset pagination when category changes - do NOT reset search text so
   // users can search across a newly selected category without losing their query
   useEffect(() => {
-    setApiPage(1); setVisibleCount(perPage); setAllProducts([]);
+    setCurrentPage(1); setAllProducts([]);
   }, [activeCategory]);
 
   useEffect(() => {
-    setApiPage(1); setVisibleCount(perPage); setAllProducts([]);
+    setCurrentPage(1); setAllProducts([]);
   }, [debouncedSearch, minRating, perPage]);
 
   useEffect(() => {
@@ -144,40 +142,23 @@ export function ProductsPage() {
     category: activeCategory || undefined,
     search: debouncedSearch || undefined,
     minRating: minRating > 0 ? minRating : undefined,
-    page: apiPage,
-    limit: FETCH_LIMIT,
+    page: currentPage,
+    limit: perPage,
   });
 
   useEffect(() => {
     if (!data?.products) return;
-    if (apiPage === 1) {
-      setAllProducts(data.products);
-      setTotalFromAPI(data.total ?? 0);
-    } else {
-      setAllProducts(prev => {
-        const seen = new Set(prev.map((p: any) => p.id));
-        return [...prev, ...data.products.filter((p: any) => !seen.has(p.id))];
-      });
-      setTotalFromAPI(data.total ?? 0);
-    }
-    setIsLoadingMore(false);
-  }, [data, apiPage]);
+    setAllProducts(data.products);
+    setTotalFromAPI(data.total ?? 0);
+  }, [data]);
 
-  // Sort + slice for display
   const sortedProducts = useMemo(() => sortProducts(allProducts, sort), [allProducts, sort]);
-  const visibleProducts = useMemo(() => sortedProducts.slice(0, visibleCount), [sortedProducts, visibleCount]);
+  const totalPages = Math.ceil(totalFromAPI / perPage);
 
-  const hasMoreVisible = visibleCount < sortedProducts.length;
-  const hasMoreFromAPI = allProducts.length < totalFromAPI;
-  const canLoadMore = hasMoreVisible || hasMoreFromAPI;
-
-  const handleLoadMore = useCallback(() => {
-    if (isLoadingMore) return;
-    // Load a full "page" worth of products each time for consistent UX
-    const batch = perPage;
-    if (hasMoreVisible) { setVisibleCount(v => v + batch); }
-    else if (hasMoreFromAPI) { setIsLoadingMore(true); setApiPage(p => p + 1); setVisibleCount(v => v + batch); }
-  }, [isLoadingMore, hasMoreVisible, hasMoreFromAPI, perPage]);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const activeCategoryObj = dbCategories?.find(c => c.slug === activeCategory);
   const displayTitle = activeCategoryObj?.name
@@ -270,7 +251,7 @@ export function ProductsPage() {
             {/* Result count */}
             {totalFromAPI > 0 && (
               <p className="text-xs text-muted-foreground ml-auto hidden sm:block">
-                {visibleProducts.length} / {totalFromAPI} products
+                {totalFromAPI} products
               </p>
             )}
           </div>
@@ -400,7 +381,7 @@ export function ProductsPage() {
         ) : (
           <>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-              {visibleProducts.map(product => (
+              {sortedProducts.map(product => (
                 <LazyProductCard key={product.id} product={product} backContext={activeCategory || undefined} />
               ))}
               {isLoadingMore && Array.from({ length: Math.min(perPage, 8) }).map((_, i) => (
@@ -416,22 +397,47 @@ export function ProductsPage() {
               ))}
             </div>
 
-            <div className="flex flex-col items-center gap-3 mt-10">
-              {canLoadMore ? (
-                <Button
-                  onClick={handleLoadMore}
-                  disabled={isLoadingMore || isFetching}
-                  variant="outline"
-                  className="rounded-full px-8 min-w-[160px]"
-                >
-                  {isLoadingMore
-                    ? <><Loader2 className="h-4 w-4 animate-spin mr-2" />Loading?</>
-                    : "Load More Products"}
-                </Button>
-              ) : allProducts.length > INITIAL_LOAD ? (
-                <p className="text-sm text-muted-foreground py-4">✓ All {totalFromAPI} products shown</p>
-              ) : null}
-            </div>
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-10 flex-wrap">
+                {/* Prev */}
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="h-10 w-10 rounded-xl border border-border bg-white flex items-center justify-center text-sm font-medium disabled:opacity-40 hover:border-accent/60 transition-colors"
+                >{"<"}</button>
+
+                {/* Page numbers */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                  .reduce<(number | string)[]>((acc, p, idx, arr) => {
+                    if (idx > 0 && (p as number) - (arr[idx - 1] as number) > 1) acc.push("...");
+                    acc.push(p);
+                    return acc;
+                  }, [])
+                  .map((p, idx) =>
+                    p === "..." ? (
+                      <span key={`ellipsis-${idx}`} className="h-10 w-10 flex items-center justify-center text-muted-foreground text-sm">...</span>
+                    ) : (
+                      <button
+                        key={p}
+                        onClick={() => handlePageChange(p as number)}
+                        className={`h-10 w-10 rounded-xl border text-sm font-medium transition-colors ${
+                          currentPage === p
+                            ? "bg-foreground text-background border-foreground"
+                            : "bg-white border-border hover:border-accent/60"
+                        }`}
+                      >{p}</button>
+                    )
+                  )}
+
+                {/* Next */}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="h-10 w-10 rounded-xl border border-border bg-white flex items-center justify-center text-sm font-medium disabled:opacity-40 hover:border-accent/60 transition-colors"
+                >{">"}</button>
+              </div>
+            )}
           </>
         )}
       </div>
