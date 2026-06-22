@@ -205,37 +205,21 @@ export function ProductsPage() {
 
         {/* ?? Screenshot-style filter bar ?????????????????????? */}
         <div className="bg-[#fdf0f2]/60 border border-pink-100 rounded-2xl px-4 py-3 mb-6">
-          <div className="flex flex-wrap items-center gap-3">
 
-            {/* Search */}
-            <div className="relative flex-1 min-w-[180px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search for product"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="pl-9 h-10 rounded-xl border-border bg-white text-sm shadow-none"
-                aria-label="Search products"
-              />
-            </div>
+          {/* Row 1: Full-width search */}
+          <div className="relative w-full mb-3">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search for product"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="pl-9 h-10 rounded-xl border-border bg-white text-sm shadow-none w-full"
+              aria-label="Search products"
+            />
+          </div>
 
-            {/* Filter toggle */}
-            <button
-              onClick={() => setShowFilterPanel(v => !v)}
-              className={`flex items-center gap-2 h-10 px-4 rounded-xl border text-sm font-medium transition-colors ${
-                showFilterPanel || activeFiltersCount > 0
-                  ? "border-accent bg-accent text-white"
-                  : "border-border bg-white text-foreground hover:border-accent/60"
-              }`}
-              aria-label="Toggle filters"
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-              {activeFiltersCount > 0 && (
-                <span className="bg-white text-accent text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {activeFiltersCount}
-                </span>
-              )}
-            </button>
+          {/* Row 2: Sort, Per page, Filter toggle */}
+          <div className="flex items-center gap-3">
 
             {/* Sort */}
             <div className="min-w-[160px]">
@@ -264,6 +248,24 @@ export function ProductsPage() {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Filter toggle */}
+            <button
+              onClick={() => setShowFilterPanel(v => !v)}
+              className={`flex items-center gap-2 h-10 px-4 rounded-xl border text-sm font-medium transition-colors ${
+                showFilterPanel || activeFiltersCount > 0
+                  ? "border-accent bg-accent text-white"
+                  : "border-border bg-white text-foreground hover:border-accent/60"
+              }`}
+              aria-label="Toggle filters"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              {activeFiltersCount > 0 && (
+                <span className="bg-white text-accent text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {activeFiltersCount}
+                </span>
+              )}
+            </button>
 
             {/* Result count */}
             {totalFromAPI > 0 && (
