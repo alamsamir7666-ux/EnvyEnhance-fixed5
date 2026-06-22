@@ -5,6 +5,7 @@ import { useLoyalty } from "@/hooks/useLoyalty";
 import { useGetCart, useCreateOrder, useValidateCoupon, useListAddresses, getGetCartQueryKey, getListAddressesQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { BKASH_ICON, NAGAD_ICON } from "@/lib/preorderIcons";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -344,7 +345,7 @@ export function CheckoutPage() {
                       className={`border rounded-xl py-3 px-4 text-sm font-medium transition-all ${paymentMethod === method ? "border-primary bg-primary/5 text-foreground" : "border-border text-muted-foreground hover:border-foreground/50"}`}
                     >
                       <div className="text-lg font-bold mb-1">
-                        {method === "bkash" ? "📱" : method === "nagad" ? "📲" : "💵"}
+                        {method === "bkash" ? <img src={BKASH_ICON} className="h-7 w-7 mx-auto" /> : method === "nagad" ? <img src={NAGAD_ICON} className="h-7 w-7 mx-auto" /> : <span className="text-2xl">💵</span>}
                       </div>
                       <div className="text-xs font-semibold">
                         {method === "bkash" ? "bKash" : method === "nagad" ? "Nagad" : "Cash on Delivery"}

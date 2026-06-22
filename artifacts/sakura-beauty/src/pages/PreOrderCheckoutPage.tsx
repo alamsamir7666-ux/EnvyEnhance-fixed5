@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSearch, useLocation } from "wouter";
 import { useListAddresses, getListAddressesQueryKey } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
+import { BKASH_ICON, NAGAD_ICON } from "@/lib/preorderIcons";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -179,7 +180,7 @@ export function PreOrderCheckoutPage() {
                   {(["bkash", "nagad"] as PaymentMethod[]).map((method) => (
                     <button type="button" key={method} onClick={() => setPaymentMethod(method)}
                       className={`border rounded-xl py-3 px-4 text-sm font-medium transition-all ${paymentMethod === method ? "border-primary bg-primary/5 text-foreground" : "border-border text-muted-foreground hover:border-foreground/50"}`}>
-                      <div className="text-lg mb-1">{method === "bkash" ? "📱" : "📲"}</div>
+                      <img src={method === "bkash" ? BKASH_ICON : NAGAD_ICON} className="h-7 w-7 mx-auto mb-1" />
                       {method === "bkash" ? "bKash" : "Nagad"}
                     </button>
                   ))}
