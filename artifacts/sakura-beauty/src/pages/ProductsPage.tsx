@@ -222,7 +222,7 @@ export function ProductsPage() {
           <div className="flex items-center gap-3">
 
             {/* Sort */}
-            <div className="min-w-[160px]">
+            <div className="flex-1">
               <Select value={sort} onValueChange={setSort}>
                 <SelectTrigger className="h-10 rounded-xl border-border bg-white text-sm">
                   <SelectValue />
