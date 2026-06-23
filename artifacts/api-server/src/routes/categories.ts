@@ -14,6 +14,7 @@ function toCategory(c: typeof categoriesTable.$inferSelect) {
     icon: c.icon,
     image: c.image,
     displayOrder: c.displayOrder,
+    parentId: (c as any).parentId ?? null,
     createdAt: c.createdAt.toISOString(),
     updatedAt: c.updatedAt.toISOString(),
   };
