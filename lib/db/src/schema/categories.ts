@@ -15,6 +15,7 @@ export const categoriesTable = pgTable("categories", {
   icon: text("icon"),
   image: text("image"),
   displayOrder: integer("display_order").notNull().default(0),
+  parentId: integer("parent_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
