@@ -95,7 +95,21 @@ export function OrdersPage() {
 
   const [preOrders, setPreOrders] = useState<any[]>([]);
   useEffect(() => {
-    if (!isLoaded || isGuest) return;
+    if (!isLoaded) return;
+    if (isGuest) {
+      try {
+        const raw = JSON.parse(localStorage.getItem("sakura_guest_orders") ?? "[]");
+        const preIds = raw.filter((o: any) => o.type === "preorder").map((o: any) => o.trackingId);
+        if (preIds.length === 0) return;
+        Promise.all(
+          preIds.map((tid: string) =>
+            fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/pre-orders/track/${tid}`)
+              .then(r => r.ok ? r.json() : null).catch(() => null)
+          )
+        ).then(results => setPreOrders(results.filter(Boolean)));
+      } catch {}
+      return;
+    }
     getToken().then(token => {
       if (!token) return;
       fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/pre-orders/my`, {
