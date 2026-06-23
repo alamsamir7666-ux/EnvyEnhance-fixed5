@@ -41,7 +41,6 @@ export function PreOrderCheckoutPage() {
   const [whatsappPhone, setWhatsappPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState<{ trackingId: string; deliveryCharge: number } | null>(null);
 
   const city = address.city.toLowerCase();
   const isDhaka = ["dhaka", "????"].some(k => city.includes(k));
@@ -86,37 +85,11 @@ export function PreOrderCheckoutPage() {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Failed to place pre-order"); return; }
-      setSuccess({ trackingId: data.trackingId, deliveryCharge: data.deliveryCharge });
+      setLocation("/pre-orders/" + data.trackingId);
     } catch { setError("Something went wrong. Please try again."); }
     finally { setLoading(false); }
   }
 
-  if (success) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
-        <div className="max-w-md w-full text-center space-y-6">
-          <div className="h-20 w-20 rounded-full bg-green-100 flex items-center justify-center mx-auto">
-            <CheckCircle2 className="h-10 w-10 text-green-600" />
-          </div>
-          <div>
-            <h1 className="font-serif text-2xl font-medium mb-2">Pre-Order Confirmed! 🎉</h1>
-            <p className="text-muted-foreground">Your pre-order for <strong>{productName}</strong> has been placed.</p>
-          </div>
-          <div className="bg-muted/30 rounded-2xl p-5 text-left space-y-3">
-            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Tracking ID</span><span className="font-mono font-semibold">{success.trackingId}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Delivery paid</span><span className="font-semibold">Tk{success.deliveryCharge}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Product price</span><span className="font-semibold">Cash on delivery</span></div>
-            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Expected delivery</span><span className="font-semibold">{getDaysUntilShipment()}</span></div>
-          </div>
-          <p className="text-sm text-muted-foreground">You will receive a WhatsApp notification when your product arrives in Bangladesh.</p>
-          <div className="flex gap-3">
-            <Link href="/orders" className="flex-1"><Button className="w-full rounded-full">View My Orders</Button></Link>
-            <Link href="/products" className="flex-1"><Button variant="outline" className="w-full rounded-full">Continue Shopping</Button></Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background">
