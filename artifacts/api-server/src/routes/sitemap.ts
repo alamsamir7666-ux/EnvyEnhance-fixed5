@@ -47,7 +47,7 @@ ${allUrls
   .map(
     (u) => `  <url>
     <loc>${APP_URL}${u.url}</loc>
-    ${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ""}
+    ${u ? `<lastmod>${u}</lastmod>` : ""}
     <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
   </url>`,

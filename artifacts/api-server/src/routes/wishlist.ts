@@ -45,7 +45,7 @@ router.get("/wishlist", requireAuth, async (req: any, res) => {
           images: product.images as string[],
           averageRating: stats.avg,
           reviewCount: Number(stats.count),
-          isFeatured: product.isFeatured,
+          isFeatured: product.homepageTag,
           createdAt: product.createdAt.toISOString(),
         },
       };

@@ -48,7 +48,7 @@ async function buildCart(userId: string) {
         images: product.images as string[],
         averageRating: 0,
         reviewCount: 0,
-        isFeatured: product.isFeatured,
+        isFeatured: product.homepageTag,
         createdAt: product.createdAt.toISOString(),
       },
     };

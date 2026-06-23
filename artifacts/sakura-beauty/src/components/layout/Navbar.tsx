@@ -3,7 +3,7 @@ import { Link, useLocation, useSearch } from "wouter";
 import { Show, useUser, useClerk } from "@clerk/react";
 import {
   ShoppingBag, User as UserIcon, Heart, Menu, LogOut,
-  Settings, Package, X, Home, Sparkles, Droplets, Wind, Flower2, Sun, Moon, Eye, Star, Share2, Search,
+  Settings, Package, X, Home, Sparkles, Droplets, Wind, Flower2, Sun, Moon, Eye, Star, Share2, Search, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetCart, getGetCartQueryKey, useListCategories, getListCategoriesQueryKey, useGetMe } from "@workspace/api-client-react";
@@ -64,6 +64,8 @@ export function Navbar() {
   const isAdmin = dbUser?.role === "admin" || user?.publicMetadata?.role === "admin";
 
   const categories = dbCategories ?? [];
+  const parentCategories = categories.filter((cat: any) => !cat.parentId);
+  const [drillCategory, setDrillCategory] = useState<any>(null);
 
   const activeCategory = new URLSearchParams(searchStr).get("category") ?? "";
 
@@ -82,6 +84,8 @@ export function Navbar() {
 
   function handleMobileCategory(slug: string) {
     navigate(`/products?category=${slug}`);
+    setMobileOpen(false);
+    setDrillCategory(null);
   }
 
   return (
@@ -297,20 +301,89 @@ export function Navbar() {
 
           <div className="py-1"><p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground px-5 py-2.5">Categories</p>
 
-          {categories.map((cat) => {
-            const Icon = getCategoryIcon(cat.slug);
-            const isActive = activeCategory === cat.slug;
-            return (
+          {drillCategory ? (
+            <>
               <button
-                key={cat.slug}
-                onClick={() => handleMobileCategory(cat.slug)}
-                className={`w-full flex items-center gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors text-left ${isActive ? "bg-accent/10 text-accent" : "text-foreground hover:bg-muted/50"}`}
+                onClick={() => setDrillCategory(null)}
+                className="w-full flex items-center gap-2 px-5 py-2 text-[14px] text-muted-foreground hover:text-foreground transition-colors"
               >
-                <Icon className="h-[21px] w-[21px] shrink-0" />
-                {cat.name}
+                <ChevronLeft className="h-4 w-4" /> Back
               </button>
-            );
-          })}
+              <div className="bg-pink-50 dark:bg-pink-950/30 px-5 py-3 mb-1">
+                <p className="text-[17px] font-bold">{drillCategory.name}</p>
+              </div>
+              {(() => {
+                const subs: any[] = categories.filter((cat: any) => cat.parentId === drillCategory.id);
+                const makeupGroups: Record<string, string[]> = {
+                  FACE: ["foundation","bb-cream","concealer","blush","highlighter","face-powder"],
+                  EYES: ["eyeshadow","eyeliner","mascara","eyebrow-pencil","eyelash-serum"],
+                  LIPS: ["lip-tint","lip-gloss","lip-oil","liquid-lipstick","lip-palette"],
+                };
+                const bodyGroups: Record<string, string[]> = {
+                  "BATH CARE": ["bath-salt","bath-bomb"],
+                };
+                const groups = drillCategory.slug === "makeup" ? makeupGroups : drillCategory.slug === "body-care" ? bodyGroups : null;
+                if (groups) {
+                  const groupedSlugs = Object.values(groups).flat();
+                  const ungrouped = subs.filter((s: any) => !groupedSlugs.includes(s.slug));
+                  return (
+                    <>
+                      {ungrouped.map((sub: any) => (
+                        <button key={sub.slug} onClick={() => handleMobileCategory(sub.slug)}
+                          className="w-full flex items-center px-5 py-2.5 text-[15px] text-foreground hover:bg-muted/50 transition-colors text-left border-b border-border/40">
+                          {sub.name}
+                        </button>
+                      ))}
+                      {Object.entries(groups).map(([label, slugs]) => {
+                        const groupSubs = subs.filter((s: any) => slugs.includes(s.slug));
+                        if (!groupSubs.length) return null;
+                        return (
+                          <div key={label}>
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground px-5 py-2 mt-1">{label}</p>
+                            {groupSubs.map((sub: any) => (
+                              <button key={sub.slug} onClick={() => handleMobileCategory(sub.slug)}
+                                className="w-full flex items-center px-5 py-2.5 text-[15px] text-foreground hover:bg-muted/50 transition-colors text-left border-b border-border/40">
+                                {sub.name}
+                              </button>
+                            ))}
+                          </div>
+                        );
+                      })}
+                    </>
+                  );
+                }
+                return (
+                  <>
+                    {subs.map((sub: any) => (
+                      <button key={sub.slug} onClick={() => handleMobileCategory(sub.slug)}
+                        className="w-full flex items-center px-5 py-2.5 text-[15px] text-foreground hover:bg-muted/50 transition-colors text-left border-b border-border/40">
+                        {sub.name}
+                      </button>
+                    ))}
+                  </>
+                );
+              })()}
+            </>
+          ) : (
+            <>
+              {parentCategories.map((cat: any) => {
+                const Icon = getCategoryIcon(cat.slug);
+                return (
+                  <button
+                    key={cat.slug}
+                    onClick={() => setDrillCategory(cat)}
+                    className="w-full flex items-center justify-between gap-3.5 px-5 py-2.5 text-[15px] font-medium transition-colors text-left text-foreground hover:bg-muted/50 border-b border-border/40"
+                  >
+                    <span className="flex items-center gap-3.5">
+                      <Icon className="h-[21px] w-[21px] shrink-0" />
+                      {cat.name}
+                    </span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                  </button>
+                );
+              })}
+            </>
+          )}
 
           </div>
 

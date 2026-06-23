@@ -27,7 +27,7 @@ router.get("/flash-sales", async (_req, res) => {
       .from(productsTable)
       .where(
         and(
-          sql`${productsTable.homepageSection} = 'flash'`,
+          sql`${productsTable.homepageTag} = 'flash'`,
           isNotNull(productsTable.discountPrice),
         ),
       )
@@ -44,7 +44,7 @@ router.get("/flash-sales", async (_req, res) => {
         category: p.category,
         images: p.images as string[],
         stock: p.stock,
-        isFeatured: p.isFeatured,
+        homepageTag: (p as any).homepageTag,
       })),
     );
   } catch {
