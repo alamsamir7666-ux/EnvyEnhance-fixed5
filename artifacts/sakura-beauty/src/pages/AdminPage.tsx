@@ -1347,42 +1347,76 @@ export function AdminPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {categories.map((cat) => {
-                  const productCount = products.filter(p => p.category === cat.slug).length;
-                  return (
-                    <tr key={cat.id} className="hover:bg-pink-50/30 transition-colors">
-                      <td className="px-5 py-3.5">
-                        <p className="font-medium text-gray-800">{cat.name}</p>
-                      </td>
-                      <td className="px-5 py-3.5">
-                        <span className="font-mono text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">{cat.slug}</span>
-                      </td>
-                      <td className="px-5 py-3.5">
-                        <span className="text-xl">{cat.icon ?? "-"}</span>
-                      </td>
-                      <td className="px-5 py-3.5 text-right text-gray-500">{cat.displayOrder}</td>
-                      <td className="px-5 py-3.5 text-right">
-                        <span className="font-semibold text-gray-700">{productCount}</span>
-                      </td>
-                      <td className="px-5 py-3.5 text-right">
-                        <div className="flex justify-end gap-1">
-                          <button
-                            onClick={() => { setEditingCategory(cat); setShowCategoryModal(true); }}
-                            className="p-1.5 rounded-lg text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-colors"
-                          >
-                            <Pencil className="h-3.5 w-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteCategory(cat.id)}
-                            className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {(() => {
+                  const allCats = categories as any[];
+                  const parents = allCats.filter(c => !c.parentId);
+                  const rows: any[] = [];
+                  parents.forEach(parent => {
+                    // Parent row
+                    const parentProductCount = products.filter(p => {
+                      const sub = allCats.find((s: any) => s.slug === p.category);
+                      return sub && sub.parentId === parent.id;
+                    }).length;
+                    rows.push(
+                      <tr key={parent.id} className="bg-pink-50/50">
+                        <td className="px-5 py-3" colSpan={2}>
+                          <p className="font-bold text-gray-800">{parent.icon} {parent.name}</p>
+                        </td>
+                        <td className="px-5 py-3">
+                          <span className="font-mono text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">{parent.slug}</span>
+                        </td>
+                        <td className="px-5 py-3 text-right text-gray-500">{parent.displayOrder}</td>
+                        <td className="px-5 py-3 text-right">
+                          <span className="font-semibold text-gray-700">{parentProductCount}</span>
+                        </td>
+                        <td className="px-5 py-3 text-right">
+                          <div className="flex justify-end gap-1">
+                            <button onClick={() => { setEditingCategory(parent); setShowCategoryModal(true); }}
+                              className="p-1.5 rounded-lg text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-colors">
+                              <Pencil className="h-3.5 w-3.5" />
+                            </button>
+                            <button onClick={() => handleDeleteCategory(parent.id)}
+                              className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors">
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                    // Subcategory rows
+                    const subs = allCats.filter((c: any) => c.parentId === parent.id);
+                    subs.forEach(sub => {
+                      const productCount = products.filter(p => p.category === sub.slug).length;
+                      rows.push(
+                        <tr key={sub.id} className="hover:bg-pink-50/30 transition-colors">
+                          <td className="px-5 py-3 pl-10" colSpan={2}>
+                            <p className="text-sm text-gray-600">↳ {sub.name}</p>
+                          </td>
+                          <td className="px-5 py-3">
+                            <span className="font-mono text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">{sub.slug}</span>
+                          </td>
+                          <td className="px-5 py-3 text-right text-gray-400 text-sm">{sub.displayOrder}</td>
+                          <td className="px-5 py-3 text-right">
+                            <span className="text-sm font-semibold text-gray-700">{productCount}</span>
+                          </td>
+                          <td className="px-5 py-3 text-right">
+                            <div className="flex justify-end gap-1">
+                              <button onClick={() => { setEditingCategory(sub); setShowCategoryModal(true); }}
+                                className="p-1.5 rounded-lg text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-colors">
+                                <Pencil className="h-3.5 w-3.5" />
+                              </button>
+                              <button onClick={() => handleDeleteCategory(sub.id)}
+                                className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors">
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    });
+                  });
+                  return rows;
+                })()}
               </tbody>
             </table>
           </div>
