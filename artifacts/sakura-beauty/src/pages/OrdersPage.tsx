@@ -70,7 +70,7 @@ export function OrdersPage() {
     if (!isGuest) return;
     try {
       const raw = JSON.parse(localStorage.getItem("sakura_guest_orders") ?? "[]");
-      setGuestTrackingIds(raw.map((o: any) => typeof o === "string" ? { trackingId: o } : o));
+      setGuestTrackingIds(raw.filter((o: any) => o.type !== "preorder").map((o: any) => typeof o === "string" ? { trackingId: o } : o));
     } catch { setGuestTrackingIds([]); }
   }, [isGuest]);
   const [returnsMap, setReturnsMap] = useState<Record<number, any>>({});
