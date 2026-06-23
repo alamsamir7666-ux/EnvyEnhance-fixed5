@@ -88,6 +88,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
     bestFor: (product?.bestFor ?? []).join("\n"),
     texture: product?.texture ?? "",
     homepageTag: product?.homepageTag ?? "",
+    parentCategory: "",
   });
 
   const [newIngName, setNewIngName] = useState("");
@@ -144,8 +145,9 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
     }
   }
 
+  const parentCats = categories.filter((cat: any) => !cat.parentId);
   const catOptions = categories.length > 0
-    ? categories
+    ? categories.filter((cat: any) => cat.parentId)
     : [
         { slug: "moisturizers", name: "Moisturizers" },
         { slug: "serums",       name: "Serums" },
@@ -175,13 +177,29 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
               <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required className="mt-1.5 rounded-xl" placeholder="e.g. Hada Labo Gokujyun Premium Milk" />
             </div>
             <div>
-              <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Category *</Label>
-              <Select value={form.category} onValueChange={v => setForm(f => ({ ...f, category: v }))}>
-                <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue /></SelectTrigger>
+              <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Parent Category *</Label>
+              <Select value={form.parentCategory || ""} onValueChange={v => setForm(f => ({ ...f, parentCategory: v, category: "" }))}>
+                <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue placeholder="Select category" /></SelectTrigger>
                 <SelectContent>
-                  {catOptions.map((c: any) => (
-                    <SelectItem key={c.slug} value={c.slug} className="capitalize">{c.name}</SelectItem>
+                  {parentCats.map((cat: any) => (
+                    <SelectItem key={cat.slug} value={cat.slug}>{cat.icon ? cat.icon + " " : ""}{cat.name}</SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Subcategory *</Label>
+              <Select value={form.category} onValueChange={v => setForm(f => ({ ...f, category: v }))} disabled={!form.parentCategory}>
+                <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue placeholder="Select subcategory" /></SelectTrigger>
+                <SelectContent>
+                  {catOptions
+                    .filter((cat: any) => {
+                      const parent = categories.find((p: any) => p.slug === form.parentCategory);
+                      return parent && cat.parentId === parent.id;
+                    })
+                    .map((cat: any) => (
+                      <SelectItem key={cat.slug} value={cat.slug}>{cat.name}</SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
