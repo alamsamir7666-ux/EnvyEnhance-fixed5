@@ -85,6 +85,9 @@ export function PreOrderCheckoutPage() {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Failed to place pre-order"); return; }
+      const _gk = "sakura_guest_orders";
+      const _ge = JSON.parse(localStorage.getItem(_gk) ?? "[]");
+      localStorage.setItem(_gk, JSON.stringify([{ trackingId: data.trackingId, type: "preorder" }, ..._ge.filter((o: any) => (o.trackingId ?? o) !== data.trackingId)]));
       setLocation("/pre-orders/" + data.trackingId);
     } catch { setError("Something went wrong. Please try again."); }
     finally { setLoading(false); }
