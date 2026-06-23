@@ -278,8 +278,22 @@ export function ProductsPage() {
                             className={`h-1.5 rounded-full transition-all ${i === activeParentIdx ? "w-6 bg-accent" : "w-1.5 bg-border"}`} />
                         ))}
                       </div>
-                      {/* Parent card */}
-                      <div className="border border-border rounded-2xl p-4 bg-white">
+                      {/* Parent card - swipeable */}
+                      <div className="border border-border rounded-2xl p-4 bg-white"
+                        onTouchStart={(e) => {
+                          const touch = e.touches[0];
+                          (e.currentTarget as any)._touchStartX = touch.clientX;
+                        }}
+                        onTouchEnd={(e) => {
+                          const startX = (e.currentTarget as any)._touchStartX ?? 0;
+                          const endX = e.changedTouches[0].clientX;
+                          const diff = startX - endX;
+                          if (Math.abs(diff) > 40) {
+                            if (diff > 0) setActiveParentIdx(i => Math.min(i + 1, parents.length - 1));
+                            else setActiveParentIdx(i => Math.max(i - 1, 0));
+                          }
+                        }}
+                      >
                         <div className="flex items-center justify-between mb-1">
                           <div className="flex items-center gap-2">
                             <span className="text-2xl">{currentParent?.icon ?? "✨"}</span>
