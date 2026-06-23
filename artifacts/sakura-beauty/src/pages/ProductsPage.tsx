@@ -89,6 +89,7 @@ export function ProductsPage() {
   const [sort, setSort] = useState("default");
   const [perPage, setPerPage] = useState(24);
   const [showFilterPanel, setShowFilterPanel] = useState(false);
+  const [activeParentIdx, setActiveParentIdx] = useState(0);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [allProducts, setAllProducts] = useState<Record<string, unknown>[]>([]);
@@ -260,34 +261,79 @@ export function ProductsPage() {
           {showFilterPanel && (
             <div className="mt-4 pt-4 border-t border-pink-100 grid grid-cols-1 sm:grid-cols-3 gap-6">
 
-              {/* Category */}
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Category</p>
-                <div className="flex flex-wrap gap-1.5">
-                  <button
-                    onClick={() => navigate("/products")}
-                    className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
-                      activeCategory === ""
-                        ? "bg-accent text-white border-accent"
-                        : "border-border text-muted-foreground bg-white hover:border-accent/60 hover:text-foreground"
-                    }`}
-                  >
-                    All
-                  </button>
-                  {(dbCategories ?? []).map(cat => (
-                    <button
-                      key={cat.slug}
-                      onClick={() => navigate(cat.slug ? `/products?category=${cat.slug}` : "/products")}
-                      className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
-                        activeCategory === cat.slug
-                          ? "bg-accent text-white border-accent"
-                          : "border-border text-muted-foreground bg-white hover:border-accent/60 hover:text-foreground"
-                      }`}
-                    >
-                      {cat.name}
-                    </button>
-                  ))}
-                </div>
+              {/* Category carousel */}
+              <div className="sm:col-span-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Category</p>
+                {(() => {
+                  const allCats = dbCategories ?? [];
+                  const parents = allCats.filter((cat: any) => !cat.parentId);
+                  const currentParent = parents[activeParentIdx];
+                  const subs = currentParent ? allCats.filter((cat: any) => cat.parentId === currentParent.id) : [];
+                  return (
+                    <div>
+                      {/* Dot indicators */}
+                      <div className="flex justify-center gap-1.5 mb-3">
+                        {parents.map((_: any, i: number) => (
+                          <button key={i} onClick={() => setActiveParentIdx(i)}
+                            className={`h-1.5 rounded-full transition-all ${i === activeParentIdx ? "w-6 bg-accent" : "w-1.5 bg-border"}`} />
+                        ))}
+                      </div>
+                      {/* Parent card */}
+                      <div className="border border-border rounded-2xl p-4 bg-white">
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl">{currentParent?.icon ?? "✨"}</span>
+                            <span className="font-semibold text-[15px]">{currentParent?.name}</span>
+                          </div>
+                          <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{subs.length} types</span>
+                        </div>
+                        {/* Prev/Next hint */}
+                        <div className="flex justify-between text-[11px] text-muted-foreground mb-3">
+                          {activeParentIdx > 0 ? (
+                            <button onClick={() => setActiveParentIdx(i => i - 1)} className="flex items-center gap-0.5 hover:text-foreground">
+                              ‹ {parents[activeParentIdx - 1]?.name}
+                            </button>
+                          ) : <span />}
+                          {activeParentIdx < parents.length - 1 ? (
+                            <button onClick={() => setActiveParentIdx(i => i + 1)} className="flex items-center gap-0.5 hover:text-foreground">
+                              {parents[activeParentIdx + 1]?.name} ›
+                            </button>
+                          ) : <span />}
+                        </div>
+                        {/* Subcategory pills */}
+                        <div className="flex flex-wrap gap-1.5">
+                          <button
+                            onClick={() => navigate(`/products?category=${currentParent?.slug}`)}
+                            className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                              activeCategory === currentParent?.slug
+                                ? "bg-accent text-white border-accent"
+                                : "border-border text-muted-foreground bg-white hover:border-accent/60 hover:text-foreground"
+                            }`}
+                          >All</button>
+                          {subs.map((sub: any) => (
+                            <button key={sub.slug}
+                              onClick={() => navigate(`/products?category=${sub.slug}`)}
+                              className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                                activeCategory === sub.slug
+                                  ? "bg-accent text-white border-accent"
+                                  : "border-border text-muted-foreground bg-white hover:border-accent/60 hover:text-foreground"
+                              }`}
+                            >{sub.name}</button>
+                          ))}
+                        </div>
+                      </div>
+                      {/* Also show All products button */}
+                      <button
+                        onClick={() => navigate("/products")}
+                        className={`mt-2 text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                          activeCategory === ""
+                            ? "bg-accent text-white border-accent"
+                            : "border-border text-muted-foreground bg-white hover:border-accent/60 hover:text-foreground"
+                        }`}
+                      >All Products</button>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Min rating */}
