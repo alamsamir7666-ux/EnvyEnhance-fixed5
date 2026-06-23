@@ -125,7 +125,7 @@ function GuestCartPage() {
               <Button className="w-full rounded-full" size="lg" onClick={() => setLocation("/checkout")}>
                 Checkout
               </Button>
-              <Button variant="outline" className="w-full rounded-full mt-2" size="lg" onClick={() => setLocation("/sign-in")}>
+              <Button className="w-full rounded-full mt-2 bg-green-500 hover:bg-green-600 text-white border-0" size="lg" onClick={() => setLocation("/sign-in")}>
                 <LogIn className="mr-2 h-4 w-4" />
                 Sign in
               </Button>
