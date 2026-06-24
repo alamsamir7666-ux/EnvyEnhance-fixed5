@@ -1637,7 +1637,7 @@ export function AdminPage() {
                             <StatusIcon className="h-3 w-3" />{o.orderStatus === "return_completed" ? "Refund Completed" : o.orderStatus}
                           </span>
                         </td>
-                        <td className="px-4 py-3.5 text-right font-semibold text-gray-800">Tk{o.totalAmount.toLocaleString()}</td>
+                        <td className="px-4 py-3.5 text-right font-semibold text-gray-800">Tk{Number((o as any).totalAmount ?? (o as any).discountedPrice ?? 0).toLocaleString()}</td>
                         <td className="px-4 py-3.5 text-right" onClick={e => e.stopPropagation()}>
                           <Select value={o.orderStatus} onValueChange={(v) => handleOrderStatus(o.id, v)} disabled={o.orderStatus === "delivered" || o.orderStatus === "cancelled" || o.orderStatus === "return_completed"}>
                             <SelectTrigger className={`w-34 text-xs h-8 rounded-lg border-gray-200 ${(o.orderStatus === "delivered" || o.orderStatus === "cancelled" || o.orderStatus === "return_completed") ? "opacity-50 cursor-not-allowed" : ""}`}>
@@ -2021,7 +2021,7 @@ export function AdminPage() {
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-3.5 text-right font-semibold text-gray-800">Tk{o.totalAmount.toLocaleString()}</td>
+                      <td className="px-4 py-3.5 text-right font-semibold text-gray-800">Tk{Number((o as any).totalAmount ?? (o as any).discountedPrice ?? 0).toLocaleString()}</td>
                     </tr>
                   );
                 })}
