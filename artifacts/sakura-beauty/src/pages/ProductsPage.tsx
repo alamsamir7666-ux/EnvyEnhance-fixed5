@@ -91,7 +91,10 @@ export function ProductsPage() {
   const [showFilterPanel, setShowFilterPanel] = useState(false);
   const [activeParentIdx, setActiveParentIdx] = useState(0);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() => {
+    const initial = new URLSearchParams(window.location.search).get("page");
+    return initial ? parseInt(initial) || 1 : 1;
+  });
   const [allProducts, setAllProducts] = useState<Record<string, unknown>[]>([]);
   const [totalFromAPI, setTotalFromAPI] = useState(0);
 
@@ -155,6 +158,15 @@ export function ProductsPage() {
 
   const sortedProducts = useMemo(() => sortProducts(allProducts, sort), [allProducts, sort]);
   const totalPages = Math.ceil(totalFromAPI / perPage);
+
+  useEffect(() => {
+    const onPopState = () => {
+      const p = new URLSearchParams(window.location.search).get("page");
+      setCurrentPage(p ? parseInt(p) || 1 : 1);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
