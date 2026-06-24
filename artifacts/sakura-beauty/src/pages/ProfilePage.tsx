@@ -6,6 +6,8 @@ import { ReferralSection } from "@/components/ui/ReferralSection";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Star, Users, Package2, ArrowRight } from "lucide-react";
 import { useGetMe, useListOrders } from "@workspace/api-client-react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@clerk/clerk-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
@@ -24,6 +26,21 @@ export function ProfilePage() {
   const { data: dbUser } = useGetMe({ query: { retry: false, queryKey: ["me"] } });
   const { data: orders, isLoading: ordersLoading } = useListOrders();
 
+  const { getToken } = useAuth();
+  const [preOrders, setPreOrders] = useState<any[]>([]);
+  useEffect(() => {
+    getToken().then(token => {
+      if (!token) return;
+      fetch(`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/pre-orders/my`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }).then(r => r.json()).then(d => { if (Array.isArray(d)) setPreOrders(d); }).catch(() => {});
+    });
+  }, []);
+
+  const allRecent = [
+    ...(orders ?? []).map((o: any) => ({ ...o, _type: "order" })),
+    ...preOrders.map((o: any) => ({ ...o, _type: "preorder" }))
+  ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 3);
   const recentOrders = (orders ?? []).slice(0, 3);
   const isAdmin = dbUser?.role === "admin";
   const [profileTab, setProfileTab] = useState("overview");
@@ -101,24 +118,29 @@ export function ProfilePage() {
               </div>
             ) : (
               <div className="space-y-3">
-                {recentOrders.map((order, index) => { const rank = (orders ?? []).length - index; return (
-                  <Link key={order.id} href={`/orders/${order.id}?rank=${rank}`}>
+                {allRecent.map((order: any) => {
+                  const isPreOrder = order._type === "preorder";
+                  const href = isPreOrder ? `/pre-orders/${order.trackingId}` : `/orders/${order.id}?rank=${(orders ?? []).length - (orders ?? []).findIndex((o: any) => o.id === order.id)}`;
+                  const label = isPreOrder ? `Pre-Order` : `Order #${(orders ?? []).length - (orders ?? []).findIndex((o: any) => o.id === order.id)}`;
+                  const status = isPreOrder ? order.status : order.orderStatus;
+                  const total = isPreOrder ? (Number(order.discountedPrice) * Number(order.quantity) + Number(order.deliveryCharge)) : order.totalAmount;
+                  return (
+                  <Link key={isPreOrder ? `pre-${order.id}` : order.id} href={href}>
                     <div className="bg-card border rounded-xl p-4 hover:shadow-sm transition-shadow cursor-pointer">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium">Order #{rank}</p>
+                          {isPreOrder && <span className="text-xs font-bold bg-blue-100 text-blue-700 rounded-full px-2 py-0.5 mr-1">PRE-ORDER</span>}
+                          <p className="text-sm font-medium">{label}</p>
                           <p className="text-xs text-muted-foreground mt-0.5">{new Date(order.createdAt).toLocaleDateString()}</p>
                         </div>
                         <div className="text-right">
-                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[order.orderStatus] ?? "bg-muted"}`}>
-                            {order.orderStatus}
-                          </span>
-                          <p className="text-sm font-medium mt-1">Tk{order.totalAmount.toLocaleString()}</p>
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[status] ?? "bg-muted"}`}>{status}</span>
+                          <p className="text-sm font-medium mt-1">Tk{Number(total).toLocaleString()}</p>
                         </div>
                       </div>
                     </div>
                   </Link>
-                )})}
+                );})}
               </div>
             )}
           </div>
