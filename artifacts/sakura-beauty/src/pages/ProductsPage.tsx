@@ -158,6 +158,10 @@ export function ProductsPage() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    const p = new URLSearchParams(searchStr);
+    if (page === 1) p.delete("page"); else p.set("page", String(page));
+    const qs = p.toString();
+    window.history.pushState(null, "", `/products${qs ? "?" + qs : ""}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
