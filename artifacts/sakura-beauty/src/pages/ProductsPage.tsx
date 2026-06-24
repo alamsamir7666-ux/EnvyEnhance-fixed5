@@ -91,12 +91,9 @@ export function ProductsPage() {
   const [showFilterPanel, setShowFilterPanel] = useState(false);
   const [activeParentIdx, setActiveParentIdx] = useState(0);
 
-  const urlPage = parseInt(new URLSearchParams(searchStr).get("page") ?? "1") || 1;
-  const [currentPage, setCurrentPage] = useState(urlPage);
+  const [currentPage, setCurrentPage] = useState(1);
   const [allProducts, setAllProducts] = useState<Record<string, unknown>[]>([]);
   const [totalFromAPI, setTotalFromAPI] = useState(0);
-
-  useEffect(() => { setCurrentPage(urlPage); }, [urlPage]);
 
   const debouncedSearch = useDebounce(search, 350);
   const [compareOpen, setCompareOpen] = useState(false);
@@ -161,10 +158,6 @@ export function ProductsPage() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    const p = new URLSearchParams(searchStr);
-    if (page === 1) p.delete("page"); else p.set("page", String(page));
-    const qs = p.toString();
-    navigate(`/products${qs ? "?" + qs : ""}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
