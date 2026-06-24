@@ -33,7 +33,7 @@ router.post("/categories", requireAdmin, async (req: any, res) => {
   const generatedSlug = slug || name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
   const [c] = await db
     .insert(categoriesTable)
-    .values({ name, slug: generatedSlug, icon: icon || null, image: image || null, displayOrder: displayOrder ?? 0 })
+    .values({ name, slug: generatedSlug, icon: icon || null, image: image || null, displayOrder: displayOrder ?? 0, parentId: parentId || null })
     .returning();
   res.status(201).json(toCategory(c));
 });
