@@ -3411,7 +3411,7 @@ function BulkImportTab() {
 
   const tabContent: Record<string, React.ReactNode> = {
     dashboard:  <DashboardTab />,
-    products:   <ProductsTab />,
+    products:   ProductsTab(),
     categories: <CategoriesTab />,
     orders:     <OrdersTab />,
     archived:   <ArchivedOrdersTab />,
