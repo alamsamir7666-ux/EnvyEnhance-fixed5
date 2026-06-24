@@ -1992,11 +1992,17 @@ export function AdminPage() {
                       </td>
                       <td className="px-4 py-3.5">
                         <div className="space-y-0.5 max-w-[180px]">
-                          {((o as any).items ?? []).slice(0, 2).map((item: any, idx: number) => (
-                            <p key={idx} className="text-xs text-gray-600 truncate">{item.productName} ×{item.quantity}</p>
-                          ))}
-                          {((o as any).items ?? []).length > 2 && (
-                            <p className="text-xs text-gray-400">+{((o as any).items ?? []).length - 2} more</p>
+                          {(o as any)._type === "preorder" ? (
+                            <p className="text-xs text-gray-600 truncate">{(o as any).productName} ×{(o as any).quantity ?? 1}</p>
+                          ) : (
+                            <>
+                              {((o as any).items ?? []).slice(0, 2).map((item: any, idx: number) => (
+                                <p key={idx} className="text-xs text-gray-600 truncate">{item.productName} ×{item.quantity}</p>
+                              ))}
+                              {((o as any).items ?? []).length > 2 && (
+                                <p className="text-xs text-gray-400">+{((o as any).items ?? []).length - 2} more</p>
+                              )}
+                            </>
                           )}
                         </div>
                       </td>
