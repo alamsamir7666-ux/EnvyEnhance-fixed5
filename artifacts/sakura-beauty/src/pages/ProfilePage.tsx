@@ -1,13 +1,11 @@
 import { PageBreadcrumb } from "@/components/ui/PageBreadcrumb";
-import { useUser, UserProfile } from "@clerk/react";
-import { useState } from "react";
+import { useUser, UserProfile, useAuth } from "@clerk/react";
 import { LoyaltyBanner } from "@/components/ui/LoyaltyBanner";
 import { ReferralSection } from "@/components/ui/ReferralSection";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Star, Users, Package2, ArrowRight } from "lucide-react";
 import { useGetMe, useListOrders } from "@workspace/api-client-react";
 import { useState, useEffect } from "react";
-import { useAuth } from "@clerk/clerk-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
