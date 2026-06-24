@@ -131,7 +131,7 @@ export function OrdersPage() {
         </div>
       );
     }
-    if (guestTrackingIds.length === 0) {
+    if (guestTrackingIds.length === 0 && preOrders.length === 0) {
       return (
         <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
           <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center mb-6">
@@ -149,10 +149,24 @@ export function OrdersPage() {
           <div className="container mx-auto px-4">
             <PageBreadcrumb crumbs={[{ label: "My Orders", icon: <Package2 className="h-3 w-3" /> }]} className="mb-3" />
             <h1 className="font-serif text-4xl font-medium">My Orders</h1>
-            <p className="text-muted-foreground mt-1 text-sm">{guestTrackingIds.length} order{guestTrackingIds.length !== 1 ? "s" : ""} on this device</p>
+            <p className="text-muted-foreground mt-1 text-sm">{guestTrackingIds.length + preOrders.length} order{(guestTrackingIds.length + preOrders.length) !== 1 ? "s" : ""} on this device</p>
           </div>
         </div>
         <div className="container mx-auto px-4 py-8 max-w-3xl space-y-3">
+          {preOrders.map((o: any) => (
+            <Link key={o.trackingId} href={`/pre-orders/${o.trackingId}`}>
+              <div className="border rounded-xl p-4 hover:bg-muted/30 transition-colors cursor-pointer">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <span className="text-xs font-bold bg-blue-100 text-blue-700 rounded-full px-2.5 py-1">PRE-ORDER</span>
+                    <p className="font-mono font-semibold text-sm mt-1">{o.trackingId}</p>
+                    {o.createdAt && <p className="text-xs text-muted-foreground mt-0.5">{new Date(o.createdAt).toLocaleDateString("en-BD", { year: "numeric", month: "long", day: "numeric" })}</p>}
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                </div>
+              </div>
+            </Link>
+          ))}
           {guestTrackingIds.map((o) => (
             <Link key={o.trackingId} href={`/orders/${o.trackingId}`}>
               <div className="border rounded-xl p-4 hover:bg-muted/30 transition-colors cursor-pointer">
