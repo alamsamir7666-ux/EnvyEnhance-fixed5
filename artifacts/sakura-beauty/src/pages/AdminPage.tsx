@@ -1275,8 +1275,14 @@ export function AdminPage() {
                       {p.discountPrice && <p className="text-xs text-pink-500">Sale: Tk{p.discountPrice.toLocaleString()}</p>}
                     </td>
                     <td className="px-5 py-3.5 text-right">
-                      <span className={`font-semibold ${p.stock < 10 ? "text-red-500" : "text-gray-700"}`}>{p.stock}</span>
-                      {p.stock < 10 && <p className="text-xs text-red-400">Low stock</p>}
+                      {p.productStatus === "pre_order" ? (
+                        <span className="font-semibold text-blue-600">Pre-Order</span>
+                      ) : (
+                        <>
+                          <span className={`font-semibold ${p.stock < 10 ? "text-red-500" : "text-gray-700"}`}>{p.stock}</span>
+                          {p.stock < 10 && <p className="text-xs text-red-400">Low stock</p>}
+                        </>
+                      )}
                     </td>
                     <td className="px-5 py-3.5 text-right">
                       <div className="flex justify-end gap-1">
