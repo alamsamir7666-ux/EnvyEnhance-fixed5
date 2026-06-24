@@ -29,7 +29,7 @@ router.get("/categories", async (_req, res) => {
 });
 
 router.post("/categories", requireAdmin, async (req: any, res) => {
-  const { name, slug, icon, image, displayOrder } = req.body;
+  const { name, slug, icon, image, displayOrder, parentId } = req.body;
   const generatedSlug = slug || name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
   const [c] = await db
     .insert(categoriesTable)
@@ -40,13 +40,14 @@ router.post("/categories", requireAdmin, async (req: any, res) => {
 
 router.put("/categories/:id", requireAdmin, async (req: any, res) => {
   const id = parseInt(req.params.id);
-  const { name, slug, icon, image, displayOrder } = req.body;
+  const { name, slug, icon, image, displayOrder, parentId } = req.body;
   const updates: Record<string, unknown> = { updatedAt: new Date() };
   if (name !== undefined) updates.name = name;
   if (slug !== undefined) updates.slug = slug;
   if (icon !== undefined) updates.icon = icon;
   if (image !== undefined) updates.image = image;
   if (displayOrder !== undefined) updates.displayOrder = displayOrder;
+  if (parentId !== undefined) (updates as any).parentId = parentId || null;
 
   const [c] = await db
     .update(categoriesTable)

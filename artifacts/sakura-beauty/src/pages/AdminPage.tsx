@@ -407,6 +407,7 @@ function CategoryModal({ category, onClose }: { category?: any; onClose: () => v
   const { getToken } = useAuth();
   const createCategory = useCreateCategory();
   const updateCategory = useUpdateCategory();
+  const { data: allCategories = [] } = useListCategories({ query: { staleTime: 30_000, queryKey: getListCategoriesQueryKey() } });
 
   const [form, setForm] = useState({
     name: category?.name ?? "",
@@ -414,6 +415,7 @@ function CategoryModal({ category, onClose }: { category?: any; onClose: () => v
     icon: category?.icon ?? "",
     image: category?.image ?? "",
     displayOrder: category?.displayOrder ?? 0,
+    parentId: category?.parentId ?? null,
   });
 
   function handleSubmit(e: React.FormEvent) {
@@ -424,6 +426,7 @@ function CategoryModal({ category, onClose }: { category?: any; onClose: () => v
       icon: form.icon || null,
       image: form.image || null,
       displayOrder: Number(form.displayOrder),
+      parentId: form.parentId || null,
     };
     if (category) {
       updateCategory.mutate({ id: category.id, data }, {
@@ -447,6 +450,19 @@ function CategoryModal({ category, onClose }: { category?: any; onClose: () => v
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div>
+            <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Parent Category (leave empty for top-level)</Label>
+            <select
+              value={form.parentId ?? ""}
+              onChange={e => setForm(f => ({ ...f, parentId: e.target.value ? Number(e.target.value) : null }))}
+              className="mt-1.5 w-full rounded-xl border border-input px-3 py-2 text-sm bg-white"
+            >
+              <option value="">— None (top-level category) —</option>
+              {(allCategories as any[]).filter((cat: any) => !cat.parentId && cat.id !== category?.id).map((cat: any) => (
+                <option key={cat.id} value={cat.id}>{cat.icon ? cat.icon + " " : ""}{cat.name}</option>
+              ))}
+            </select>
+          </div>
           <div>
             <Label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Category Name *</Label>
             <Input
