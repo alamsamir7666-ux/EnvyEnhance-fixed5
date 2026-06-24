@@ -161,7 +161,7 @@ router.get("/admin/dashboard", requireAdmin, async (_req, res) => {
 router.get("/admin/orders/stats", requireAdmin, async (_req, res) => {
   try {
     const TWO_DAYS_AGO = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
-    const [activeResult, archivedResult] = await Promise.all([
+    const [activeResult, archivedResult, archivedPreOrderResult] = await Promise.all([
       db.select({ count: sql<string>`COUNT(*)` })
         .from(ordersTable)
         .where(
@@ -179,10 +179,19 @@ router.get("/admin/orders/stats", requireAdmin, async (_req, res) => {
           ),
           lt(ordersTable.updatedAt, TWO_DAYS_AGO)
         )),
+      db.select({ count: sql<string>`COUNT(*)` })
+        .from(preOrdersTable)
+        .where(and(
+          or(
+            eq(preOrdersTable.status, "delivered"),
+            eq(preOrdersTable.status, "cancelled")
+          ),
+          lt(preOrdersTable.updatedAt, TWO_DAYS_AGO)
+        )),
     ]);
     res.json({
       activeOrders: Number(activeResult[0].count),
-      archivedOrders: Number(archivedResult[0].count),
+      archivedOrders: Number(archivedResult[0].count) + Number(archivedPreOrderResult[0].count),
     });
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch order stats" });
