@@ -91,7 +91,7 @@ export function ProductsPage() {
   const [showFilterPanel, setShowFilterPanel] = useState(false);
   const [activeParentIdx, setActiveParentIdx] = useState(0);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() => { const p = new URLSearchParams(window.location.search).get("page"); return p ? parseInt(p) : 1; });
   const [allProducts, setAllProducts] = useState<Record<string, unknown>[]>([]);
   const [totalFromAPI, setTotalFromAPI] = useState(0);
 
@@ -124,6 +124,7 @@ export function ProductsPage() {
   // users can search across a newly selected category without losing their query
   useEffect(() => {
     setCurrentPage(1); setAllProducts([]);
+    const p = new URLSearchParams(window.location.search); p.delete("page"); navigate(`/products?${p.toString()}`, { replace: true });
   }, [activeCategory]);
 
   useEffect(() => {
@@ -158,6 +159,9 @@ export function ProductsPage() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    const p = new URLSearchParams(window.location.search);
+    p.set("page", String(page));
+    navigate(`/products?${p.toString()}`, { replace: true });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
