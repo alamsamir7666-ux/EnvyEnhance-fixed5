@@ -88,7 +88,7 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
     bestFor: (product?.bestFor ?? []).join("\n"),
     texture: product?.texture ?? "",
     homepageTag: product?.homepageTag ?? "",
-    parentCategory: "",
+    parentCategory: (() => { if (!product?.category || !categories.length) return ""; const sub = categories.find((cat) => cat.slug === product.category); if (!sub?.parentId) return ""; const parent = categories.find((cat) => cat.id === sub.parentId); return parent?.slug ?? ""; })(),
   });
 
   const [newIngName, setNewIngName] = useState("");
