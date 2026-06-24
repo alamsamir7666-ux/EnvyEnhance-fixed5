@@ -786,13 +786,14 @@ export function AdminPage() {
 
   const products = allProducts;
 
-  const filteredProducts = useMemo(
-    () => products.filter(p =>
-      p.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-      p.category.toLowerCase().includes(debouncedSearch.toLowerCase())
-    ),
-    [products, debouncedSearch]
-  );
+  const filteredProducts = useMemo(() => {
+    if (!debouncedSearch.trim()) return products;
+    const q = debouncedSearch.toLowerCase();
+    return products.filter(p =>
+      (p.name ?? "").toLowerCase().includes(q) ||
+      (p.category ?? "").toLowerCase().includes(q)
+    );
+  }, [products, debouncedSearch]);
 
   const TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
   const fetchArchivedOrders = async (page: number, append = false) => {
