@@ -91,7 +91,7 @@ export function ProductsPage() {
   const [showFilterPanel, setShowFilterPanel] = useState(false);
   const [activeParentIdx, setActiveParentIdx] = useState(0);
 
-  const currentPage = parseInt(new URLSearchParams(searchStr).get("page") ?? "1") || 1;
+  const [currentPage, setCurrentPage] = useState(1);
   const [allProducts, setAllProducts] = useState<Record<string, unknown>[]>([]);
   const [totalFromAPI, setTotalFromAPI] = useState(0);
 
@@ -123,11 +123,11 @@ export function ProductsPage() {
   // Reset pagination when category changes - do NOT reset search text so
   // users can search across a newly selected category without losing their query
   useEffect(() => {
-    setAllProducts([]);
+    setCurrentPage(1); setAllProducts([]);
   }, [activeCategory]);
 
   useEffect(() => {
-    setAllProducts([]);
+    setCurrentPage(1); setAllProducts([]);
   }, [debouncedSearch, minRating, perPage]);
 
   useEffect(() => {
@@ -157,9 +157,7 @@ export function ProductsPage() {
   const totalPages = Math.ceil(totalFromAPI / perPage);
 
   const handlePageChange = (page: number) => {
-    const p = new URLSearchParams(searchStr);
-    if (page === 1) p.delete("page"); else p.set("page", String(page));
-    navigate(`/products?${p.toString()}`);
+    setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
