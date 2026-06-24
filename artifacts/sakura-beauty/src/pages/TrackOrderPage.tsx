@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "wouter";
+import { useParams, useLocation } from "wouter";
 import { useTrackOrder, getTrackOrderQueryKey } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,13 @@ export function TrackOrderPage() {
       setSubmitted(params.trackingId);
     }
   }, [params.trackingId]);
+
+  const [, setLocation] = useLocation();
+  useEffect(() => {
+    if (submitted && submitted.startsWith("PRE-")) {
+      setLocation("/pre-orders/" + submitted);
+    }
+  }, [submitted]);
 
   const { data: order, isLoading, isError } = useTrackOrder(submitted, {
     query: { enabled: !!submitted, retry: false, queryKey: getTrackOrderQueryKey(submitted) },
