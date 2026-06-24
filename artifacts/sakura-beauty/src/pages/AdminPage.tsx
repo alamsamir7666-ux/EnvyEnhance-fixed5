@@ -88,7 +88,11 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
     bestFor: (product?.bestFor ?? []).join("\n"),
     texture: product?.texture ?? "",
     homepageTag: product?.homepageTag ?? "",
-    parentCategory: "",
+    parentCategory: (() => {
+      const sub = categories.find((c: any) => c.slug === product.category);
+      const parent = categories.find((c: any) => c.id === sub.parentId);
+      return parent?.slug ?? "";
+    })(),
   });
 
   const [newIngName, setNewIngName] = useState("");
