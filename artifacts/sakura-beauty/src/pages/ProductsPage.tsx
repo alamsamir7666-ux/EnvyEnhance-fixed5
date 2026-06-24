@@ -91,10 +91,7 @@ export function ProductsPage() {
   const [showFilterPanel, setShowFilterPanel] = useState(false);
   const [activeParentIdx, setActiveParentIdx] = useState(0);
 
-  const [currentPage, setCurrentPage] = useState(() => {
-    const initial = new URLSearchParams(window.location.search).get("page");
-    return initial ? parseInt(initial) || 1 : 1;
-  });
+
   const [allProducts, setAllProducts] = useState<Record<string, unknown>[]>([]);
   const [totalFromAPI, setTotalFromAPI] = useState(0);
 
@@ -104,6 +101,10 @@ export function ProductsPage() {
 
   const [, navigate] = useLocation();
   const searchStr = useSearch();
+  const currentPage = (() => {
+    const p = new URLSearchParams(searchStr).get("page");
+    return p ? parseInt(p) || 1 : 1;
+  })();
   const params = new URLSearchParams(searchStr);
   const activeCategory = params.get("category") ?? "";
   const urlSearch = params.get("q") ?? "";
@@ -125,12 +126,24 @@ export function ProductsPage() {
 
   // Reset pagination when category changes - do NOT reset search text so
   // users can search across a newly selected category without losing their query
+  // Reset to page 1 (by clearing ?page= from URL) when category/search/rating/perPage change
+  const resetPage = () => {
+    if (new URLSearchParams(searchStr).has("page")) {
+      const p = new URLSearchParams(searchStr);
+      p.delete("page");
+      const qs = p.toString();
+      navigate(`/products${qs ? "?" + qs : ""}`, { replace: true });
+    }
+  };
+
   useEffect(() => {
-    setCurrentPage(1); setAllProducts([]);
+    resetPage(); setAllProducts([]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategory]);
 
   useEffect(() => {
-    setCurrentPage(1); setAllProducts([]);
+    resetPage(); setAllProducts([]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, minRating, perPage]);
 
   useEffect(() => {
@@ -159,23 +172,11 @@ export function ProductsPage() {
   const sortedProducts = useMemo(() => sortProducts(allProducts, sort), [allProducts, sort]);
   const totalPages = Math.ceil(totalFromAPI / perPage);
 
-  useEffect(() => {
-    const onPopState = () => {
-      const p = new URLSearchParams(window.location.search).get("page");
-      const parsed = p ? parseInt(p) || 1 : 1;
-      console.log("[pagefix] popstate, url page =", parsed);
-      setCurrentPage(parsed);
-    };
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
-  }, []);
-
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
     const p = new URLSearchParams(searchStr);
     if (page === 1) p.delete("page"); else p.set("page", String(page));
     const qs = p.toString();
-    window.history.pushState(null, "", `/products${qs ? "?" + qs : ""}`);
+    navigate(`/products${qs ? "?" + qs : ""}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
