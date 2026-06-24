@@ -162,7 +162,9 @@ export function ProductsPage() {
   useEffect(() => {
     const onPopState = () => {
       const p = new URLSearchParams(window.location.search).get("page");
-      setCurrentPage(p ? parseInt(p) || 1 : 1);
+      const parsed = p ? parseInt(p) || 1 : 1;
+      console.log("[pagefix] popstate, url page =", parsed);
+      setCurrentPage(parsed);
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
