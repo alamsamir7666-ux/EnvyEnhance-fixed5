@@ -124,12 +124,10 @@ export function ProductsPage() {
   // users can search across a newly selected category without losing their query
   useEffect(() => {
     setAllProducts([]);
-    const p = new URLSearchParams(searchStr); p.delete("page"); navigate(`/products?${p.toString()}`, { replace: true });
   }, [activeCategory]);
 
   useEffect(() => {
     setAllProducts([]);
-    const p2 = new URLSearchParams(searchStr); p2.delete("page"); navigate(`/products?${p2.toString()}`, { replace: true });
   }, [debouncedSearch, minRating, perPage]);
 
   useEffect(() => {
@@ -160,7 +158,7 @@ export function ProductsPage() {
 
   const handlePageChange = (page: number) => {
     const p = new URLSearchParams(searchStr);
-    p.set("page", String(page));
+    if (page === 1) p.delete("page"); else p.set("page", String(page));
     navigate(`/products?${p.toString()}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
