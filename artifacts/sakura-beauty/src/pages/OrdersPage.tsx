@@ -268,8 +268,7 @@ export function OrdersPage() {
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .map((order, index) => {
                 if ((order as any)._type === "preorder") {
-                  const preIdx2 = preOrders.findIndex((p: any) => p.id === order.id);
-                  const preNum2 = preOrders.length - preIdx2;
+                  const preNum2 = preOrders.slice().sort((a,b) => a.id - b.id).findIndex((p: any) => p.id === order.id) + 1;
                   const preTotal = Number(order.discountedPrice) * Number(order.quantity) + Number(order.deliveryCharge);
                   const preStepIdx = ["pending","confirmed","arrived_in_bd","shipped","delivered"].indexOf(order.status);
                   const isCancelled = order.status === "cancelled";
