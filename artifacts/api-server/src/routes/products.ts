@@ -222,7 +222,14 @@ router.get("/products", async (req, res) => {
     const offset = (pageNum - 1) * limitNum;
 
     const conditions = [];
-    if (category) conditions.push(eq(productsTable.category, category));
+    if (category) {
+      const slugs = category.split(",").map(s => s.trim()).filter(Boolean);
+      conditions.push(
+        slugs.length > 1
+          ? inArray(productsTable.category, slugs)
+          : eq(productsTable.category, slugs[0])
+      );
+    }
     if (search) conditions.push(or(ilike(productsTable.name, `%${search}%`), ilike(productsTable.category, `%${search}%`)));
     if (minPrice) conditions.push(gte(productsTable.price, minPrice));
     if (maxPrice) conditions.push(lte(productsTable.price, maxPrice));

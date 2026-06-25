@@ -185,8 +185,14 @@ export function ProductsPage() {
   };
 
   const activeCategoryObj = dbCategories?.find(c => c.slug === activeCategory);
+  const isMultiCategory = activeCategory.includes(",");
+  const matchedParentForAll = isMultiCategory
+    ? (dbCategories ?? []).find((cat: any) => !cat.parentId &&
+        (dbCategories ?? []).filter((c: any) => c.parentId === cat.id).map((c: any) => c.slug).join(",") === activeCategory)
+    : undefined;
   const displayTitle = activeCategoryObj?.name
-    ?? (activeCategory ? activeCategory.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()) : "Shop All");
+    ?? matchedParentForAll?.name
+    ?? (activeCategory && !isMultiCategory ? activeCategory.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()) : "Shop All");
 
   const breadcrumbs = [
     { label: "Products", href: "/products", icon: <ShoppingBag className="h-3 w-3" /> },
@@ -340,9 +346,9 @@ export function ProductsPage() {
                         {/* Subcategory pills */}
                         <div className="flex flex-wrap gap-1.5">
                           <button
-                            onClick={() => navigate(`/products?category=${currentParent?.slug}`)}
+                            onClick={() => navigate(`/products?category=${subs.map((s: any) => s.slug).join(",")}`)}
                             className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
-                              activeCategory === currentParent?.slug
+                              activeCategory === subs.map((s: any) => s.slug).join(",")
                                 ? "bg-accent text-white border-accent"
                                 : "border-border text-muted-foreground bg-white hover:border-accent/60 hover:text-foreground"
                             }`}
@@ -414,7 +420,7 @@ export function ProductsPage() {
           <div className="flex flex-wrap gap-2 mb-5">
             {activeCategory && (
               <span className="inline-flex items-center gap-1.5 text-xs bg-accent/10 text-accent px-3 py-1 rounded-full">
-                {activeCategoryObj?.name ?? activeCategory}
+                {displayTitle}
                 <button onClick={() => navigate("/products")} aria-label="Remove"><X className="h-3 w-3" /></button>
               </span>
             )}
