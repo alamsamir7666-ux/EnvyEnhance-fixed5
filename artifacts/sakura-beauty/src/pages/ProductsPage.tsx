@@ -140,12 +140,16 @@ export function ProductsPage() {
     }
   };
 
+  const didMountCategory = useRef(false);
   useEffect(() => {
+    if (!didMountCategory.current) { didMountCategory.current = true; return; }
     resetPage(); setAllProducts([]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategory]);
 
+  const didMountFilters = useRef(false);
   useEffect(() => {
+    if (!didMountFilters.current) { didMountFilters.current = true; return; }
     resetPage(); setAllProducts([]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, minRating, perPage]);
