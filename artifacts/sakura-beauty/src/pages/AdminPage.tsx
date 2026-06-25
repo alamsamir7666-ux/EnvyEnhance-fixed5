@@ -798,7 +798,7 @@ export function AdminPage() {
   }, [products, debouncedSearch]);
 
   const recentCombined = [...orders, ...adminPreOrders.map((o: any) => ({
-    id: o.id, createdAt: o.createdAt, totalAmount: o.totalAmount ?? 0,
+    id: o.id, createdAt: o.createdAt, totalAmount: o.totalAmount ?? o.discountedPrice ?? o.productPrice ?? 0,
     orderStatus: o.status ?? "pre-order", _type: "preorder"
   } as any))].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5);
 
