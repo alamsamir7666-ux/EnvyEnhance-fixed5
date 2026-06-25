@@ -1085,7 +1085,7 @@ export function AdminPage() {
           },
           {
             label: "Products",
-            value: products.length > 0 ? products.length : "-",
+            value: (productsData?.total ?? products.length) > 0 ? (productsData?.total ?? products.length) : "-",
             change: products.length > 0 ? `${products.filter(p => p.stock < 10).length} low stock` : "No products yet",
             icon: Package2,
             color: "bg-violet-50 text-violet-600",
