@@ -7,7 +7,7 @@ import {
   productsTable,
   reviewsTable,
 } from "@workspace/db";
-import { eq, ilike, gte, lte, and, desc, sql, inArray } from "drizzle-orm";
+import { eq, ilike, gte, lte, and, desc, sql, inArray, or } from "drizzle-orm";
 import { requireAdmin, requireAuth } from "../middlewares/auth";
 import { notifyStockAlerts } from "./stockAlerts";
 import { notifyPreOrderCustomers } from "./preOrders";
@@ -223,7 +223,7 @@ router.get("/products", async (req, res) => {
 
     const conditions = [];
     if (category) conditions.push(eq(productsTable.category, category));
-    if (search) conditions.push(ilike(productsTable.name, `%${search}%`));
+    if (search) conditions.push(or(ilike(productsTable.name, `%${search}%`), ilike(productsTable.category, `%${search}%`)));
     if (minPrice) conditions.push(gte(productsTable.price, minPrice));
     if (maxPrice) conditions.push(lte(productsTable.price, maxPrice));
     const homepageTagFilter = req.query.homepageTag as string | undefined;
