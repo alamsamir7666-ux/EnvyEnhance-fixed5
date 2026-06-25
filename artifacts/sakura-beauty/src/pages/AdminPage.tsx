@@ -592,9 +592,10 @@ export function AdminPage() {
   const qc = useQueryClient();
   const { getToken } = useAuth();
   const [productsPage, setProductsPage] = useState(1);
-  const { data: productsData, isLoading: productsLoading } = useListProducts({ limit: 25, page: productsPage });
+  const { data: productsData, isLoading: productsLoading } = useListProducts({ limit: 25, page: productsPage, search: debouncedSearch || undefined } as any);
   const [allProducts, setAllProducts] = useState<any[]>([]);
   const productsHasMore = productsData ? allProducts.length < (productsData.total ?? 0) : false;
+  useEffect(() => { setProductsPage(1); setAllProducts([]); }, [debouncedSearch]);
   useEffect(() => {
     if (productsData?.products) {
       if (productsPage === 1) setAllProducts(productsData.products);
