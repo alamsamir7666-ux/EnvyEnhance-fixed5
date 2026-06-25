@@ -21,11 +21,16 @@ function toCategory(c: typeof categoriesTable.$inferSelect) {
 }
 
 router.get("/categories", async (_req, res) => {
+  const t0 = Date.now();
   const cats = await db
     .select()
     .from(categoriesTable)
     .orderBy(asc(categoriesTable.displayOrder), asc(categoriesTable.name));
+  const t1 = Date.now();
+  console.log("[timing] /categories DB query took", t1 - t0, "ms");
   res.json(cats.map(toCategory));
+  const t2 = Date.now();
+  console.log("[timing] /categories serialize+send took", t2 - t1, "ms, total handler:", t2 - t0, "ms");
 });
 
 router.post("/categories", requireAdmin, async (req: any, res) => {
