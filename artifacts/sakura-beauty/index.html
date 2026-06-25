@@ -50,7 +50,9 @@
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&q=75&fm=webp" fetchpriority="high" />
 
     <!-- Fonts: DM Sans for body + DM Serif Display for headings (matches index.css) -->
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" /></noscript>
 
     <!-- Structured Data: Organization -->
     <script type="application/ld+json">
@@ -90,7 +92,14 @@
         });
       }
     </script>
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script><script>eruda.init();</script>
+<script>
+      window.addEventListener('load', () => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/eruda';
+        s.onload = () => { window.eruda && window.eruda.init(); };
+        document.body.appendChild(s);
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
