@@ -127,16 +127,12 @@ export function ProductsPage() {
   // Reset pagination when category changes - do NOT reset search text so
   // users can search across a newly selected category without losing their query
   // Reset to page 1 (by clearing ?page= from URL) when category/search/rating/perPage change
-  console.log("[pagefix] RENDER historyLen:", window.history.length, "currentPage:", currentPage, "searchStr:", searchStr);
-
   const resetPage = () => {
     if (new URLSearchParams(searchStr).has("page")) {
-      console.log("[pagefix] resetPage FIRING, historyLen before:", window.history.length, "searchStr:", searchStr);
       const p = new URLSearchParams(searchStr);
       p.delete("page");
       const qs = p.toString();
       navigate(`/products${qs ? "?" + qs : ""}`, { replace: true });
-      console.log("[pagefix] resetPage DONE, historyLen after:", window.history.length);
     }
   };
 
