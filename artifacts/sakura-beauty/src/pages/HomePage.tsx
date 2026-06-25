@@ -8,7 +8,6 @@ import { ProductCardSkeleton, ProductGridSkeleton } from "@/components/ui/Produc
 import { useListProducts, useListCategories, getListCategoriesQueryKey } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePageContext } from "@/contexts/PageContext";
-import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 import { updateSEO } from "@/lib/seo";
 import { InstagramFeed } from "@/components/ui/InstagramFeed";
 
@@ -157,7 +156,6 @@ export function HomePage() {
   const { data: trendingData, isLoading: trendingLoading } = useListProducts({ homepageTag: "trending", limit: 22 } as any);
   const { data: newArrivalsData, isLoading: newArrivalsLoading } = useListProducts({ homepageTag: "new_arrivals", limit: 22 } as any);
   const featuredLoading = trendingLoading || newArrivalsLoading;
-  const recentlyViewed = useRecentlyViewed();
   const [heroSearch, setHeroSearch] = useState("");
   const [, navigate] = useLocation();
 
@@ -257,30 +255,6 @@ export function HomePage() {
           )}
         </div>
       </section>
-
-      {/* Recently Viewed */}
-      {recentlyViewed.length > 0 && (
-        <section className="py-16 border-t bg-muted/10">
-          <div className="container mx-auto px-4">
-            <div className="flex items-end justify-between mb-10">
-              <div>
-                <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">Continue your ritual</p>
-                <h2 className="font-serif text-4xl font-medium">Recently Viewed</h2>
-              </div>
-              <Link href="/products">
-                <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-                  View all <ArrowRight className="ml-1 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-              {recentlyViewed.slice(0, 4).map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Why Choose Us */}
       <section className="py-20 bg-muted/30">
