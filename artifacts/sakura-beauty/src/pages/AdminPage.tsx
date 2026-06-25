@@ -1123,9 +1123,7 @@ export function AdminPage() {
               </button>
             </div>
             <div className="divide-y">
-              {[...orders, ...adminPreOrders.map((o: any) => ({ ...o, _type: "preorder", orderStatus: o.status ?? "pre-order" }))]
-              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-              .slice(0, 5).map((o) => {
+              {orders.slice(0, 5).map((o) => {
                 const cfg = statusConfig[o.orderStatus] ?? { color: "bg-gray-100 text-gray-600", icon: AlertCircle };
                 const StatusIcon = cfg.icon;
                 return (
