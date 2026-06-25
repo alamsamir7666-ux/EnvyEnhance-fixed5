@@ -797,6 +797,11 @@ export function AdminPage() {
     );
   }, [products, debouncedSearch]);
 
+  const recentCombined = [...orders, ...adminPreOrders.map((o: any) => ({
+    id: o.id, createdAt: o.createdAt, totalAmount: o.totalAmount ?? 0,
+    orderStatus: o.status ?? "pre-order", _type: "preorder"
+  } as any))].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5);
+
   const TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
   const fetchArchivedOrders = async (page: number, append = false) => {
     setArchivedLoading(true);
@@ -1123,7 +1128,7 @@ export function AdminPage() {
               </button>
             </div>
             <div className="divide-y">
-              {orders.slice(0, 5).map((o) => {
+              {recentCombined.map((o) => {
                 const cfg = statusConfig[o.orderStatus] ?? { color: "bg-gray-100 text-gray-600", icon: AlertCircle };
                 const StatusIcon = cfg.icon;
                 return (
