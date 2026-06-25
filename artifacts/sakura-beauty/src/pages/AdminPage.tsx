@@ -591,10 +591,13 @@ export function AdminPage() {
   const closeCdg = () => setCdg(d=>({...d,open:false}));
   const qc = useQueryClient();
   const { getToken } = useAuth();
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [productsPage, setProductsPage] = useState(1);
-  const { data: productsData, isLoading: productsLoading } = useListProducts({ limit: 25, page: productsPage });
+  const { data: productsData, isLoading: productsLoading } = useListProducts({ limit: 25, page: productsPage, search: debouncedSearch || undefined } as any);
   const [allProducts, setAllProducts] = useState<any[]>([]);
   const productsHasMore = productsData ? allProducts.length < (productsData.total ?? 0) : false;
+  useEffect(() => { setProductsPage(1); setAllProducts([]); }, [debouncedSearch]);
   useEffect(() => {
     if (productsData?.products) {
       if (productsPage === 1) setAllProducts(productsData.products);
@@ -661,7 +664,6 @@ export function AdminPage() {
   const [showProductModal, setShowProductModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [search, setSearch] = useState("");
   const [orderSearch, setOrderSearch] = useState("");
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
   const [userSearch, setUserSearch] = useState("");
@@ -689,7 +691,7 @@ export function AdminPage() {
   const [monthlyLoading, setMonthlyLoading] = useState(false);
 
   // Debounced search values (prevent filtering on every keystroke)
-  const debouncedSearch = useDebounce(search, 300);
+
   const debouncedOrderSearch = useDebounce(orderSearch, 300);
   const debouncedUserSearch = useDebounce(userSearch, 300);
 
