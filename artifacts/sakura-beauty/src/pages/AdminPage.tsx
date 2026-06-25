@@ -65,7 +65,7 @@ const navItems = [
 ];
 
 // ??? Product form ????????????????????????????????????????????????????????????
-function ProductModal({ product, categories, onClose }: { product?: any; categories: any[]; onClose: () => void }) {
+function ProductModal({ product, categories, tagCounts, onClose }: { product?: any; categories: any[]; tagCounts?: Record<string, number>; onClose: () => void }) {
   const qc = useQueryClient();
   const { getToken } = useAuth();
   const createProduct = useCreateProduct();
@@ -209,8 +209,12 @@ function ProductModal({ product, categories, onClose }: { product?: any; categor
                 <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue placeholder="Not on homepage" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">Not on homepage</SelectItem>
-                  <SelectItem value="trending">Trending</SelectItem>
-                  <SelectItem value="new_arrivals">New Arrivals</SelectItem>
+                  <SelectItem value="trending">🔥 Trending ({tagCounts?.["trending"] ?? 0}/22)</SelectItem>
+                  <SelectItem value="new_arrivals">✨ New Arrivals ({tagCounts?.["new_arrivals"] ?? 0}/22)</SelectItem>
+                  <SelectItem value="best_skin_care" disabled={(tagCounts?.["best_skin_care"] ?? 0) >= 15 && product?.homepageTag !== "best_skin_care"}>🌿 Best Skin Care ({tagCounts?.["best_skin_care"] ?? 0}/15)</SelectItem>
+                  <SelectItem value="best_hair_care" disabled={(tagCounts?.["best_hair_care"] ?? 0) >= 15 && product?.homepageTag !== "best_hair_care"}>💇 Best Hair Care ({tagCounts?.["best_hair_care"] ?? 0}/15)</SelectItem>
+                  <SelectItem value="best_make_up" disabled={(tagCounts?.["best_make_up"] ?? 0) >= 15 && product?.homepageTag !== "best_make_up"}>💄 Best Make Up ({tagCounts?.["best_make_up"] ?? 0}/15)</SelectItem>
+                  <SelectItem value="best_body_care" disabled={(tagCounts?.["best_body_care"] ?? 0) >= 15 && product?.homepageTag !== "best_body_care"}>🧴 Best Body Care ({tagCounts?.["best_body_care"] ?? 0}/15)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -788,6 +792,12 @@ export function AdminPage() {
 
   const products = allProducts;
 
+  const tagCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    allProducts.forEach(p => { if (p.homepageTag) counts[p.homepageTag] = (counts[p.homepageTag] ?? 0) + 1; });
+    return counts;
+  }, [allProducts]);
+
   const filteredProducts = useMemo(() => {
     if (!debouncedSearch.trim()) return products;
     const q = debouncedSearch.toLowerCase();
@@ -1266,15 +1276,18 @@ export function AdminPage() {
                       <span className="capitalize text-gray-500 text-xs bg-gray-100 px-2.5 py-1 rounded-full font-medium">{p.category}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      {(p as any).homepageTag ? (
-                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium capitalize ${
-                          (p as any).homepageTag === "trending"
-                            ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
-                            : "bg-blue-50 text-blue-600 border border-blue-200"
-                        }`}>
-                          {(p as any).homepageTag === "trending" ? "Trending" : "New Arrivals"}
-                        </span>
-                      ) : (
+                      {(p as any).homepageTag ? (() => {
+                        const TAG_LABELS: Record<string, { label: string; cls: string }> = {
+                          trending:       { label: "🔥 Trending",      cls: "bg-emerald-50 text-emerald-600 border-emerald-200" },
+                          new_arrivals:   { label: "✨ New Arrivals",  cls: "bg-blue-50 text-blue-600 border-blue-200" },
+                          best_skin_care: { label: "🌿 Best Skin Care", cls: "bg-teal-50 text-teal-600 border-teal-200" },
+                          best_hair_care: { label: "💇 Best Hair Care", cls: "bg-purple-50 text-purple-600 border-purple-200" },
+                          best_make_up:   { label: "💄 Best Make Up",   cls: "bg-pink-50 text-pink-600 border-pink-200" },
+                          best_body_care: { label: "🧴 Best Body Care", cls: "bg-orange-50 text-orange-600 border-orange-200" },
+                        };
+                        const cfg = TAG_LABELS[(p as any).homepageTag];
+                        return <span className={`text-xs px-2.5 py-1 rounded-full font-medium border ${cfg?.cls ?? "bg-gray-50 text-gray-600 border-gray-200"}`}>{cfg?.label ?? (p as any).homepageTag}</span>;
+                      })() : (
                         <span className="text-xs text-gray-400">-</span>
                       )}
                     </td>
@@ -3492,6 +3505,7 @@ function BulkImportTab() {
         <ProductModal
           product={editingProduct}
           categories={categories as any[]}
+          tagCounts={tagCounts}
           onClose={() => { setShowProductModal(false); setEditingProduct(null); }}
         />
       )}

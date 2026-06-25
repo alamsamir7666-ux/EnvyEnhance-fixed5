@@ -152,9 +152,14 @@ const PAGE_SIZE = 4;
 
 export function HomePage() {
   const [activeTab, setActiveTab] = useState<"trending" | "new_arrivals">("trending");
+  const [bestTab, setBestTab] = useState("best_skin_care");
   const { setPageReady } = usePageContext();
   const { data: trendingData, isLoading: trendingLoading } = useListProducts({ homepageTag: "trending", limit: 22 } as any);
   const { data: newArrivalsData, isLoading: newArrivalsLoading } = useListProducts({ homepageTag: "new_arrivals", limit: 22 } as any);
+  const { data: bestSkinData,   isLoading: bestSkinLoading }   = useListProducts({ homepageTag: "best_skin_care",   limit: 15 } as any);
+  const { data: bestHairData,   isLoading: bestHairLoading }   = useListProducts({ homepageTag: "best_hair_care",   limit: 15 } as any);
+  const { data: bestMakeUpData, isLoading: bestMakeUpLoading } = useListProducts({ homepageTag: "best_make_up",     limit: 15 } as any);
+  const { data: bestBodyData,   isLoading: bestBodyLoading }   = useListProducts({ homepageTag: "best_body_care",   limit: 15 } as any);
   const featuredLoading = trendingLoading || newArrivalsLoading;
   const [heroSearch, setHeroSearch] = useState("");
   const [, navigate] = useLocation();
@@ -172,6 +177,21 @@ export function HomePage() {
   const trendingProducts = trendingData?.products ?? [];
   const newArrivalsProducts = newArrivalsData?.products ?? [];
   const activeProducts = activeTab === "trending" ? trendingProducts : newArrivalsProducts;
+
+  const BEST_TABS = [
+    { key: "best_skin_care", label: "SKIN CARE" },
+    { key: "best_hair_care", label: "HAIR CARE" },
+    { key: "best_make_up",   label: "MAKE UP" },
+    { key: "best_body_care", label: "BODY CARE" },
+  ];
+  const bestDataMap: Record<string, { products: any[]; loading: boolean }> = {
+    best_skin_care: { products: bestSkinData?.products   ?? [], loading: bestSkinLoading },
+    best_hair_care: { products: bestHairData?.products   ?? [], loading: bestHairLoading },
+    best_make_up:   { products: bestMakeUpData?.products ?? [], loading: bestMakeUpLoading },
+    best_body_care: { products: bestBodyData?.products   ?? [], loading: bestBodyLoading },
+  };
+  const bestProducts = bestDataMap[bestTab]?.products ?? [];
+  const bestLoading  = bestDataMap[bestTab]?.loading  ?? false;
 
   return (
     <div className="min-h-screen">
@@ -252,6 +272,48 @@ export function HomePage() {
                 ))}
               </div>
             </>
+          )}
+        </div>
+      </section>
+
+      {/* Best J-Beauty Products */}
+      <section className="py-16 bg-muted/10 border-t">
+        <div className="container mx-auto px-4">
+          <div className="flex items-end justify-between mb-2">
+            <div>
+              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-1">Based On Category</p>
+              <h2 className="font-serif text-3xl font-medium">Best J-Beauty Products</h2>
+            </div>
+            <Link href="/products">
+              <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+                View all <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+
+          {/* Category tabs */}
+          <div className="flex gap-2 mt-6 mb-8 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+            {BEST_TABS.map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => setBestTab(tab.key)}
+                className={`px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition-colors whitespace-nowrap ${bestTab === tab.key ? "bg-foreground text-background" : "bg-muted text-muted-foreground hover:text-foreground"}`}
+              >{tab.label}</button>
+            ))}
+          </div>
+
+          {bestLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+              {Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)}
+            </div>
+          ) : bestProducts.length === 0 ? (
+            <p className="text-center text-muted-foreground py-10">No products here yet. Check back soon!</p>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+              {bestProducts.map(product => (
+                <ProductCard key={product.id} product={product as any} />
+              ))}
+            </div>
           )}
         </div>
       </section>
