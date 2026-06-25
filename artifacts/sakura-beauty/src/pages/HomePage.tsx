@@ -115,7 +115,7 @@ function CollectionSlider() {
           className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {categories.map((cat) => {
+          {categories.map((cat, idx) => {
             const img = (cat as any).image || (categoryImages[cat.slug] ?? categoryImages.moisturizers);
             const bg = categoryBgs[cat.slug] ?? "#f8e8e8";
             return (
@@ -128,6 +128,8 @@ function CollectionSlider() {
                     src={img}
                     alt={cat.name}
                     className="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-80 transition-transform duration-700 group-hover:scale-105"
+                    fetchPriority={idx === 0 ? "high" : undefined}
+                    loading={idx === 0 ? "eager" : "lazy"}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent" />
                   <div className="absolute bottom-5 left-5 text-white">
