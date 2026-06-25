@@ -15,7 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, Heart, ShoppingBag, Minus, Plus, ChevronLeft, Check, ShieldCheck, Package, Truck, Bike, Pencil, Trash2, AlertTriangle, Lock } from "lucide-react";
+import { Star, Heart, ShoppingBag, Minus, Plus, ChevronLeft, Check, ShieldCheck, Package, Truck, Bike, Pencil, Trash2, AlertTriangle, Lock   ArrowRight,
+} from "lucide-react";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { saveRecentlyViewed, useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 import { VariantSelector } from "@/components/ui/VariantSelector";
@@ -624,7 +625,7 @@ export function ProductDetailPage() {
                 <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">Your browsing history</p>
                 <h2 className="font-serif text-3xl font-medium">Recently Viewed</h2>
               </div>
-              <Link href="/products"><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all ?</Button></Link>
+              <Link href="/products"><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all <ArrowRight className="ml-1 h-4 w-4" /></Button></Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
               {recentlyViewed.slice(0, 4).map((p) => (<ProductCard key={p.id} product={p as ExtendedProduct} />))}
@@ -639,7 +640,7 @@ export function ProductDetailPage() {
                 <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">You may also like</p>
                 <h2 className="font-serif text-3xl font-medium">Related Products</h2>
               </div>
-              <Link href={`/products?category=${product.category}`}><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all {product.category} ?</Button></Link>
+              <Link href={`/products?category=${product.category}`}><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all {product.category} <ArrowRight className="ml-1 h-4 w-4" /></Button></Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
               {relatedProducts.map((p) => (<ProductCard key={p.id} product={p} />))}
