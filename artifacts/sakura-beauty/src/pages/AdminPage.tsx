@@ -137,6 +137,7 @@ function ProductModal({ product, categories, tagCounts, onClose }: { product?: a
       qc.invalidateQueries({ queryKey: getListProductsQueryKey() });
       qc.invalidateQueries({ queryKey: getGetFeaturedProductsQueryKey() });
       qc.invalidateQueries({ queryKey: getGetHomepageProductsQueryKey() });
+      qc.invalidateQueries({ queryKey: ["products", "tag-counts"] });
       onClose();
     };
     if (product) {
