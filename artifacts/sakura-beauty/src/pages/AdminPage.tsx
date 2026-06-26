@@ -141,7 +141,11 @@ function ProductModal({ product, categories, tagCounts, onClose }: { product?: a
     };
 
     const updateCacheAndClose = (updatedProduct: any) => {
-      // Optimistically update the product in ALL cached pages instantly
+      // Update local allProducts state directly (what the table renders from)
+      setAllProducts(prev => prev.map((p: any) =>
+        p.id === updatedProduct.id ? { ...p, ...updatedProduct } : p
+      ));
+      // Also update React Query cache for consistency
       qc.setQueriesData(
         { queryKey: ["/api/products"] },
         (old: any) => {
