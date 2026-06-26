@@ -797,7 +797,7 @@ export function AdminPage() {
   const { data: tagCounts = {} } = useQuery({
     queryKey: ["products", "tag-counts"],
     queryFn: async () => {
-      const { data } = await apiClient.get<Record<string, number>>("/products/tag-counts");
+      const { data } = await apiClient.get<Record<string, number>>("/api/products/tag-counts");
       return data;
     },
     staleTime: 30_000,
