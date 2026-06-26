@@ -792,11 +792,17 @@ export function AdminPage() {
 
   const products = allProducts;
 
-  const tagCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    allProducts.forEach(p => { if (p.homepageTag) counts[p.homepageTag] = (counts[p.homepageTag] ?? 0) + 1; });
-    return counts;
-  }, [allProducts]);
+  const { data: tagCounts = {} } = useQuery({
+    queryKey: ["products", "tag-counts"],
+    queryFn: async () => {
+      const token = await getToken();
+      const res = await fetch(`${API}/products/tag-counts`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.json() as Promise<Record<string, number>>;
+    },
+    staleTime: 30_000,
+  });
 
   const filteredProducts = useMemo(() => {
     if (!debouncedSearch.trim()) return products;
