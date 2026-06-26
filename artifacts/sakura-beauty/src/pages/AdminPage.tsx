@@ -134,14 +134,31 @@ function ProductModal({ product, categories, tagCounts, onClose }: { product?: a
       productStatus: (form as any).productStatus ?? "in_stock",
     };
     const invalidateAll = () => {
-      qc.invalidateQueries({ queryKey: getListProductsQueryKey() });
       qc.invalidateQueries({ queryKey: getGetFeaturedProductsQueryKey() });
       qc.invalidateQueries({ queryKey: getGetHomepageProductsQueryKey() });
       qc.invalidateQueries({ queryKey: ["products", "tag-counts"] });
       onClose();
     };
+
+    const updateCacheAndClose = (updatedProduct: any) => {
+      // Optimistically update the product in ALL cached pages instantly
+      qc.setQueriesData(
+        { queryKey: ["/api/products"] },
+        (old: any) => {
+          if (!old?.products) return old;
+          return {
+            ...old,
+            products: old.products.map((p: any) =>
+              p.id === updatedProduct.id ? { ...p, ...updatedProduct } : p
+            ),
+          };
+        }
+      );
+      invalidateAll();
+    };
+
     if (product) {
-      updateProduct.mutate({ id: product.id, data }, { onSuccess: invalidateAll });
+      updateProduct.mutate({ id: product.id, data }, { onSuccess: updateCacheAndClose });
     } else {
       createProduct.mutate({ data }, { onSuccess: invalidateAll });
     }
