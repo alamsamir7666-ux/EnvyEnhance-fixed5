@@ -103,15 +103,17 @@ router.get("/products/featured", async (_req, res) => {
 
 router.get("/products/tag-counts", async (_req, res) => {
   try {
+    const { isNotNull } = await import("drizzle-orm");
     const rows = await db
       .select({ tag: productsTable.homepageTag, count: sql<number>`cast(count(*) as int)` })
       .from(productsTable)
-      .where(sql`${productsTable.homepageTag} is not null`)
+      .where(isNotNull(productsTable.homepageTag))
       .groupBy(productsTable.homepageTag);
     const counts: Record<string, number> = {};
     rows.forEach(r => { if (r.tag) counts[r.tag] = r.count; });
     res.json(counts);
   } catch (e) {
+    console.error("tag-counts error:", e);
     res.status(500).json({ error: "Failed to fetch tag counts" });
   }
 });
