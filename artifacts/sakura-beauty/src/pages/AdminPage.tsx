@@ -795,11 +795,8 @@ export function AdminPage() {
   const { data: tagCounts = {} } = useQuery({
     queryKey: ["products", "tag-counts"],
     queryFn: async () => {
-      const token = await getToken();
-      const res = await fetch(`${API}/products/tag-counts`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return res.json() as Promise<Record<string, number>>;
+      const { data } = await apiClient.get<Record<string, number>>("/products/tag-counts");
+      return data;
     },
     staleTime: 30_000,
   });
