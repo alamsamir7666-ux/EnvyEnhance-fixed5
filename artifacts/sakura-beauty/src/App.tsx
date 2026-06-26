@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ClerkProvider, SignIn, SignUp, Show, useClerk, useAuth, useSession } from '@clerk/react';
+import { ClerkProvider, Show, useClerk, useAuth, useSession } from '@clerk/react';
 import { setAuthTokenGetter } from '@workspace/api-client-react';
 import { shadcn } from '@clerk/themes';
 import { Switch, Route, useLocation, Router as WouterRouter, Redirect, Link } from 'wouter';
@@ -17,6 +17,8 @@ import { Navbar } from "./components/layout/Navbar";
 import { Footer } from "./components/layout/Footer";
 import { lazy, Suspense } from "react";
 const AddressesPage = lazy(() => import("@/pages/AddressesPage").then(m => ({ default: m.AddressesPage })));
+const SignInPage = lazy(() => import("@/pages/SignInPage").then(m => ({ default: m.SignInPage })));
+const SignUpPage = lazy(() => import("@/pages/SignUpPage").then(m => ({ default: m.SignUpPage })));
 const BlogPage = lazy(() => import("@/pages/BlogPage").then(m => ({ default: m.BlogPage })));
 const BlogArticlePage = lazy(() => import("@/pages/BlogArticlePage").then(m => ({ default: m.BlogArticlePage })));
 import { I18nProvider } from "@/lib/i18n";
@@ -121,41 +123,6 @@ const clerkAppearance = {
     main: "p-8",
   },
 };
-
-function AuthSkeleton() {
-  return (
-    <div className="w-full flex justify-center py-8">
-      <div className="bg-card rounded-xl w-[440px] max-w-full border border-border shadow-lg p-8 space-y-6">
-        <div className="flex justify-center"><div className="h-14 w-14 rounded-full bg-muted animate-pulse" /></div>
-        <div className="space-y-2 text-center"><div className="h-7 w-48 bg-muted animate-pulse rounded mx-auto" /><div className="h-4 w-64 bg-muted animate-pulse rounded mx-auto" /></div>
-        <div className="h-11 w-full bg-muted animate-pulse rounded-full" />
-        <div className="flex items-center gap-2"><div className="flex-1 h-px bg-muted" /><div className="h-4 w-6 bg-muted animate-pulse rounded" /><div className="flex-1 h-px bg-muted" /></div>
-        <div className="space-y-2"><div className="h-4 w-24 bg-muted animate-pulse rounded" /><div className="h-11 w-full bg-muted animate-pulse rounded" /></div>
-        <div className="h-11 w-full bg-muted animate-pulse rounded-full" />
-      </div>
-    </div>
-  );
-}
-
-function SignInPage() {
-  return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-gradient-to-br from-[#fdf6f0] to-[#fdf0f2] px-4 py-12">
-      <Suspense fallback={<AuthSkeleton />}>
-        <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
-      </Suspense>
-    </div>
-  );
-}
-
-function SignUpPage() {
-  return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-gradient-to-br from-[#fdf6f0] to-[#fdf0f2] px-4 py-12">
-      <Suspense fallback={<AuthSkeleton />}>
-        <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
-      </Suspense>
-    </div>
-  );
-}
 
 function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useClerk();
