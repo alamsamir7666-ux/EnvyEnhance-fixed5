@@ -28,6 +28,7 @@ import {
   BookOpen, FileText, Save,
 } from "lucide-react";
 import { useAuth } from "@clerk/react";
+import { apiClient } from "@/lib/apiClient";
 
 
 const API = import.meta.env.VITE_API_BASE_URL ?? "";
