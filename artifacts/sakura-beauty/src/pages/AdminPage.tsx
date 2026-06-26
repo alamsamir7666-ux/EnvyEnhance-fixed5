@@ -66,7 +66,7 @@ const navItems = [
 ];
 
 // ??? Product form ????????????????????????????????????????????????????????????
-function ProductModal({ product, categories, tagCounts, onClose }: { product?: any; categories: any[]; tagCounts?: Record<string, number>; onClose: () => void }) {
+function ProductModal({ product, categories, tagCounts, onClose, onProductUpdated }: { product?: any; categories: any[]; tagCounts?: Record<string, number>; onClose: () => void; onProductUpdated?: (p: any) => void }) {
   const qc = useQueryClient();
   const { getToken } = useAuth();
   const createProduct = useCreateProduct();
@@ -142,9 +142,7 @@ function ProductModal({ product, categories, tagCounts, onClose }: { product?: a
 
     const updateCacheAndClose = (updatedProduct: any) => {
       // Update local allProducts state directly (what the table renders from)
-      setAllProducts(prev => prev.map((p: any) =>
-        p.id === updatedProduct.id ? { ...p, ...updatedProduct } : p
-      ));
+      onProductUpdated?.(updatedProduct);
       // Also update React Query cache for consistency
       qc.setQueriesData(
         { queryKey: ["/api/products"] },
@@ -3533,6 +3531,7 @@ function BulkImportTab() {
           categories={categories as any[]}
           tagCounts={tagCounts}
           onClose={() => { setShowProductModal(false); setEditingProduct(null); }}
+          onProductUpdated={(p) => setAllProducts(prev => prev.map((x: any) => x.id === p.id ? { ...x, ...p } : x))}
         />
       )}
 
