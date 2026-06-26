@@ -101,6 +101,21 @@ router.get("/products/featured", async (_req, res) => {
   }
 });
 
+router.get("/products/tag-counts", async (_req, res) => {
+  try {
+    const rows = await db
+      .select({ tag: productsTable.homepageTag, count: sql<number>`cast(count(*) as int)` })
+      .from(productsTable)
+      .where(sql`${productsTable.homepageTag} is not null`)
+      .groupBy(productsTable.homepageTag);
+    const counts: Record<string, number> = {};
+    rows.forEach(r => { if (r.tag) counts[r.tag] = r.count; });
+    res.json(counts);
+  } catch (e) {
+    res.status(500).json({ error: "Failed to fetch tag counts" });
+  }
+});
+
 router.get("/products/homepage", async (_req, res) => {
   try {
     const [topProducts, bottomProducts] = await Promise.all([
