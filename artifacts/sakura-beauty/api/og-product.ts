@@ -1,4 +1,4 @@
-import { isBotRequest, injectMeta, SITE_BASE, API_BASE } from "./_og";
+import { isBotRequest, injectMeta, SITE_BASE, API_BASE } from "./_og.js";
 
 interface Product {
   id: number;
