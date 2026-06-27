@@ -173,6 +173,15 @@ export function ProductDetailPage() {
   }
   if (!product) return <div className="py-20 text-center text-muted-foreground">Product not found</div>;
 
+  updateSEO({
+    title: product.name,
+    description: product.description,
+    image: product.images[0],
+    type: "product",
+    priceAmount: product.discountPrice ?? product.price,
+    priceCurrency: "BDT",
+  });
+
   const imgs = (product.images.length > 0 ? product.images : ["https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600&q=80&fm=webp"]).map((img: string, i: number) =>
     img.includes("res.cloudinary.com")
       ? (i === 0

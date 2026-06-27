@@ -16,6 +16,8 @@ interface SEOOptions {
   image?: string;
   type?: "website" | "product";
   noIndex?: boolean;
+  priceAmount?: number;
+  priceCurrency?: string;
 }
 
 function setMeta(name: string, content: string, property = false) {
@@ -55,6 +57,12 @@ export function updateSEO(opts: SEOOptions = {}) {
   setMeta("og:image", image.startsWith("http") ? image : `https://envyenhance.com${image}`, true);
   setMeta("og:type", opts.type === "product" ? "product" : "website", true);
   setMeta("og:site_name", SITE_NAME, true);
+
+  // Product price (Open Graph product namespace) — only when supplied
+  if (opts.type === "product" && opts.priceAmount != null) {
+    setMeta("product:price:amount", String(opts.priceAmount), true);
+    setMeta("product:price:currency", opts.priceCurrency ?? "BDT", true);
+  }
 
   // Twitter
   setMeta("twitter:title", title);
