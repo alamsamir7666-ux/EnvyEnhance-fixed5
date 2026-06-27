@@ -3112,9 +3112,36 @@ function BlogTab() {
                 onChange={e => setForm(f => ({ ...f, readTime: e.target.value }))} />
             </div>
             <div className="space-y-1 sm:col-span-2">
-              <Label className="text-xs">Cover Image URL</Label>
-              <Input placeholder="https://?" value={form.image}
-                onChange={e => setForm(f => ({ ...f, image: e.target.value }))} />
+              <Label className="text-xs">Cover Image</Label>
+              <div className="flex gap-2 items-center">
+                <Input placeholder="https://..." value={form.image}
+                  onChange={e => setForm(f => ({ ...f, image: e.target.value }))} />
+                <button type="button"
+                  onClick={() => document.getElementById("blog-image-upload")?.click()}
+                  className="shrink-0 text-xs bg-muted hover:bg-muted/80 px-3 py-2 rounded-lg border transition-colors">
+                  Upload
+                </button>
+                <input type="file" accept="image/*" id="blog-image-upload" className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0]; if (!file) return;
+                    const fd = new FormData();
+                    fd.append("images", file);
+                    fd.append("productName", "blog-cover");
+                    fd.append("startIndex", "1");
+                    const token = await getToken();
+                    const res = await fetch(`${API}/api/products/upload-image`, { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: fd });
+                    const data = await res.json();
+                    if (data.urls?.[0]) setForm(f => ({ ...f, image: data.urls[0] }));
+                    e.target.value = "";
+                  }} />
+              </div>
+              {form.image && (
+                <div className="relative mt-2 w-full h-32 rounded-xl overflow-hidden border">
+                  <img src={form.image} alt="preview" className="w-full h-full object-cover" />
+                  <button type="button" onClick={() => setForm(f => ({ ...f, image: "" }))}
+                    className="absolute top-1 right-1 bg-black/60 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">×</button>
+                </div>
+              )}
             </div>
             <div className="space-y-1 sm:col-span-2">
               <Label className="text-xs">Excerpt *</Label>
