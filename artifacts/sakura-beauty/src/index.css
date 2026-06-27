@@ -35,6 +35,7 @@
   --color-muted-border: var(--muted-border);
 
   --color-accent: hsl(var(--accent));
+  --color-accent-text: hsl(var(--accent-text));
   --color-accent-foreground: hsl(var(--accent-foreground));
   --color-accent-border: var(--accent-border);
 
@@ -109,6 +110,8 @@
   /* Gold accent */
   --accent: 43 62% 42%;
   --accent-foreground: 34 23% 98%;
+  /* Darker variant of accent for small text labels (WCAG AA 4.5:1 on light bg) */
+  --accent-text: 43 62% 34%;
 
   --destructive: 0 72% 51%;
   --destructive-foreground: 34 23% 98%;
@@ -277,6 +280,8 @@
 
   --accent: 43 55% 48%;
   --accent-foreground: 20 10% 8%;
+  /* Already passes WCAG AA in dark mode, no need to darken further */
+  --accent-text: 43 55% 48%;
 
   --destructive: 0 65% 48%;
   --destructive-foreground: 34 20% 92%;

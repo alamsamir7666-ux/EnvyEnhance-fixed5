@@ -5,6 +5,10 @@
   "routes": [
     { "handle": "filesystem" },
     {
+      "src": "/sitemap.xml",
+      "dest": "/api/sitemap"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }

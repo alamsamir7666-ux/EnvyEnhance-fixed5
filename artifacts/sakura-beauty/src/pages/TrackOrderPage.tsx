@@ -39,7 +39,7 @@ export function TrackOrderPage() {
       <div className="bg-muted/30 border-b py-10">
         <div className="container mx-auto px-4">
           <PageBreadcrumb crumbs={[{ label: "Track Order", icon: <Truck className="h-3 w-3" /> }]} className="mb-3" />
-          <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">Order Tracking</p>
+          <p className="text-xs uppercase tracking-[0.15em] text-accent-text mb-2 font-medium">Order Tracking</p>
           <h1 className="font-serif text-4xl font-medium">Track Your Order</h1>
         </div>
       </div>

@@ -252,7 +252,7 @@ export function ComparisonBar({ onOpen }: { onOpen: () => void }) {
       <Button size="sm" className="rounded-full text-xs" onClick={onOpen}>
         Compare Now
       </Button>
-      <button onClick={clearCompare} className="text-muted-foreground hover:text-foreground transition-colors">
+      <button onClick={clearCompare} aria-label="Clear comparison" className="text-muted-foreground hover:text-foreground transition-colors">
         <X className="h-4 w-4" />
       </button>
     </div>

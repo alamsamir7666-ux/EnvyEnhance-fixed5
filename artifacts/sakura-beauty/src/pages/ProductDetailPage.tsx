@@ -625,7 +625,7 @@ export function ProductDetailPage() {
           <section className="border-t pt-12 mb-12">
             <div className="flex items-end justify-between mb-8">
               <div>
-                <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">Your browsing history</p>
+                <p className="text-xs uppercase tracking-[0.15em] text-accent-text mb-2 font-medium">Your browsing history</p>
                 <h2 className="font-serif text-3xl font-medium">Recently Viewed</h2>
               </div>
               <Link href="/products"><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all <ArrowRight className="ml-1 h-4 w-4" /></Button></Link>
@@ -640,7 +640,7 @@ export function ProductDetailPage() {
           <section className="border-t pt-12">
             <div className="flex items-end justify-between mb-8">
               <div>
-                <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">You may also like</p>
+                <p className="text-xs uppercase tracking-[0.15em] text-accent-text mb-2 font-medium">You may also like</p>
                 <h2 className="font-serif text-3xl font-medium">Related Products</h2>
               </div>
               <Link href={`/products?category=${product.category}`}><Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">View all {product.category} <ArrowRight className="ml-1 h-4 w-4" /></Button></Link>

@@ -91,18 +91,20 @@ function CollectionSlider() {
       <div className="container mx-auto px-4">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">Browse by Collection</p>
+            <p className="text-xs uppercase tracking-[0.15em] text-accent-text mb-2 font-medium">Browse by Collection</p>
             <h2 className="font-serif text-3xl font-medium">Our Collections</h2>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => sliderRef.current?.scrollBy({ left: -280, behavior: "smooth" })}
+              aria-label="Scroll collections left"
               className="h-9 w-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
               onClick={() => sliderRef.current?.scrollBy({ left: 280, behavior: "smooth" })}
+              aria-label="Scroll collections right"
               className="h-9 w-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
             >
               <ChevronRight className="h-4 w-4" />
@@ -324,7 +326,7 @@ export function HomePage() {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <p className="text-xs uppercase tracking-[0.15em] text-accent mb-2 font-medium">Why Choose Us</p>
+            <p className="text-xs uppercase tracking-[0.15em] text-accent-text mb-2 font-medium">Why Choose Us</p>
             <h2 className="font-serif text-3xl font-medium">Our Promise to You</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl mx-auto text-center">
