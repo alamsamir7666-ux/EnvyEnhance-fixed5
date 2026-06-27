@@ -2991,7 +2991,10 @@ function BlogTab() {
   const emptyForm = { slug: "", title: "", excerpt: "", content: "", category: "Skincare Tips", readTime: "5 min read", image: "", featured: false };
   const [form, setForm] = useState(emptyForm);
 
+  const fetchedRef = useRef(false);
   useEffect(() => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
     getToken().then(token => fetch(API+"/api/blog-posts", { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(data => setPosts(Array.isArray(data) ? data : []))
