@@ -175,7 +175,10 @@ router.post("/products/upload-image", requireAuth, requireAdmin, uploadMiddlewar
         { folder: "envyenhance/products", ...(isPrimary ? {} : { quality: 75, format: "webp" }), ...(publicId ? { public_id: publicId } : {}) },
         (err, result) => {
           if (err || !result) { console.error("Cloudinary error:", err); return reject(err ?? new Error("Upload failed")); }
-          resolve(result.secure_url);
+          const url = isPrimary
+            ? result.secure_url.replace("/upload/", "/upload/f_jpg/")
+            : result.secure_url;
+          resolve(url);
         }
       );
       stream.end(file.buffer);
