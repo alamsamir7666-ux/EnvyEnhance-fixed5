@@ -35,7 +35,7 @@ export default {
 
       const productsRes = await fetch(`${API_BASE}/api/products?limit=1000`);
       if (productsRes.ok) {
-        const data = await productsRes.json();
+        const data = (await productsRes.json()) as { products?: Product[] };
         const products: Product[] = data.products ?? [];
         for (const p of products) {
           entries.push(
@@ -51,7 +51,7 @@ export default {
 
       const blogRes = await fetch(`${API_BASE}/api/blog-posts?limit=1000`);
       if (blogRes.ok) {
-        const data = await blogRes.json();
+        const data = (await blogRes.json()) as BlogPost[] | { posts?: BlogPost[] };
         const posts: BlogPost[] = Array.isArray(data) ? data : (data.posts ?? []);
         for (const post of posts) {
           entries.push(
