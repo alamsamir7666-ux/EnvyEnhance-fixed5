@@ -166,9 +166,11 @@ router.post("/products/upload-image", requireAuth, requireAdmin, uploadMiddlewar
       .replace(/^-|-$/g, "")
       .slice(0, 60);
 
+    const startIndex = parseInt(req.body.startIndex ?? "0") || 0;
     const urls = await Promise.all(files.map((file, idx) => new Promise<string>((resolve, reject) => {
-      const publicId = slug ? `${slug}-${idx + 1}-${Date.now()}` : undefined;
-      const isPrimary = idx === 0;
+      const absoluteIdx = startIndex + idx;
+      const publicId = slug ? `${slug}-${absoluteIdx + 1}-${Date.now()}` : undefined;
+      const isPrimary = absoluteIdx === 0;
       const stream = cloudinaryV2.uploader.upload_stream(
         { folder: "envyenhance/products", quality: isPrimary ? 90 : 75, format: isPrimary ? "png" : "webp", ...(publicId ? { public_id: publicId } : {}) },
         (err, result) => {

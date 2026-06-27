@@ -367,7 +367,8 @@ function ProductModal({ product, categories, tagCounts, onClose, onProductUpdate
                     const fd = new FormData();
                     files.forEach((f: File) => fd.append("images", f));
                     if (form.name) fd.append("productName", String(form.name));
-                    if (form.name) fd.append("productName", String(form.name));
+                    const existingCount = form.images ? String(form.images).split(",").filter((s: string) => s.trim()).length : 0;
+                    fd.append("startIndex", String(existingCount));
                     try {
                       const token = await getToken();
                       if (!token) { alert("Not logged in"); return; }
