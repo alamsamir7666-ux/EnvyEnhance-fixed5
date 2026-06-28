@@ -3490,7 +3490,7 @@ function BulkImportTab() {
 }
 
 
-  const tabContent: Record<string, React.ReactNode> = {
+  const tabContent: Record<string, React.ReactNode> = useMemo(() => ({
     dashboard:  <DashboardTab />,
     products:   ProductsTab(),
     categories: <CategoriesTab />,
@@ -3508,7 +3508,7 @@ function BulkImportTab() {
     auditlogs:  <AuditLogsTab />,
     qa:         <QATab />,
     bulkimport: <BulkImportTab />,
-  };
+  }), []);
 
   const activeNav = navItems.find(n => n.id === activeTab);
 
