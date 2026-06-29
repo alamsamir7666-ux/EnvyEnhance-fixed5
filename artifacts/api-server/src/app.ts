@@ -23,27 +23,25 @@ app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
 // ─── Structured request logging ──────────────────────────────────────────────
-if (!process.env.VERCEL) {
-  app.use(
-    pinoHttp({
-      logger,
-      serializers: {
-        req(req) {
-          return {
-            id: req.id,
-            method: req.method,
-            url: req.url?.split("?")[0],
-          };
-        },
-        res(res) {
-          return {
-            statusCode: res.statusCode,
-          };
-        },
+app.use(
+  pinoHttp({
+    logger,
+    serializers: {
+      req(req) {
+        return {
+          id: req.id,
+          method: req.method,
+          url: req.url?.split("?")[0], // Never log query strings (may contain tokens)
+        };
       },
-    }),
-  );
-}
+      res(res) {
+        return {
+          statusCode: res.statusCode,
+        };
+      },
+    },
+  }),
+);
 
 // ─── Security Headers ────────────────────────────────────────────────────────
 app.use((_req: Request, res: Response, next: NextFunction) => {
@@ -84,19 +82,11 @@ app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cookieParser());
 
-// ─── Clerk proxy (disabled on Vercel serverless) ────────────────────────────
-if (!process.env.VERCEL) {
-  app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
-}
+// ─── Clerk proxy ─────────────────────────────────────────────────────────────
+app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 
 // ─── Clerk middleware ─────────────────────────────────────────────────────────
-app.use(clerkMiddleware({
-  authorizedParties: [
-    "https://envy-enhance-fixed5.vercel.app",
-    "http://localhost:5173",
-    "http://localhost:3000",
-  ]
-}));
+app.use(clerkMiddleware({ publishableKey: process.env.CLERK_PUBLISHABLE_KEY }));
 
 // ─── Rate Limiting ───────────────────────────────────────────────────────────
 app.use("/api", apiLimiter);
