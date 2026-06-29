@@ -90,7 +90,7 @@ if (!process.env.VERCEL) {
 }
 
 // ─── Clerk middleware ─────────────────────────────────────────────────────────
-app.use(clerkMiddleware({ publishableKey: process.env.CLERK_PUBLISHABLE_KEY }));
+app.use(clerkMiddleware());
 
 // ─── Rate Limiting ───────────────────────────────────────────────────────────
 app.use("/api", apiLimiter);
