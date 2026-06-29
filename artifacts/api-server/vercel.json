@@ -1,6 +1,7 @@
 {
   "version": 2,
   "buildCommand": "node build.mjs",
+  "outputDirectory": "dist",
   "builds": [
     {
       "src": "dist/index.mjs",
