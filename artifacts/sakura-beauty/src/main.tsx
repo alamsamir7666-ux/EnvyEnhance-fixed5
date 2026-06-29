@@ -1,4 +1,11 @@
 import { createRoot } from "react-dom/client";
+// Eruda mobile console - remove after debugging
+if (typeof window !== "undefined") {
+  const script = document.createElement("script");
+  script.src = "https://cdn.jsdelivr.net/npm/eruda";
+  script.onload = () => (window as any).eruda.init();
+  document.head.appendChild(script);
+}
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import App from "./App";
 import "./index.css";
