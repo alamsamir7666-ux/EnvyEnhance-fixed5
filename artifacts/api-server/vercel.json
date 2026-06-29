@@ -1,19 +1,15 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "src/vercel.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["src/**", "../../lib/**"],
-        "tsConfig": "tsconfig.vercel.json"
-      }
+  "functions": {
+    "api/index.js": {
+      "memory": 512,
+      "maxDuration": 10
     }
-  ],
+  },
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/vercel.ts"
+      "dest": "/api/index.js"
     }
   ]
 }
