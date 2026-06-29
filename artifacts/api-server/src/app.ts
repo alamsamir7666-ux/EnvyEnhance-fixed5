@@ -90,7 +90,13 @@ if (!process.env.VERCEL) {
 }
 
 // ─── Clerk middleware ─────────────────────────────────────────────────────────
-app.use(clerkMiddleware());
+app.use(clerkMiddleware({
+  authorizedParties: [
+    "https://envy-enhance-fixed5.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
+  ]
+}));
 
 // ─── Rate Limiting ───────────────────────────────────────────────────────────
 app.use("/api", apiLimiter);
