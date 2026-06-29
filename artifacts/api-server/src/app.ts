@@ -82,8 +82,10 @@ app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cookieParser());
 
-// ─── Clerk proxy ─────────────────────────────────────────────────────────────
-app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
+// ─── Clerk proxy (disabled on Vercel serverless) ────────────────────────────
+if (!process.env.VERCEL) {
+  app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
+}
 
 // ─── Clerk middleware ─────────────────────────────────────────────────────────
 app.use(clerkMiddleware({ publishableKey: process.env.CLERK_PUBLISHABLE_KEY }));
