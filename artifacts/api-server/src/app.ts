@@ -23,25 +23,27 @@ app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
 // ─── Structured request logging ──────────────────────────────────────────────
-app.use(
-  pinoHttp({
-    logger,
-    serializers: {
-      req(req) {
-        return {
-          id: req.id,
-          method: req.method,
-          url: req.url?.split("?")[0], // Never log query strings (may contain tokens)
-        };
+if (!process.env.VERCEL) {
+  app.use(
+    pinoHttp({
+      logger,
+      serializers: {
+        req(req) {
+          return {
+            id: req.id,
+            method: req.method,
+            url: req.url?.split("?")[0],
+          };
+        },
+        res(res) {
+          return {
+            statusCode: res.statusCode,
+          };
+        },
       },
-      res(res) {
-        return {
-          statusCode: res.statusCode,
-        };
-      },
-    },
-  }),
-);
+    }),
+  );
+}
 
 // ─── Security Headers ────────────────────────────────────────────────────────
 app.use((_req: Request, res: Response, next: NextFunction) => {
