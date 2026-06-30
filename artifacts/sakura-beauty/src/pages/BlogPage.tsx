@@ -9,52 +9,6 @@ updateSEO({
   description: "Expert skincare tips, Japanese beauty guides, ingredient breakdowns, and routine advice for Bangladesh.",
 });
 
-// Fallback static posts used when API has no posts yet
-const FALLBACK_POSTS = [
-  {
-    slug: "japanese-skincare-routine-beginners",
-    title: "The Complete Japanese Skincare Routine for Beginners",
-    excerpt: "Learn the foundational steps of a Japanese skincare routine - from double cleansing to layering essences - and why it works so well for all skin types.",
-    category: "Routine Guide", readTime: "7 min read", publishedAt: "May 2025", featured: true,
-    image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=800&q=80&fm=webp",
-  },
-  {
-    slug: "vitamin-c-serum-guide",
-    title: "Vitamin C Serums: Everything You Need to Know",
-    excerpt: "Not all Vitamin C serums are created equal. We break down L-ascorbic acid vs derivatives, concentrations, and how to get the best results without irritation.",
-    category: "Ingredients", readTime: "5 min read", publishedAt: "April 2025", featured: false,
-    image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&q=80&fm=webp",
-  },
-  {
-    slug: "sunscreen-guide-bangladesh",
-    title: "Why SPF Is Non-Negotiable in Bangladesh",
-    excerpt: "Living in a tropical climate means UV exposure is intense year-round. Here's how to choose the right sunscreen for your skin type and lifestyle.",
-    category: "Sun Protection", readTime: "4 min read", publishedAt: "March 2025", featured: false,
-    image: "https://images.unsplash.com/photo-1607006344380-b6775a0824a7?w=800&q=80&fm=webp",
-  },
-  {
-    slug: "niacinamide-skincare-benefits",
-    title: "Niacinamide: The Multi-Tasking Ingredient You Need",
-    excerpt: "Niacinamide (Vitamin B3) tackles pores, oil control, hyperpigmentation, and barrier repair - all in one. Here's how to add it to your routine.",
-    category: "Ingredients", readTime: "5 min read", publishedAt: "February 2025", featured: false,
-    image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80&fm=webp",
-  },
-  {
-    slug: "hyaluronic-acid-guide",
-    title: "Hyaluronic Acid: Hydration Done Right",
-    excerpt: "It holds 1000× its weight in water - but are you using it correctly? Learn when, how, and why to apply hyaluronic acid for maximum plumping effect.",
-    category: "Ingredients", readTime: "4 min read", publishedAt: "January 2025", featured: false,
-    image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=80&fm=webp",
-  },
-  {
-    slug: "retinol-beginners-guide",
-    title: "Starting Retinol Without the Purge",
-    excerpt: "Retinol is the gold standard for anti-ageing - but used wrong, it causes irritation and purging. This guide walks you through introducing it safely.",
-    category: "Anti-Ageing", readTime: "6 min read", publishedAt: "December 2024", featured: false,
-    image: "https://images.unsplash.com/photo-1576426863848-c21f53c60b19?w=800&q=80&fm=webp",
-  },
-];
-
 interface BlogPost {
   slug: string;
   title: string;
@@ -74,14 +28,9 @@ export function BlogPage() {
     fetch("/api/blog-posts")
       .then(r => r.json())
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          setPosts(data);
-        } else {
-          // Fallback to static posts if no admin-created posts exist yet
-          setPosts(FALLBACK_POSTS);
-        }
+        setPosts(Array.isArray(data) ? data : []);
       })
-      .catch(() => setPosts(FALLBACK_POSTS))
+      .catch(() => setPosts([]))
       .finally(() => setLoading(false));
   }, []);
 
