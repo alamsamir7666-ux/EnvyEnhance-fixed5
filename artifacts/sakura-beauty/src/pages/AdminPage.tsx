@@ -1864,48 +1864,6 @@ export function AdminPage() {
     );
   }, [activeTab]);
 
-  function PreOrdersTab() {
-    if (preOrdersLoading) return <div className="text-center py-10 text-gray-400">Loading...</div>;
-    if (preOrders.length === 0) return <div className="text-center py-10 text-gray-400">No pre-orders yet.</div>;
-    return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="font-serif text-xl font-medium">Pre-Orders ({preOrders.length})</h2>
-        </div>
-        {preOrders.map((o: any) => (
-          <div key={o.id} className="bg-white border rounded-2xl p-5 space-y-3">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex gap-3">
-                {o.productImage && <img src={o.productImage} className="w-12 h-12 rounded-xl object-cover shrink-0" />}
-                <div>
-                  <p className="font-medium text-sm">{o.productName}</p>
-                  <p className="text-xs text-gray-500 font-mono mt-0.5">{o.trackingId}</p>
-                </div>
-              </div>
-              <div className="text-right shrink-0">
-                <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                  o.status === "shipped" ? "bg-green-100 text-green-700" :
-                  o.status === "confirmed" ? "bg-blue-100 text-blue-700" :
-                  "bg-amber-100 text-amber-700"
-                }`}>{o.status}</span>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
-              <div><span className="text-gray-400">Customer:</span> {o.shippingAddress?.fullName}</div>
-              <div><span className="text-gray-400">Phone:</span> {o.shippingAddress?.phone}</div>
-              <div><span className="text-gray-400">City:</span> {o.shippingAddress?.city}</div>
-              <div><span className="text-gray-400">WhatsApp:</span> {o.whatsappPhone ?? "-"}</div>
-              <div><span className="text-gray-400">Delivery paid:</span> Tk{o.deliveryCharge}</div>
-              <div><span className="text-gray-400">Product price:</span> Tk{o.discountedPrice}</div>
-              <div><span className="text-gray-400">Payment:</span> {o.paymentMethod}</div>
-              <div><span className={`font-semibold ${o.paymentStatus === "paid" ? "text-green-600" : "text-amber-600"}`}>{o.paymentStatus}</span></div>
-            </div>
-            <p className="text-xs text-gray-400">{new Date(o.createdAt).toLocaleString()}</p>
-          </div>
-        ))}
-      </div>
-    );
-  }
 
   const [shipmentDate, setShipmentDate] = useState(() => localStorage.getItem("nextShipmentDate") ?? "");
   const [shipmentSaved, setShipmentSaved] = useState(false);
