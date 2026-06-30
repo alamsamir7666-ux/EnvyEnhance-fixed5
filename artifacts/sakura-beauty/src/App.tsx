@@ -282,6 +282,7 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 }
 
 function AdminRoute() {
+  console.log("[AdminRoute] component function called - fresh mount or re-render");
   const { user: clerkUser } = useUser();
   const { data: dbUser, isLoading } = useGetMe({ query: { retry: false, queryKey: ["me"], staleTime: Infinity, refetchOnMount: false, refetchOnReconnect: false } });
   const [verifiedAdmin, setVerifiedAdmin] = useState(false);
