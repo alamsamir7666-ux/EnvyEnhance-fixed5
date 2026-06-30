@@ -2985,6 +2985,7 @@ function CashoutsSection() {
 
 // ??? Blog Tab ????????????????????????????????????????????????????????????????
 function BlogTab() {
+  console.log("[BlogTab] component function called/rendered");
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQ, setSearchQ] = useState("");
@@ -2999,6 +3000,7 @@ function BlogTab() {
 
   const fetchedRef = useRef(false);
   useEffect(() => {
+    console.log("[BlogTab] MOUNT EFFECT FIRED - fetchedRef was:", fetchedRef.current);
     if (fetchedRef.current) return;
     fetchedRef.current = true;
     getToken().then(token => fetch(API+"/api/blog-posts", { headers: { Authorization: `Bearer ${token}` } })
