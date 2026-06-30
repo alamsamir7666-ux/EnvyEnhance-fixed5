@@ -612,10 +612,16 @@ function ConfirmDialog({ open, title, message, onConfirm, onCancel, danger = tru
 
 // ??? Main AdminPage ??????????????????????????????????????????????????????????
 export function AdminPage() {
+  console.log("[AdminPage] component function called - fresh mount or re-render");
   const [cdg, setCdg] = useState<{open:boolean;title:string;message:string;onConfirm:()=>void;danger:boolean}>({open:false,title:"",message:"",onConfirm:()=>{},danger:true});
   const askConfirm = (title:string,message:string,cb:()=>void,danger=true) => setCdg({open:true,title,message,onConfirm:cb,danger});
   const closeCdg = () => setCdg(d=>({...d,open:false}));
   const qc = useQueryClient();
+  const adminMountRef = useRef(false);
+  useEffect(() => {
+    console.log("[AdminPage] MOUNT EFFECT - was already mounted before:", adminMountRef.current);
+    adminMountRef.current = true;
+  }, []);
   const { getToken } = useAuth();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
