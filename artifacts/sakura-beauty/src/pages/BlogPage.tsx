@@ -25,7 +25,7 @@ export function BlogPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/blog-posts")
+    fetch((import.meta.env.VITE_API_BASE_URL ?? "") + "/api/blog-posts")
       .then(r => r.json())
       .then(data => {
         setPosts(Array.isArray(data) ? data : []);

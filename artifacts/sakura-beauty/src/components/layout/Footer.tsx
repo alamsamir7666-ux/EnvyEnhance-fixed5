@@ -105,7 +105,7 @@ export function Footer() {
                 if (!input?.value || !input.checkValidity()) return;
                 const email = input.value.trim();
                 try {
-                  const r = await fetch("/api/newsletter/subscribe", {
+                  const r = await fetch((import.meta.env.VITE_API_BASE_URL ?? "") + "/api/newsletter/subscribe", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ email }),
