@@ -697,6 +697,9 @@ export function AdminPage() {
   const toggleUserBlock = useToggleUserBlock();
 
   const [activeTab, setActiveTab] = useState("dashboard");
+  useEffect(() => {
+    console.log("[activeTab] changed to:", activeTab);
+  }, [activeTab]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [showProductModal, setShowProductModal] = useState(false);
