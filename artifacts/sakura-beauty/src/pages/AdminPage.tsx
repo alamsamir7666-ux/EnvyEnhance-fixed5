@@ -645,6 +645,7 @@ export function AdminPage() {
   const [ordersHasMore, setOrdersHasMore] = useState(false);
   const [ordersTotal, setOrdersTotal] = useState(0);
   const [dashStats, setDashStats] = useState<{totalSales:number,totalOrders:number,pendingOrders:number,deliveredOrders:number}>({totalSales:0,totalOrders:0,pendingOrders:0,deliveredOrders:0});
+  const [dashStatsLoading, setDashStatsLoading] = useState(true);
 
   const fetchOrders = async (page: number, append = false) => {
     setOrdersLoading(true);
@@ -664,13 +665,18 @@ export function AdminPage() {
   useEffect(() => {
     fetchOrders(1);
     fetchAdminPreOrders();
+    setDashStatsLoading(true);
     getToken().then(token =>
       fetch(`${API}/api/admin/dashboard`, { headers: { Authorization: `Bearer ${token}` } })
-        .then(r => r.json())
+        .then(r => {
+          if (!r.ok) throw new Error(`Dashboard fetch failed: ${r.status}`);
+          return r.json();
+        })
         .then(data => {
           setDashStats({ totalSales: data.totalSales ?? 0, totalOrders: data.totalOrders ?? 0, pendingOrders: data.pendingOrders ?? 0, deliveredOrders: data.totalOrders != null && data.pendingOrders != null ? (data.totalOrders - data.pendingOrders) : 0 });
         })
-        .catch(() => {})
+        .catch((e) => console.error("Dashboard stats error:", e?.message))
+        .finally(() => setDashStatsLoading(false))
     );
   }, []);
   const { data: users } = useListAllUsers({ query: { queryKey: getListAllUsersQueryKey() } });
@@ -1036,7 +1042,7 @@ export function AdminPage() {
 
   // ??? Dashboard Tab ?????????????????????????????????????????????????????????
   const DashboardTab = () => {
-    const dashLoading = productsLoading || ordersLoading;
+    const dashLoading = dashStatsLoading;
     if (dashLoading) {
       return (
         <div className="space-y-6">
