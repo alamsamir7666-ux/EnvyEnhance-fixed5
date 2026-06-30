@@ -283,10 +283,20 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 
 function AdminRoute() {
   const { user: clerkUser } = useUser();
-  const { data: dbUser, isLoading } = useGetMe({ query: { retry: false, queryKey: ["me"] } });
+  const { data: dbUser, isLoading } = useGetMe({ query: { retry: false, queryKey: ["me"], staleTime: Infinity, refetchOnMount: false, refetchOnReconnect: false } });
+  const [verifiedAdmin, setVerifiedAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && (dbUser?.role === "admin" || clerkUser?.publicMetadata?.role === "admin")) {
+      setVerifiedAdmin(true);
+    }
+  }, [isLoading, dbUser, clerkUser]);
+
+  if (verifiedAdmin) {
+    return <Suspense fallback={<div className="min-h-[60vh]" />}><AdminPage /></Suspense>;
+  }
   if (isLoading) return null;
-  if (isLoading) return null;
-  if (!isLoading && dbUser?.role !== "admin" && clerkUser?.publicMetadata?.role !== "admin") return <Redirect to="/" />;
+  if (dbUser?.role !== "admin" && clerkUser?.publicMetadata?.role !== "admin") return <Redirect to="/" />;
   return <Suspense fallback={<div className="min-h-[60vh]" />}><AdminPage /></Suspense>;
 }
 
