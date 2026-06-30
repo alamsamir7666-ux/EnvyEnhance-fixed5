@@ -3496,25 +3496,27 @@ function BulkImportTab() {
 }
 
 
-  const tabContent: Record<string, React.ReactNode> = {
-    dashboard:  <DashboardTab />,
-    products:   <ProductsTab />,
-    categories: <CategoriesTab />,
-    orders:     <OrdersTab />,
-    archived:   <ArchivedOrdersTab />,
-    users:      <UsersTab />,
-    reviews:    <ReviewsTab />,
-    coupons:    <CouponsTab />,
-    monthly:    <MonthlyHistoryTab />,
-
-    settings:   <SettingsTab />,
-    returns:    <ReturnsTab />,
-    affiliates: <AffiliatesTab />,
-    blog:       <BlogTab />,
-    auditlogs:  <AuditLogsTab />,
-    qa:         <QATab />,
-    bulkimport: <BulkImportTab />,
-  };
+  function renderActiveTab() {
+    switch (activeTab) {
+      case "dashboard":  return <DashboardTab />;
+      case "products":   return <ProductsTab />;
+      case "categories": return <CategoriesTab />;
+      case "orders":     return <OrdersTab />;
+      case "archived":   return <ArchivedOrdersTab />;
+      case "users":      return <UsersTab />;
+      case "reviews":    return <ReviewsTab />;
+      case "coupons":    return <CouponsTab />;
+      case "monthly":    return <MonthlyHistoryTab />;
+      case "settings":   return <SettingsTab />;
+      case "returns":    return <ReturnsTab />;
+      case "affiliates": return <AffiliatesTab />;
+      case "blog":       return <BlogTab />;
+      case "auditlogs":  return <AuditLogsTab />;
+      case "qa":         return <QATab />;
+      case "bulkimport": return <BulkImportTab />;
+      default:           return <DashboardTab />;
+    }
+  }
 
   const activeNav = navItems.find(n => n.id === activeTab);
 
@@ -3557,7 +3559,7 @@ function BulkImportTab() {
 
         <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
           <div className="max-w-7xl mx-auto">
-            {tabContent[activeTab]}
+            {renderActiveTab()}
           </div>
         </main>
       </div>
