@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { apiClient } from "@/lib/apiClient";
 
 function FacebookIcon() {
   return (
@@ -105,15 +106,9 @@ export function Footer() {
                 if (!input?.value || !input.checkValidity()) return;
                 const email = input.value.trim();
                 try {
-                  const r = await fetch((import.meta.env.VITE_API_BASE_URL ?? "") + "/api/newsletter/subscribe", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email }),
-                  });
-                  if (r.ok) {
-                    input.value = "";
-                    alert("Thank you for subscribing! 🌸");
-                  }
+                  await apiClient.post("/api/newsletter/subscribe", { email });
+                  input.value = "";
+                  alert("Thank you for subscribing! 🌸");
                 } catch {}
               }}
               className="bg-accent text-accent-foreground px-4 py-2 text-sm font-medium hover:bg-accent/90 transition-colors rounded-lg whitespace-nowrap"

@@ -1,6 +1,7 @@
 import { useParams, Link } from "wouter";
 import { ArrowLeft, Clock, Tag, Share2, Check, BookOpen, FileText } from "lucide-react";
 import { useState, useEffect } from "react";
+import { apiClient } from "@/lib/apiClient";
 import { updateSEO } from "@/lib/seo";
 import { PageBreadcrumb } from "@/components/ui/PageBreadcrumb";
 
@@ -14,10 +15,10 @@ export function BlogArticlePage() {
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
     // Fetch from API
-    fetch(`/api/blog-posts/${slug}`)
-      .then(r => {
-        if (!r.ok) throw new Error("Not found");
-        return r.json();
+    apiClient.get(`/api/blog-posts/${slug}`)
+      .then(({ data }) => {
+        const r = data as any;
+        return r;
       })
       .then(data => {
         // Normalise API response to match static article shape

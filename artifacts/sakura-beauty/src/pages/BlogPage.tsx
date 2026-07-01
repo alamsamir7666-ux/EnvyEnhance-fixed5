@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { apiClient } from "@/lib/apiClient";
 import { updateSEO } from "@/lib/seo";
 import { Link } from "wouter";
 import { ArrowRight, Clock, Tag, BookOpen, Loader2 } from "lucide-react";
@@ -25,10 +26,9 @@ export function BlogPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch((import.meta.env.VITE_API_BASE_URL ?? "") + "/api/blog-posts")
-      .then(r => r.json())
-      .then(data => {
-        setPosts(Array.isArray(data) ? data : []);
+    apiClient.get("/api/blog-posts")
+      .then(({ data }) => {
+        setPosts(Array.isArray(data) ? data as BlogPost[] : []);
       })
       .catch(() => setPosts([]))
       .finally(() => setLoading(false));
