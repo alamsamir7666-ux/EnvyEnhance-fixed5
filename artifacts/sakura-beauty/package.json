@@ -74,6 +74,13 @@
   "dependencies": {
     "@clerk/react": "^6.4.6",
     "@clerk/themes": "^2.4.57",
-    "axios": "^1.16.1"
+    "axios": "^1.16.1",
+    "@tiptap/react": "catalog:",
+    "@tiptap/pm": "catalog:",
+    "@tiptap/starter-kit": "catalog:",
+    "@tiptap/extension-underline": "catalog:",
+    "@tiptap/extension-text-align": "catalog:",
+    "@tiptap/extension-placeholder": "catalog:",
+    "@tiptap/extension-link": "catalog:"
   }
 }

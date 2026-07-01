@@ -29,7 +29,7 @@ export function BlogArticlePage() {
           readTime: data.readTime,
           date: data.publishedAt,
           image: data.image,
-          content: Array.isArray(data.content) ? data.content : [],
+          content: Array.isArray(data.content) ? data.content : (data.content || ""),
         });
       })
       .catch(() => {
@@ -111,25 +111,29 @@ export function BlogArticlePage() {
         />
       )}
 
-      <div className="prose prose-sm md:prose-base max-w-none">
-        {article.content.map((block: any, i: number) => {
-          if (block.type === "h2") return <h2 key={i} className="font-serif text-xl md:text-2xl font-medium mt-8 mb-3">{block.text}</h2>;
-          if (block.type === "h3") return <h3 key={i} className="font-serif text-lg font-medium mt-6 mb-2">{block.text}</h3>;
-          if (block.type === "p") return <p key={i} className="text-sm md:text-base leading-relaxed mb-4 text-foreground/90">{block.text}</p>;
-          if (block.type === "ul") return (
-            <ul key={i} className="list-disc pl-5 mb-4 space-y-1.5">
-              {block.items?.map((item: string, j: number) => (
-                <li key={j} className="text-sm md:text-base text-foreground/90">{item}</li>
-              ))}
-            </ul>
-          );
-          if (block.type === "tip") return (
-            <div key={i} className="bg-accent/5 border border-accent/20 rounded-xl p-4 my-6 text-sm">
-              {block.text}
-            </div>
-          );
-          return null;
-        })}
+      <div className="prose prose-sm md:prose-base max-w-none prose-headings:font-serif">
+        {Array.isArray(article.content) ? (
+          article.content.map((block: any, i: number) => {
+            if (block.type === "h2") return <h2 key={i} className="font-serif text-xl md:text-2xl font-medium mt-8 mb-3">{block.text}</h2>;
+            if (block.type === "h3") return <h3 key={i} className="font-serif text-lg font-medium mt-6 mb-2">{block.text}</h3>;
+            if (block.type === "p") return <p key={i} className="text-sm md:text-base leading-relaxed mb-4 text-foreground/90">{block.text}</p>;
+            if (block.type === "ul") return (
+              <ul key={i} className="list-disc pl-5 mb-4 space-y-1.5">
+                {block.items?.map((item: string, j: number) => (
+                  <li key={j} className="text-sm md:text-base text-foreground/90">{item}</li>
+                ))}
+              </ul>
+            );
+            if (block.type === "tip") return (
+              <div key={i} className="bg-accent/5 border border-accent/20 rounded-xl p-4 my-6 text-sm">
+                {block.text}
+              </div>
+            );
+            return null;
+          })
+        ) : (
+          <div dangerouslySetInnerHTML={{ __html: article.content || "" }} />
+        )}
       </div>
 
       <div className="flex items-center justify-between mt-12 pt-6 border-t">

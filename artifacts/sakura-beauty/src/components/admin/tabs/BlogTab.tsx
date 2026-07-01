@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Search, Save, Pencil, Trash2, X } from "lucide-react";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
 const API = import.meta.env.VITE_API_BASE_URL ?? "";
 
@@ -47,7 +48,15 @@ export function BlogTab() {
       slug: post.slug,
       title: post.title,
       excerpt: post.excerpt,
-      content: Array.isArray(post.content) ? post.content.map((b: any) => b.text || (b.items || []).join("\n")).join("\n\n") : post.content,
+      content: Array.isArray(post.content)
+        ? post.content.map((b: any) => {
+            if (b.type === "h2") return `<h2>${b.text}</h2>`;
+            if (b.type === "h3") return `<h3>${b.text}</h3>`;
+            if (b.type === "ul") return `<ul>${(b.items || []).map((i: string) => `<li>${i}</li>`).join("")}</ul>`;
+            if (b.type === "tip") return `<blockquote>${b.text}</blockquote>`;
+            return `<p>${b.text || ""}</p>`;
+          }).join("")
+        : (post.content || ""),
       category: post.category,
       readTime: post.readTime,
       image: post.image,
@@ -61,9 +70,7 @@ export function BlogTab() {
   async function handleSave() {
     setSaving(true); setError("");
     try {
-      // Convert plain text content to simple paragraph blocks
-      const contentBlocks = form.content.split("\n\n").filter(Boolean).map(t => ({ type: "p", text: t.trim() }));
-      const body = { ...form, content: contentBlocks };
+      const body = { ...form, content: form.content };
       const url = editingPost ? `${API}/api/admin/blog-posts/${editingPost.id}` : API+"/api/admin/blog-posts";
       const method = editingPost ? "PATCH" : "POST";
       const r = await fetch(url, {
@@ -210,14 +217,13 @@ export function BlogTab() {
                 className="rounded-xl resize-none" />
             </div>
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Content *</Label>
-                <span className="text-xs text-muted-foreground">Separate paragraphs with a blank line</span>
-              </div>
-              <Textarea placeholder="Write your article content here..."
-                value={form.content} rows={10}
-                onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
-                className="rounded-xl text-sm leading-relaxed" />
+              <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Content *</Label>
+              <RichTextEditor
+                value={form.content}
+                onChange={html => setForm(f => ({ ...f, content: html }))}
+                placeholder="Write your article content here..."
+                minHeight={280}
+              />
             </div>
             <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-xl border">
               <input type="checkbox" id="featured" checked={form.featured}
