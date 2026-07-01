@@ -90,6 +90,34 @@ export interface AdminContextValue {
   // Shared
   askConfirm: (title: string, message: string, onConfirm: () => void, danger?: boolean) => void;
   getToken: () => Promise<string | null>;
+  setActiveTab: (tab: string) => void;
+
+  // Dashboard computed
+  totalRevenue: number;
+  deliveredOrders: number;
+  recentCombined: any[];
+  statusConfig: Record<string, { color: string; icon: any }>;
+  products: any[];
+  productsData: any;
+  users: any[];
+  pendingOrders: number;
+
+  // Handlers
+  handleDeleteCategory: (id: number) => void;
+  handleDeleteReview: (productId: number, reviewId: number) => void;
+  handleToggleBlock: (userId: number, isBlocked: boolean) => void;
+  handleDeleteCoupon: (id: number) => void;
+  handleToggleCoupon: (id: number) => void;
+  handleArchiveNow: () => void;
+  handleSeedCategories: () => void;
+  totalOrdersThisMonth: number;
+  fetchOrders: (page: number, append?: boolean) => void;
+  fetchAdminPreOrders: () => void;
+
+  // Computed
+  filteredReviews: any[];
+  filteredCoupons: any[];
+  debouncedUserSearch: string;
 }
 
 export const AdminContext = createContext<AdminContextValue | null>(null);
