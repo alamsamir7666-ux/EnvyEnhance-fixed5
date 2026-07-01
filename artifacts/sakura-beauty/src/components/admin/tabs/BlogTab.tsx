@@ -3,7 +3,7 @@ import { useAuth } from "@clerk/react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Search, Save, Pencil, Trash2 } from "lucide-react";
+import { Plus, Search, Save, Pencil, Trash2, X } from "lucide-react";
 
 const API = import.meta.env.VITE_API_BASE_URL ?? "";
 
@@ -19,7 +19,7 @@ export function BlogTab() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  const emptyForm = { slug: "", title: "", excerpt: "", content: "", category: "Skincare Tips", readTime: "5 min read", image: "", featured: false };
+  const emptyForm = { slug: "", title: "", excerpt: "", content: "", category: "Skincare Tips", readTime: "5 min read", image: "", featured: false, slugEdited: false };
   const [form, setForm] = useState(emptyForm);
 
   const fetchedRef = useRef(false);
@@ -36,7 +36,7 @@ export function BlogTab() {
 
   function openCreate() {
     setEditingPost(null);
-    setForm(emptyForm);
+    setForm({ ...emptyForm, slugEdited: false });
     setShowForm(true);
     setError("");
   }
@@ -52,6 +52,7 @@ export function BlogTab() {
       readTime: post.readTime,
       image: post.image,
       featured: post.featured,
+      slugEdited: true,
     });
     setShowForm(true);
     setError("");
@@ -121,39 +122,60 @@ export function BlogTab() {
         />
       </div>
 
-      {/* Create / Edit form */}
+      {/* Create / Edit Form */}
       {showForm && (
-        <div className="bg-card border rounded-xl p-5 space-y-4">
-          <h3 className="font-medium">{editingPost ? "Edit Post" : "New Blog Post"}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label className="text-xs">Title *</Label>
-              <Input placeholder="Post title" value={form.title}
-                onChange={e => setForm(f => ({ ...f, title: e.target.value, slug: f.slug || autoSlug(e.target.value) }))} />
+        <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b bg-muted/30">
+            <div>
+              <h3 className="font-semibold text-base">{editingPost ? "Edit Blog Post" : "New Blog Post"}</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">{editingPost ? "Update your article details below" : "Fill in the details to publish a new article"}</p>
             </div>
-            <div className="space-y-1">
-              <Label className="text-xs">Slug (URL) *</Label>
-              <Input placeholder="post-url-slug" value={form.slug}
-                onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} />
+            <button onClick={() => { setShowForm(false); setEditingPost(null); }}
+              className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground">
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          <div className="p-6 space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Title *</Label>
+                <Input placeholder="e.g. Best Japanese Sunscreens for 2025" value={form.title}
+                  onChange={e => setForm(f => ({ ...f, title: e.target.value, slug: f.slugEdited ? f.slug : autoSlug(e.target.value) }))}
+                  className="rounded-xl" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Slug (URL) *</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">/blog/</span>
+                  <Input placeholder="best-japanese-sunscreens" value={form.slug}
+                    onChange={e => setForm(f => ({ ...f, slug: e.target.value, slugEdited: true }))}
+                    className="rounded-xl pl-12 font-mono text-sm" />
+                </div>
+              </div>
             </div>
-            <div className="space-y-1">
-              <Label className="text-xs">Category</Label>
-              <Input placeholder="e.g. Skincare Tips" value={form.category}
-                onChange={e => setForm(f => ({ ...f, category: e.target.value }))} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Category</Label>
+                <Input placeholder="e.g. Skincare Tips" value={form.category}
+                  onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+                  className="rounded-xl" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Read Time</Label>
+                <Input placeholder="e.g. 5 min read" value={form.readTime}
+                  onChange={e => setForm(f => ({ ...f, readTime: e.target.value }))}
+                  className="rounded-xl" />
+              </div>
             </div>
-            <div className="space-y-1">
-              <Label className="text-xs">Read Time</Label>
-              <Input placeholder="e.g. 5 min read" value={form.readTime}
-                onChange={e => setForm(f => ({ ...f, readTime: e.target.value }))} />
-            </div>
-            <div className="space-y-1 sm:col-span-2">
-              <Label className="text-xs">Cover Image</Label>
-              <div className="flex gap-2 items-center">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Cover Image</Label>
+              <div className="flex gap-2">
                 <Input placeholder="https://..." value={form.image}
-                  onChange={e => setForm(f => ({ ...f, image: e.target.value }))} />
+                  onChange={e => setForm(f => ({ ...f, image: e.target.value }))}
+                  className="rounded-xl flex-1" />
                 <button type="button"
                   onClick={() => document.getElementById("blog-image-upload")?.click()}
-                  className="shrink-0 text-xs bg-muted hover:bg-muted/80 px-3 py-2 rounded-lg border transition-colors">
+                  className="shrink-0 text-xs font-medium bg-muted hover:bg-muted/80 px-4 py-2 rounded-xl border transition-colors">
                   Upload
                 </button>
                 <input type="file" accept="image/*" id="blog-image-upload" className="hidden"
@@ -171,41 +193,59 @@ export function BlogTab() {
                   }} />
               </div>
               {form.image && (
-                <div className="relative mt-2 w-full h-32 rounded-xl overflow-hidden border">
+                <div className="relative mt-2 w-full h-40 rounded-xl overflow-hidden border">
                   <img src={form.image} alt="preview" className="w-full h-full object-cover" />
                   <button type="button" onClick={() => setForm(f => ({ ...f, image: "" }))}
-                    className="absolute top-1 right-1 bg-black/60 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">×</button>
+                    className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full w-7 h-7 flex items-center justify-center transition-colors">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
                 </div>
               )}
             </div>
-            <div className="space-y-1 sm:col-span-2">
-              <Label className="text-xs">Excerpt *</Label>
-              <Textarea placeholder="Short description shown in listing?" value={form.excerpt} rows={2}
-                onChange={e => setForm(f => ({ ...f, excerpt: e.target.value }))} />
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Excerpt *</Label>
+              <Textarea placeholder="A short description shown in the blog listing (1-2 sentences)"
+                value={form.excerpt} rows={2}
+                onChange={e => setForm(f => ({ ...f, excerpt: e.target.value }))}
+                className="rounded-xl resize-none" />
             </div>
-            <div className="space-y-1 sm:col-span-2">
-              <Label className="text-xs">Content (separate paragraphs with a blank line)</Label>
-              <Textarea placeholder="Write your article content here. Use double line breaks to separate paragraphs." value={form.content} rows={8}
-                onChange={e => setForm(f => ({ ...f, content: e.target.value }))} />
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Content *</Label>
+                <span className="text-xs text-muted-foreground">Separate paragraphs with a blank line</span>
+              </div>
+              <Textarea placeholder="Write your article content here..."
+                value={form.content} rows={10}
+                onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
+                className="rounded-xl text-sm leading-relaxed" />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-xl border">
               <input type="checkbox" id="featured" checked={form.featured}
-                onChange={e => setForm(f => ({ ...f, featured: e.target.checked }))} />
-              <Label htmlFor="featured" className="text-xs cursor-pointer">Featured post</Label>
+                onChange={e => setForm(f => ({ ...f, featured: e.target.checked }))}
+                className="w-4 h-4 accent-accent cursor-pointer" />
+              <div>
+                <Label htmlFor="featured" className="text-sm font-medium cursor-pointer">Featured post</Label>
+                <p className="text-xs text-muted-foreground">Featured posts appear prominently at the top of the blog page</p>
+              </div>
             </div>
-          </div>
-          {error && <p className="text-xs text-destructive">{error}</p>}
-          <div className="flex gap-2">
-            <button onClick={handleSave} disabled={saving}
-              className="flex items-center gap-1.5 text-sm bg-accent text-white px-4 py-2 rounded-full hover:bg-accent/90 transition-colors">
-              <Save className="h-4 w-4" />{saving ? "Saving?" : editingPost ? "Save Changes" : "Publish Post"}
-            </button>
-            <button onClick={() => { setShowForm(false); setEditingPost(null); }}
-              className="text-sm text-muted-foreground hover:text-foreground">Cancel</button>
+            {error && (
+              <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 px-4 py-3 rounded-xl">
+                <X className="h-4 w-4 shrink-0" />{error}
+              </div>
+            )}
+            <div className="flex gap-3 pt-1">
+              <button onClick={handleSave} disabled={saving}
+                className="flex items-center gap-2 text-sm font-semibold bg-accent text-white px-5 py-2.5 rounded-xl hover:bg-accent/90 transition-colors disabled:opacity-50">
+                <Save className="h-4 w-4" />{saving ? "Saving..." : editingPost ? "Save Changes" : "Publish Post"}
+              </button>
+              <button onClick={() => { setShowForm(false); setEditingPost(null); }}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-4 py-2.5 rounded-xl hover:bg-muted">
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}
-
       {filtered.length === 0 ? (
         <p className="text-sm text-muted-foreground py-8 text-center">
           {searchQ ? "No posts match your search." : "No blog posts yet. Create your first post!"}
